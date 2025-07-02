@@ -3,6 +3,12 @@
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 
+interface TeamMembers {
+  id: number;
+  name: string;
+  role: string;
+}
+
 const TeamHeaderComplete = () => {
   const [isMounted, setIsMounted] = useState(false)
 
@@ -10,7 +16,7 @@ const TeamHeaderComplete = () => {
     setIsMounted(true)
   }, [])
 
-  const teamMembers = [
+  const teamMembers: TeamMembers[] = [
     { id: 1, name: "John Smith", role: "CEO & Founder" },
     { id: 2, name: "Sarah Johnson", role: "CTO" },
     { id: 3, name: "Mike Chen", role: "Lead Designer" },
@@ -37,7 +43,7 @@ const TeamHeaderComplete = () => {
     { id: 24, name: "Zoe Adams", role: "Operations Manager" },
   ]
 
-  const TeamMemberCard = ({ member, delay = 0 }) => {
+  const TeamMemberCard = ({ member, delay = 0 }: {member: TeamMembers, delay: number}) => {
     if (!isMounted) {
       // Server-side render: simple version without animations or hover effects
       return (
