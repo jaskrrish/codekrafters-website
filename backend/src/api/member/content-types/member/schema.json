@@ -1,0 +1,83 @@
+{
+  "kind": "collectionType",
+  "collectionName": "members",
+  "info": {
+    "singularName": "member",
+    "pluralName": "members",
+    "displayName": "Member"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "role": {
+      "type": "enumeration",
+      "enum": [
+        "president",
+        "lead",
+        "head",
+        "member"
+      ],
+      "required": true
+    },
+    "domain": {
+      "type": "enumeration",
+      "enum": [
+        "development",
+        "web3",
+        "competitive_programming",
+        "creatives",
+        "content",
+        "cyber_security",
+        "pr_and_management"
+      ],
+      "required": true
+    },
+    "year": {
+      "type": "enumeration",
+      "enum": [
+        "first",
+        "second",
+        "third",
+        "fourth"
+      ],
+      "required": true
+    },
+    "profilePicture": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "bio": {
+      "type": "text"
+    },
+    "socialMediaLinks": {
+      "type": "json"
+    },
+    "email": {
+      "type": "email"
+    },
+    "yearOfJoining": {
+      "type": "integer"
+    },
+    "yearOfLeaving": {
+      "type": "integer"
+    },
+    "domainLeads": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::domain.domain",
+      "inversedBy": "leads"
+    },
+    "domainHeads": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::domain.domain",
+      "inversedBy": "heads"
+    }
+  }
+} 
