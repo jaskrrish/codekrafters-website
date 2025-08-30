@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -23,4 +23,40 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+} */
+:root {
+  --foreground-rgb: 30, 41, 59;
+  --background-start: 255, 255, 255;
+  --background-end: 248, 250, 252;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-start));
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-lexend);
+  }
+
+  body {
+    font-family: var(--font-inter);
+  }
+}
+
+@layer utilities {
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(30, 41, 59, 0.1);
+  }
+
+  .clip-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
 }
