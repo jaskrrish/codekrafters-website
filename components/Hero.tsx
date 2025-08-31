@@ -5,7 +5,26 @@ import gsap from "gsap";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/all";
 
+// Custom hook for media queries
+const useMediaQuery = (query: string) => {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    const listener = () => setMatches(media.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [matches, query]);
+
+  return matches;
+};
+
 function Hero() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  
   gsap.registerPlugin(ScrollTrigger);
   // gsap.registerPlugin(ScrollSmoother)
   const lenisRef = useRef<any>(null);
@@ -150,11 +169,11 @@ function Hero() {
   });
 
   return (
-    <div className="min-h-full max-w-full">
+    <div className="min-h-full w-full overflow-x-hidden">
       <ReactLenis root options={{ autoRaf: false }} ref={lenisRef} />
       <div
         ref={smthDivRef}
-        className="min-h-screen max-w-full perspective-[2200px]"
+        className="min-h-screen w-full perspective-[2200px] overflow-x-hidden"
         id="smth"
         onClick={() => {
           lenis?.scrollTo("#another-div", {
@@ -165,20 +184,20 @@ function Hero() {
         <img
           src="/srm-bg-cropped-png.png"
           alt="Your clg bruv"
-          className="z-10 w-full h-full absolute hidden md:block"
+          className="z-10 w-full h-full absolute block object-cover"
           id="zoom-in"
           ref={bgLg}
         />
         <img
-          src="/man-entering-png.png"
+          src={isMobile ? "/man-entering-png-mob.png" : "/man-entering-png.png"}
           alt="Goi Entering SRM"
-          className="z-0 w-full h-full absolute opacity-0"
+          className="z-0 w-full h-full absolute opacity-0 object-cover"
           ref={manEnteringRef}
         />
       </div>
 
       <div
-        className="min-h-screen max-w-full bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden"
+        className="min-h-screen w-full bg-gray-100 flex items-center justify-center z-10 overflow-hidden"
         id="another-div"
         onClick={() => {
           lenis?.scrollTo("#smth", {
@@ -214,15 +233,15 @@ function Hero() {
               ref={commentThreeRef}
             />
           </div>
-          <img
-            src="/oat-with-man-png.png"
-            alt="Panicked Goi"
-            className="z-10 w-full h-full"
-          />
+                  <img
+          src={isMobile ? "/oat-with-man-png-mob.png" : "/oat-with-man-png.png"}
+          alt="Panicked Goi"
+          className="z-10 w-full h-full object-cover"
+        />
         </div>
         <img
           src="/shocked-man-bg-png.png"
-          className="h-full w-full absolute z-0 overflow-y-hidden"
+          className="h-full w-full absolute z-0 overflow-y-hidden object-cover"
           ref={sideLookingRef}
         />
       </div>
@@ -252,7 +271,7 @@ function Hero() {
             <img
               src="/comment-2-png.png"
               alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-80 bottom-50"
+              className="absolute w-1/4 h-1/4 opacity-0 left-60 bottom-50"
               id="comment-2"
               ref={commentTwoRef}
             />
@@ -278,42 +297,42 @@ function Hero() {
       </div> */}
 
       <div
-        className="min-h-screen max-w-full bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden overflow-x-hidden perspective-[500px]"
+        className="min-h-screen w-full bg-gray-100 flex items-center justify-center z-10 overflow-hidden perspective-[500px]"
         ref={walkingRef}
       >
         <img
-          src="/oat-walking-bg-png.png"
+          src={isMobile ? "/oat-walking-bg-png-mob.png" : "/oat-walking-bg-png.png"}
           alt="Goi walking"
-          className="w-full h-full absolute z-10"
+          className="w-full h-full absolute z-10 object-cover"
           ref={walkingManRef}
         />
         <img
-          src="/ck-png.png"
+          src={isMobile ? "/ck-png-mob.png" : "/ck-png.png"}
           alt="Goi walking"
-          className="w-full h-full absolute z-0"
+          className="w-full h-full absolute z-0 object-cover"
           id="ck"
           ref={ckRef}
         />
         <img
-          src="/moi-png.png"
+          src={isMobile ? "/moi-png-mob.png" : "/moi-png.png"}
           alt="Ck moi"
-          className="w-full h-full absolute -z-10"
+          className="w-full h-full absolute -z-10 object-cover"
         />
       </div>
       <div
-        className="min-h-screen max-w-full bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden overflow-x-hidden"
+        className="min-h-screen w-full bg-gray-100 flex items-center justify-center z-10 overflow-hidden"
         id="ck-badge"
       >
         <img
-          src="/man-ck-badge-png.png"
+          src={isMobile ? "/man-ck-badge-png-mob.png" : "/man-ck-badge-png.png"}
           alt="Man kuthifying ck badge"
-          className="z-0 w-full h-full"
+          className="z-0 w-full h-full object-cover"
           id="man-with-badge"
         />
         <img
-          src="/placement-png.png"
+          src={isMobile ? "/placement-png-mob.png" : "/placement-png.png"}
           alt="My goi got placedd!!"
-          className="absolute -z-10 w-full h-full"
+          className="absolute -z-10 w-full h-full object-cover"
           id="placement"
         />
       </div>
