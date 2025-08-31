@@ -2,16 +2,16 @@
 import ReactLenis, { useLenis } from "lenis/react";
 import "lenis/dist/lenis.css";
 import gsap from "gsap";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { ScrollTrigger } from "gsap/all";
 
-function HeroDupe() {
+function StoryComponent() {
   gsap.registerPlugin(ScrollTrigger);
   // gsap.registerPlugin(ScrollSmoother)
-  const lenisRef = useRef<any>(null);
+  const lenisRef = useRef(null);
   const smthDivRef = useRef<HTMLDivElement>(null);
   const bgLg = useRef(null);
-  const bgSm = useRef(null);
+  // const bgSm = useRef(null);
   const manEnteringRef = useRef(null);
   const anotherDivRef = useRef<HTMLDivElement>(null);
   const commentOneRef = useRef<HTMLImageElement>(null);
@@ -32,8 +32,8 @@ function HeroDupe() {
   });
 
   useEffect(() => {
-    function update(time: any) {
-      lenisRef.current?.lenis?.raf(time * 1000);
+    function update(time: number): void {
+      (lenisRef.current as { lenis?: { raf: (t: number) => void } } | null)?.lenis?.raf(time * 1000);
     }
 
     gsap.ticker.add(update);
@@ -74,8 +74,8 @@ function HeroDupe() {
                   endTrigger: anotherDivRef.current,
                 },
               })
-              .to(smthDivRef.current.querySelector('img[src="/srm-bg-png-mob.png"]'), { transform: "translateZ(2200px)" })
-              .to(smthDivRef.current.querySelector('img[src="/man-entering-png-mob.png"]'), { opacity: 1 })
+              .to(smthDivRef.current.querySelector('img[src="/story/srm-bg-png-mob.png"]'), { transform: "translateZ(2200px)" })
+              .to(smthDivRef.current.querySelector('img[src="/story/man-entering-png-mob.png"]'), { opacity: 1 })
               .pause();
           }
         },
@@ -260,14 +260,14 @@ function HeroDupe() {
       >
         {/* Desktop first section images */}
         <img
-          src="/srm-bg-cropped-png.png"
+          src="/story/srm-bg-cropped-png.png"
           alt="Your clg bruv"
           className="z-10 w-full h-full absolute hidden md:block"
           id="zoom-in"
           ref={bgLg}
         />
         <img
-          src="/man-entering-png.png"
+          src="/story/man-entering-png.png"
           alt="Goi Entering SRM"
           className="z-0 w-full h-full absolute opacity-0 hidden md:block"
           ref={manEnteringRef}
@@ -275,12 +275,12 @@ function HeroDupe() {
 
         {/* Mobile first section images */}
         <img
-          src="/srm-bg-png-mob.png"
+          src="/story/srm-bg-png-mob.png"
           alt="Your clg bruv (mobile)"
           className="z-10 w-full h-full absolute md:hidden"
         />
         <img
-          src="/man-entering-png-mob.png"
+          src="/story/man-entering-png-mob.png"
           alt="Goi Entering SRM (mobile)"
           className="z-0 w-full h-full absolute opacity-0 md:hidden"
           id="man-entering-mob"
@@ -304,21 +304,21 @@ function HeroDupe() {
         >
           <div className="z-20 flex items-center justify-center">
             <img
-              src="/comment-1-png.png"
+              src="/story/comment-1-png.png"
               alt=""
               className="absolute w-1/4 h-1/4 opacity-0 left-60 bottom-40"
               id="comment-1"
               ref={commentOneRef}
             />{" "}
             <img
-              src="/comment-2-png.png"
+              src="/story/comment-2-png.png"
               alt=""
               className="absolute w-1/4 h-1/4 opacity-0 left-80 bottom-50"
               id="comment-2"
               ref={commentTwoRef}
             />
             <img
-              src="/comment-3-png.png"
+              src="/story/comment-3-png.png"
               alt=""
               className="absolute w-1/4 h-1/4 opacity-0 left-10 bottom-10"
               id="comment-3"
@@ -326,7 +326,7 @@ function HeroDupe() {
             />
           </div>
           <img
-            src="/oat-with-man-png.png"
+            src="/story/oat-with-man-png.png"
             alt="Panicked Goi"
             className="z-10 w-full h-full"
           />
@@ -339,26 +339,26 @@ function HeroDupe() {
         >
           <div className="z-20 flex items-center justify-center">
             <img
-              src="/comment-1-png.png"
+              src="/story/comment-1-png.png"
               alt=""
               className="absolute w-1/4 h-1/4 opacity-0 left-5 bottom-10"
               id="comment-1-mob"
             />
             <img
-              src="/comment-2-png.png"
+              src="/story/comment-2-png.png"
               alt=""
               className="absolute w-1/4 h-1/4 opacity-0 left-15 -bottom-10"
               id="comment-2-mob"
             />
             <img
-              src="/comment-3-png.png"
+              src="/story/comment-3-png.png"
               alt=""
               className="absolute w-1/4 h-1/4 opacity-0 left-8 -bottom-25"
               id="comment-3-mob"
             />
           </div>
           <img
-            src="/oat-man-with-bg-png-mob.png"
+            src="/story/oat-man-with-bg-png-mob.png"
             alt="Panicked Goi (mobile)"
             className="z-10 w-full h-full"
           />
@@ -366,14 +366,14 @@ function HeroDupe() {
 
         {/* Desktop shocked man background */}
         <img
-          src="/shocked-man-bg-png.png"
+          src="/story/shocked-man-bg-png.png"
           className="h-full w-full absolute z-0 overflow-y-hidden hidden md:block"
           ref={sideLookingRef}
         />
 
         {/* Mobile shocked man background */}
         <img
-          src="/shocked-man-png-mob.png"
+          src="/story/shocked-man-png-mob.png"
           className="h-full w-full absolute z-0 overflow-y-hidden md:hidden"
         />
       </div>
@@ -434,20 +434,20 @@ function HeroDupe() {
       >
         {/* Desktop walking images */}
         <img
-          src="/oat-walking-bg-png.png"
+          src="/story/oat-walking-bg-png.png"
           alt="Goi walking"
           className="w-full h-full absolute z-10 hidden md:block"
           ref={walkingManRef}
         />
         <img
-          src="/ck-png.png"
+          src="/story/ck-png.png"
           alt="Goi walking"
           className="w-full h-full absolute z-0 hidden md:block"
           id="ck"
           ref={ckRef}
         />
         <img
-          src="/moi-png.png"
+          src="/story/moi-png.png"
           alt="Ck moi"
           className="w-full h-full absolute -z-10 hidden md:block"
           ref={moiRef}
@@ -455,20 +455,20 @@ function HeroDupe() {
 
         {/* Mobile walking images */}
         <img
-          src="/oat-walking-bg-png-mob.png"
+          src="/story/oat-walking-bg-png-mob.png"
           alt="Goi walking (mob)"
           className="w-full h-full absolute z-10 md:hidden"
           ref={walkingManMobRef}
         />
         <img
-          src="/ck-png-mob.png"
+          src="/story/ck-png-mob.png"
           alt="Goi walking (mob)"
           className="w-full h-full absolute z-0 md:hidden"
           id="ck-mob"
           ref={ckMobRef}
         />
         <img
-          src="/moi-png-mob.png"
+          src="/story/moi-png-mob.png"
           alt="Ck moi (mob)"
           className="w-full h-full absolute -z-10 md:hidden"
           ref={moiMobRef}
@@ -480,13 +480,13 @@ function HeroDupe() {
       >
         {/* Desktop badge section */}
         <img
-          src="/man-ck-badge-png.png"
+          src="/story/man-ck-badge-png.png"
           alt="Man kuthifying ck badge"
           className="z-0 w-full h-full hidden md:block"
           id="man-with-badge"
         />
         <img
-          src="/placement-png.png"
+          src="/story/placement-png.png"
           alt="My goi got placedd!!"
           className="absolute -z-10 w-full h-full hidden md:block"
           id="placement"
@@ -494,13 +494,13 @@ function HeroDupe() {
 
         {/* Mobile badge section */}
         <img
-          src="/man-ck-badge-png-mob.png"
+          src="/story/man-ck-badge-png-mob.png"
           alt="Man kuthifying ck badge (mobile)"
           className="z-0 w-full h-full md:hidden"
           id="man-with-badge-mob"
         />
         <img
-          src="/placement-png-mob.png"
+          src="/story/placement-png-mob.png"
           alt="My goi got placedd!! (mobile)"
           className="absolute -z-10 w-full h-full md:hidden"
           id="placement-mob"
@@ -510,4 +510,4 @@ function HeroDupe() {
   );
 }
 
-export default HeroDupe;
+export default StoryComponent;
