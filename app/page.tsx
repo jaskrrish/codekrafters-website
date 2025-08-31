@@ -7,7 +7,7 @@ export default function Home() {
     <main className="min-h-screen max-w-screen overflow-x-hidden">
       {/* <Hero /> */}
       {/* Other sections of your website go here */}
-      <HeroDupe />
+      {<HeroDupe />}
     </main>
   );
 }

@@ -10,12 +10,9 @@ function HeroDupe() {
   // gsap.registerPlugin(ScrollSmoother)
   const lenisRef = useRef<any>(null);
   const smthDivRef = useRef<HTMLDivElement>(null);
-  const smthDivLgRef = useRef<HTMLDivElement>(null);
-  const smthDivMobRef = useRef<HTMLDivElement>(null);
   const bgLg = useRef(null);
   const bgSm = useRef(null);
   const manEnteringRef = useRef(null);
-  const manEnteringMobRef = useRef(null);
   const anotherDivRef = useRef<HTMLDivElement>(null);
   const commentOneRef = useRef<HTMLImageElement>(null);
   const commentTwoRef = useRef<HTMLImageElement>(null);
@@ -26,6 +23,7 @@ function HeroDupe() {
   const walkingManMobRef = useRef<HTMLImageElement>(null);
   const ckRef = useRef<HTMLImageElement>(null);
   const ckMobRef = useRef<HTMLImageElement>(null);
+  const moiRef = useRef<HTMLImageElement>(null);
   const moiMobRef = useRef<HTMLImageElement>(null);
 
   const lenis = useLenis((lenis) => {
@@ -45,74 +43,114 @@ function HeroDupe() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Desktop bg timeline uses the desktop smth div
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: smthDivLgRef.current,
-            pin: smthDivLgRef.current,
-            scrub: 3,
-            start: "0% 0%",
-            endTrigger: anotherDivRef.current,
-          },
-        })
-        .to(bgLg.current, { transform: "translateZ(2200px)" })
-        .to(manEnteringRef.current, { opacity: 1 })
-        .pause();
+      // Use ScrollTrigger.matchMedia for responsive first section animations
+      ScrollTrigger.matchMedia({
+        // Desktop first section animations
+        "(min-width: 768px)": () => {
+          gsap
+            .timeline({
+              scrollTrigger: {
+                trigger: smthDivRef.current,
+                pin: smthDivRef.current,
+                scrub: 3,
+                start: "0% 0%",
+                endTrigger: anotherDivRef.current,
+              },
+            })
+            .to(bgLg.current, { transform: "translateZ(2200px)" })
+            .to(manEnteringRef.current, { opacity: 1 })
+            .pause();
+        },
+        // Mobile first section animations
+        "(max-width: 767px)": () => {
+          if (smthDivRef.current) {
+            gsap
+              .timeline({
+                scrollTrigger: {
+                  trigger: smthDivRef.current,
+                  pin: smthDivRef.current,
+                  scrub: 3,
+                  start: "0% 0%",
+                  endTrigger: anotherDivRef.current,
+                },
+              })
+              .to(smthDivRef.current.querySelector('img[src="/srm-bg-png-mob.png"]'), { transform: "translateZ(2200px)" })
+              .to(smthDivRef.current.querySelector('img[src="/man-entering-png-mob.png"]'), { opacity: 1 })
+              .pause();
+          }
+        },
+      });
     });
     return () => ctx.revert();
   }, []);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Mobile bg timeline uses the mobile smth div and mobile manEntering
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: smthDivMobRef.current,
-            pin: smthDivMobRef.current,
-            scrub: 3,
-            start: "0% 0%",
-            endTrigger: anotherDivRef.current,
-          },
-        })
-        .to(bgSm.current, { transform: "translateZ(2200px)" })
-        .to(manEnteringMobRef.current, { opacity: 1 })
-        .pause();
-    });
-    return () => ctx.revert();
-  }, []);
-
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: anotherDivRef.current,
-            pin: anotherDivRef.current,
-            scrub: 1,
-            start: "0% 0%",
-            endTrigger: walkingRef.current,
-          },
-        })
-        .to(commentOneRef.current, {
-          yPercent: -120,
-          xPercent: 55,
-          opacity: 1,
-        })
-        .to(commentTwoRef.current, {
-          yPercent: -180,
-          xPercent: 100,
-          opacity: 1,
-        })
-        .to(commentThreeRef.current, {
-          yPercent: -180,
-          xPercent: 215,
-          opacity: 1,
-        })
-        .to("#panick", {
-          opacity: 0,
-        });
+      // Use ScrollTrigger.matchMedia for responsive comment section animations
+      ScrollTrigger.matchMedia({
+        // Desktop comment section animations
+        "(min-width: 768px)": () => {
+          gsap
+            .timeline({
+              scrollTrigger: {
+                trigger: anotherDivRef.current,
+                pin: anotherDivRef.current,
+                scrub: 1,
+                start: "0% 0%",
+                endTrigger: walkingRef.current,
+              },
+            })
+            .to(commentOneRef.current, {
+              yPercent: -120,
+              xPercent: 55,
+              opacity: 1,
+            })
+            .to(commentTwoRef.current, {
+              yPercent: -180,
+              xPercent: 100,
+              opacity: 1,
+            })
+            .to(commentThreeRef.current, {
+              yPercent: -180,
+              xPercent: 215,
+              opacity: 1,
+            })
+            .to("#panick", {
+              opacity: 0,
+            });
+        },
+        // Mobile comment section animations
+        "(max-width: 767px)": () => {
+          gsap
+            .timeline({
+              scrollTrigger: {
+                trigger: anotherDivRef.current,
+                pin: anotherDivRef.current,
+                scrub: 1,
+                start: "0% 0%",
+                endTrigger: walkingRef.current,
+              },
+            })
+            .to("#comment-1-mob", {
+              yPercent: -120,
+              xPercent: 55,
+              opacity: 1,
+            })
+            .to("#comment-2-mob", {
+              yPercent: -180,
+              xPercent: 100,
+              opacity: 1,
+            })
+            .to("#comment-3-mob", {
+              yPercent: -180,
+              xPercent: 215,
+              opacity: 1,
+            })
+            .to("#panick-mob", {
+              opacity: 0,
+            });
+        },
+      });
     });
     return () => ctx.revert();
   }, []);
@@ -133,59 +171,57 @@ function HeroDupe() {
     //   extendTimeline: true,
     //   defaults: { origin: [0.5, 0.5], scale: 2 },
     // });
-    // guard: require the walking container to be present
-    if (!walkingRef.current) {
-      console.debug("GSAP walking: walkingRef not ready yet");
-      return;
-    }
-
-    let mm: any;
     const ctx = gsap.context(() => {
-      mm = ScrollTrigger.matchMedia({});
-
-      mm.add({
-        "(min-width: 768px)": function () {
-          console.debug("GSAP walking: desktop branch active");
-          // Desktop: animate desktop walking image and desktop CK
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: walkingRef.current,
-              pin: walkingRef.current,
-              scrub: 1,
-              start: "0% 0%",
-              endTrigger: "#ck-badge",
-            },
-          });
-          tl.to(walkingManRef.current, { transform: "translateZ(300px)" })
-            .to(walkingManRef.current, { opacity: 0 })
-            .to(ckRef.current, { opacity: 0 });
-          console.debug("GSAP walking: desktop timeline created", tl);
+      // Use ScrollTrigger.matchMedia for responsive animations
+      ScrollTrigger.matchMedia({
+        // Desktop animations
+        "(min-width: 768px)": () => {
+          gsap
+            .timeline({
+              scrollTrigger: {
+                trigger: walkingRef.current,
+                pin: walkingRef.current,
+                scrub: 1,
+                start: "0% 0%",
+                endTrigger: "#ck-badge",
+              },
+            })
+            .to(walkingManRef.current, {
+              transform: "translateZ(300px)",
+            })
+            .to(walkingManRef.current, {
+              opacity: 0,
+            })
+            .to(ckRef.current, {
+              opacity: 0,
+            });
         },
-        "(max-width: 767px)": function () {
-          console.debug("GSAP walking: mobile branch active");
-          // Mobile: animate mobile walking image and mobile CK
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: walkingRef.current,
-              pin: walkingRef.current,
-              scrub: 1,
-              start: "0% 0%",
-              endTrigger: "#ck-badge",
-            },
-          });
-          tl.to(walkingManMobRef.current, { transform: "translateZ(300px)" })
-            .to(walkingManMobRef.current, { opacity: 0 })
-            .to(ckMobRef.current, { opacity: 0 });
-          console.debug("GSAP walking: mobile timeline created", tl);
+        // Mobile animations
+        "(max-width: 767px)": () => {
+          gsap
+            .timeline({
+              scrollTrigger: {
+                trigger: walkingRef.current,
+                pin: walkingRef.current,
+                scrub: 1,
+                start: "0% 0%",
+                endTrigger: "#ck-badge",
+              },
+            })
+            .to(walkingManMobRef.current, {
+              transform: "translateZ(300px)",
+            })
+            .to(walkingManMobRef.current, {
+              opacity: 0,
+            })
+            .to(ckMobRef.current, {
+              opacity: 0,
+            });
         },
       });
     });
-
-    return () => {
-      ctx.revert();
-      mm && mm.revert();
-    };
-  }, []);
+    return () => ctx.revert();
+  });
 
   useLayoutEffect(() => {
     // Only using id's here. No refs.
@@ -201,6 +237,9 @@ function HeroDupe() {
         })
         .to("#man-with-badge", {
           opacity: 0,
+        })
+        .to("#man-with-badge-mob", {
+          opacity: 0,
         });
     });
     return () => ctx.revert();
@@ -209,54 +248,42 @@ function HeroDupe() {
   return (
     <div className="min-h-full max-w-full">
       <ReactLenis root options={{ autoRaf: false }} ref={lenisRef} />
-      {/* Desktop smth div */}
       <div
-        ref={smthDivLgRef}
-        className="min-h-screen max-w-full perspective-[2200px] hidden md:block"
-        id="smth-lg"
+        ref={smthDivRef}
+        className="min-h-screen max-w-full perspective-[2200px]"
+        id="smth"
         onClick={() => {
           lenis?.scrollTo("#another-div", {
             duration: 1.5,
           });
         }}
       >
+        {/* Desktop first section images */}
         <img
           src="/srm-bg-cropped-png.png"
           alt="Your clg bruv"
-          className="z-10 w-full h-full absolute"
+          className="z-10 w-full h-full absolute hidden md:block"
           id="zoom-in"
           ref={bgLg}
         />
         <img
           src="/man-entering-png.png"
           alt="Goi Entering SRM"
-          className="z-0 w-full h-full absolute opacity-0"
+          className="z-0 w-full h-full absolute opacity-0 hidden md:block"
           ref={manEnteringRef}
         />
-      </div>
 
-      {/* Mobile smth div */}
-      <div
-        ref={smthDivMobRef}
-        className="min-h-screen max-w-full perspective-[2200px] block md:hidden"
-        id="smth-mob"
-        onClick={() => {
-          lenis?.scrollTo("#another-div", {
-            duration: 1.5,
-          });
-        }}
-      >
+        {/* Mobile first section images */}
         <img
           src="/srm-bg-png-mob.png"
-          alt="Your clg bruv"
-          className="z-10 w-full h-full absolute"
-          ref={bgSm}
+          alt="Your clg bruv (mobile)"
+          className="z-10 w-full h-full absolute md:hidden"
         />
         <img
           src="/man-entering-png-mob.png"
-          alt="Goi Entering SRM"
-          className="z-0 w-full h-full absolute opacity-0"
-          ref={manEnteringMobRef}
+          alt="Goi Entering SRM (mobile)"
+          className="z-0 w-full h-full absolute opacity-0 md:hidden"
+          id="man-entering-mob"
         />
       </div>
 
@@ -270,9 +297,9 @@ function HeroDupe() {
         }}
         ref={anotherDivRef}
       >
-        {/* Desktop panick */}
+        {/* Desktop panicked man section */}
         <div
-          className="items-center justify-center z-20 w-full h-full overflow-hidden hidden md:flex"
+          className="flex items-center justify-center z-20 w-full h-full overflow-hidden hidden md:flex"
           id="panick"
         >
           <div className="z-20 flex items-center justify-center">
@@ -282,7 +309,7 @@ function HeroDupe() {
               className="absolute w-1/4 h-1/4 opacity-0 left-60 bottom-40"
               id="comment-1"
               ref={commentOneRef}
-            />
+            />{" "}
             <img
               src="/comment-2-png.png"
               alt=""
@@ -305,7 +332,7 @@ function HeroDupe() {
           />
         </div>
 
-        {/* Mobile panick */}
+        {/* Mobile panicked man section */}
         <div
           className="flex items-center justify-center z-20 w-full h-full overflow-hidden md:hidden"
           id="panick-mob"
@@ -314,42 +341,40 @@ function HeroDupe() {
             <img
               src="/comment-1-png.png"
               alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-12 bottom-10"
+              className="absolute w-1/4 h-1/4 opacity-0 left-5 bottom-10"
               id="comment-1-mob"
-              ref={commentOneRef}
             />
             <img
               src="/comment-2-png.png"
               alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-24 bottom-16"
+              className="absolute w-1/4 h-1/4 opacity-0 left-15 -bottom-10"
               id="comment-2-mob"
-              ref={commentTwoRef}
             />
             <img
               src="/comment-3-png.png"
               alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-4 bottom-4"
+              className="absolute w-1/4 h-1/4 opacity-0 left-8 -bottom-25"
               id="comment-3-mob"
-              ref={commentThreeRef}
             />
           </div>
           <img
             src="/oat-man-with-bg-png-mob.png"
-            alt="Panicked Goi (mob)"
+            alt="Panicked Goi (mobile)"
             className="z-10 w-full h-full"
           />
         </div>
 
-        <img
-          src="/shocked-man-png-mob.png"
-          className="h-full w-full absolute z-0 overflow-y-hidden md:hidden"
-          ref={sideLookingRef}
-        />
-
+        {/* Desktop shocked man background */}
         <img
           src="/shocked-man-bg-png.png"
           className="h-full w-full absolute z-0 overflow-y-hidden hidden md:block"
           ref={sideLookingRef}
+        />
+
+        {/* Mobile shocked man background */}
+        <img
+          src="/shocked-man-png-mob.png"
+          className="h-full w-full absolute z-0 overflow-y-hidden md:hidden"
         />
       </div>
 
@@ -425,6 +450,7 @@ function HeroDupe() {
           src="/moi-png.png"
           alt="Ck moi"
           className="w-full h-full absolute -z-10 hidden md:block"
+          ref={moiRef}
         />
 
         {/* Mobile walking images */}
@@ -452,17 +478,32 @@ function HeroDupe() {
         className="min-h-screen max-w-full bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden overflow-x-hidden"
         id="ck-badge"
       >
+        {/* Desktop badge section */}
         <img
           src="/man-ck-badge-png.png"
           alt="Man kuthifying ck badge"
-          className="z-0 w-full h-full"
+          className="z-0 w-full h-full hidden md:block"
           id="man-with-badge"
         />
         <img
           src="/placement-png.png"
           alt="My goi got placedd!!"
-          className="absolute -z-10 w-full h-full"
+          className="absolute -z-10 w-full h-full hidden md:block"
           id="placement"
+        />
+
+        {/* Mobile badge section */}
+        <img
+          src="/man-ck-badge-png-mob.png"
+          alt="Man kuthifying ck badge (mobile)"
+          className="z-0 w-full h-full md:hidden"
+          id="man-with-badge-mob"
+        />
+        <img
+          src="/placement-png-mob.png"
+          alt="My goi got placedd!! (mobile)"
+          className="absolute -z-10 w-full h-full md:hidden"
+          id="placement-mob"
         />
       </div>
     </div>
