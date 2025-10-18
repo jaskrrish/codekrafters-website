@@ -1,5 +1,6 @@
 "use client";
 import ReactLenis, { useLenis } from "lenis/react";
+// @ts-ignore: Allow CSS side-effect import without type declarations
 import "lenis/dist/lenis.css";
 import gsap from "gsap";
 import { useEffect, useLayoutEffect, useRef } from "react";
