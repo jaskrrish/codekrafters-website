@@ -56,7 +56,7 @@ const TEAM_MEMBERS: TeamMember[] = [
   { id: 12, name: "Hari Prasad", role: "Content Head", imagePath: "/images/Hari-prasad.png" },
   { id: 13, name: "Aaron Samuel", role: "Content Head", imagePath: "/images/Aaron.png" },
   { id: 14, name: "Yashvanth MR", role: "Operations Head", imagePath: "/images/Yashvanth.png" },
-  { id: 15, name: "Abhinav KA", role: "Operations Head", imagePath: "/images/Abhinav.png" },
+  { id: 15, name: "Abhinav KA", role: "Operations Head", imagePath: "/images/Abhinav2.png" },
   { id: 16, name: "Adithya Krishna", role: "Cybersecurity Lead", imagePath: "/images/Adithya.png" },
   { id: 17, name: "Vikas Pritam", role: "Development Lead", imagePath: "/images/Vikas.png" },
   { id: 18, name: "Vinoth Anand Gani", role: "Development Lead", imagePath: "/images/VinothAnandgani.png" },
