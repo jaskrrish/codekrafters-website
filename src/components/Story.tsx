@@ -1,6 +1,5 @@
 "use client";
 import ReactLenis, { useLenis } from "lenis/react";
-import "lenis/dist/lenis.css";
 import gsap from "gsap";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { ScrollTrigger } from "gsap/all";
