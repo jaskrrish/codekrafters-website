@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["i.pravatar.cc"],
     remotePatterns: [
       {
         protocol: 'https',
@@ -13,6 +12,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'imgs.search.brave.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
         port: '',
         pathname: '/**',
       },

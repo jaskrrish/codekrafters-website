@@ -108,7 +108,7 @@ const SponsorsComponent: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white text-black flex items-center justify-center relative">
+    <div className="min-h-screen text-black flex items-center justify-center relative" style={{ backgroundColor: '#FFEFB3' }}>
       <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
         <div className="text-center mb-8 md:mb-12 lg:mb-16">
           <h1 className="text-xs md:text-sm lg:text-base font-bold tracking-[0.2em] leading-relaxed max-w-4xl mx-auto text-black">
@@ -120,26 +120,16 @@ const SponsorsComponent: React.FC = () => {
           {companies.map((company) => (
             <div
               key={company.id}
-              className="group relative bg-gray-900/20 border border-gray-800 rounded-lg overflow-hidden hover:bg-gray-800/30 hover:border-gray-600 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/10"
+              className="group relative border border-gray-800 rounded-lg overflow-hidden hover:border-gray-600 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/10"
               style={{
+                backgroundColor: '#FFDA4D',
                 width: '100%',
                 maxWidth: '180px',
                 aspectRatio: '16/9',
                 margin: '0 auto'
               }}
             >
-              <div className={`image-container absolute inset-0 flex items-center justify-center p-3 ${
-                company.id === 1 || company.id === 3 || company.id === 5 || company.id === 8 || company.id === 12
-                  ? 'bg-white rounded-lg'
-                  : company.id === 2 || company.id === 4 || company.id === 6 || company.id === 9 || company.id === 10 || company.id === 11
-                  ? 'bg-white rounded-lg' 
-                  : company.id === 7
-                  ? 'rounded-lg'
-                  : ''
-              }`}
-              style={{
-                backgroundColor: company.id === 7 ? '#fff' : undefined
-              }}>
+              <div className="image-container absolute inset-2 flex items-center justify-center p-2 rounded-lg">
                 <Image
                   src={company.imageUrl}
                   alt={company.alt}
