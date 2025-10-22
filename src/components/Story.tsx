@@ -245,7 +245,7 @@ function StoryComponent() {
   });
 
   return (
-    <div className="min-h-full max-w-full ">
+    <div className="min-h-full max-w-full">
       <ReactLenis root options={{ autoRaf: false }} ref={lenisRef} />
       <div
         ref={smthDivRef}

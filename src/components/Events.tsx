@@ -45,6 +45,11 @@ const EventSection: React.FC = () => {
           ignoreMobileResize: true
         });
         
+        // Set default ease for smoother transitions
+        gsap.defaults({
+          ease: "power2.inOut"
+        });
+        
         if (typeof window !== 'undefined') {
           requestAnimationFrame(() => {
             handleScroll(gsap, ScrollTrigger);
@@ -175,6 +180,141 @@ const EventSection: React.FC = () => {
       );
     }
 
+    // Add smooth transition for the entire events section
+    // This will create a gradient overlay at the top and bottom that fades in/out
+    const eventsSection = document.querySelector('.events-section');
+    if (eventsSection) {
+      // Create top gradient overlay for smooth entry transition
+      const topOverlay = document.createElement('div');
+      topOverlay.className = 'absolute top-0 left-0 w-full pointer-events-none';
+      topOverlay.style.height = '500px';
+      topOverlay.style.background = 'linear-gradient(to bottom, #fffacd 0%, rgba(242, 240, 216, 0) 100%)';
+      topOverlay.style.zIndex = '10';
+      eventsSection.appendChild(topOverlay);
+
+      // Create bottom gradient overlay for smooth exit transition
+      const bottomOverlay = document.createElement('div');
+      bottomOverlay.className = 'absolute bottom-0 left-0 w-full pointer-events-none';
+      bottomOverlay.style.height = '500px';
+      bottomOverlay.style.background = 'linear-gradient(to top, #fffacd 0%, rgba(242, 240, 216, 0) 100%)';
+      bottomOverlay.style.zIndex = '10';
+      bottomOverlay.style.pointerEvents = 'none'; // Ensure it doesn't block mouse interactions
+      eventsSection.appendChild(bottomOverlay);
+
+      // Animate the opacity of the section as it enters/exits viewport
+      gsap.fromTo(
+        eventsSection,
+        { 
+          backgroundImage: 'linear-gradient(0deg, #F2F0D8, #F2F0D8)',
+          opacity: 0
+        },
+        {
+          backgroundImage: 'linear-gradient(0deg, #F2F0D8, #F2F0D8)',
+          opacity: 1,
+          duration: 0.5,
+          scrollTrigger: {
+            trigger: eventsSection,
+            start: "top bottom-=200",
+            end: "top center",
+            toggleActions: "play none none reverse",
+            scrub: true
+          }
+        }
+      );
+
+      // Animate the top gradient as the user scrolls
+      gsap.fromTo(
+        topOverlay,
+        { opacity: 1 },
+        {
+          opacity: 0,
+          scrollTrigger: {
+            trigger: eventsSection,
+            start: "top bottom-=300",
+            end: "top+=400 center",
+            toggleActions: "play none none reverse",
+            scrub: true
+          }
+        }
+      );
+
+      // Animate the bottom gradient as the user scrolls - further reduced opacity and delayed start
+      gsap.fromTo(
+        bottomOverlay,
+        { opacity: 0 },
+        {
+          opacity: 0.4, // Reduced from 0.7 to 0.4 for better content visibility
+          scrollTrigger: {
+            trigger: eventsSection,
+            start: "bottom-=500 center", // Start later to let vikas section be fully visible
+            end: "bottom-=100 top", // End very close to the bottom
+            toggleActions: "play none none reverse",
+            scrub: true
+          }
+        }
+      );
+      
+      // Add a special animation for the last section (vikas) to ensure it stays visible for longer
+      const vikasSection = document.querySelector('#vikas');
+      if (vikasSection) {
+        // Pin the vikas section to make it stay longer in view
+        ScrollTrigger.create({
+          trigger: vikasSection,
+          start: "top center",
+          end: "bottom top-=300", // Extended range to keep it visible longer
+          pin: false, // Don't actually pin it, but use pinSpacing to create extra space
+          pinSpacing: true,
+          anticipatePin: 1,
+          onEnter: () => {
+            gsap.to(vikasSection, { 
+              opacity: 1,
+              duration: 0.3,
+              ease: "power1.inOut"
+            });
+          },
+          onLeave: () => {
+            // Slow fade out when leaving
+            gsap.to(vikasSection, { 
+              opacity: 0.9, 
+              duration: 1.5, 
+              ease: "power1.inOut" 
+            });
+          },
+          onEnterBack: () => {
+            // Fast fade in when scrolling back up
+            gsap.to(vikasSection, { 
+              opacity: 1, 
+              duration: 0.3, 
+              ease: "power1.inOut" 
+            });
+          },
+          onLeaveBack: () => {
+            gsap.to(vikasSection, { 
+              opacity: 1, 
+              duration: 0.3, 
+              ease: "power1.inOut" 
+            });
+          }
+        });
+
+        // Add separate animation for movement to make it stick around longer
+        gsap.fromTo(
+          vikasSection,
+          { y: 0 },
+          {
+            y: 0, // Don't actually move it
+            scrollTrigger: {
+              trigger: vikasSection,
+              scrub: 3, // Slow down the scroll effect
+              start: "top bottom",
+              end: "bottom+=300 top", // Extended end position
+              invalidateOnRefresh: true
+            }
+          }
+        );
+      }
+    }
+
     // Refresh ScrollTrigger after setup
     ScrollTrigger.refresh();
   };
@@ -226,9 +366,13 @@ const EventSection: React.FC = () => {
   return (
     <div 
         ref={scrollerRef}
-        className="events-section overflow-x-hidden"
+        className="events-section events-section-transition overflow-x-hidden relative"
         style={{
           backgroundColor: '#F2F0D8',
+          marginTop: '-3300px', // Changed from -500px to -3000px as requested
+          paddingTop: '-3300px', // Corrected to positive value to match negative margin
+          position: 'relative', // Ensure position context for absolute elements
+          boxShadow: '0 -50px 100px 100px #F2F0D8', // Soft shadow at the top for blending
         }}
       >
 
@@ -317,7 +461,7 @@ const EventSection: React.FC = () => {
         </section>
 
         {/* Fourth image line */}
-        <section>
+        <section id="vikas" className="pb-40"> {/* Added ID "vikas" and increased padding bottom significantly */}
           <div className="wrapper flex text-[16vh] font-medium will-change-transform">
             {otherEventsImages.map((imageName: string, imageIndex: number) => (
               <div

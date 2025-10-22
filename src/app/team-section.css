@@ -1,0 +1,15 @@
+:root {
+  --retro-bg: #fffacd; /* Yellow background color */
+  --retro-light: #ffffff;
+  --retro-primary: #121212;
+  --retro-secondary: #fcb315;
+}
+
+/* Ensure colors persist on page */
+.team-section {
+  --retro-bg: #fffacd !important; /* Yellow background color - enforced */
+  --retro-light: #ffffff !important;
+  --retro-primary: #121212 !important;
+  --retro-secondary: #fcb315 !important;
+  background-color: var(--retro-bg) !important;
+}

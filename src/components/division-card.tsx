@@ -66,45 +66,57 @@ const teamMembers: Record<string, TeamMember[]> = {
 }
 
 export default function DivisionCard({ division, currentImageIndex, isActive }: DivisionCardProps) {
-  const currentMember = teamMembers[division.name]?.[currentImageIndex] || { name: "Team Member", designation: "Role" }
+  // Make sure currentImageIndex doesn't exceed the available images
+  const safeImageIndex = Math.min(currentImageIndex, division.images.length - 1);
+  const currentMember = teamMembers[division.name]?.[safeImageIndex] || { name: "Team Member", designation: "Role" }
 
   return (
     <div className="w-full h-full flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-7xl h-full flex gap-8 md:gap-12">
+      <div className="w-full max-w-7xl h-full flex flex-col md:flex-row gap-8 md:gap-12">
         {/* Image Container */}
         <div
           style={{
             backgroundColor: "var(--retro-light)",
             borderColor: "var(--retro-primary)",
+            minHeight: "60vh", /* Ensure minimum height for container */
+            maxHeight: "75vh"  /* Limit maximum height */
           }}
           className="flex-1 flex flex-col rounded-none overflow-hidden shadow-2xl border-8"
         >
           {/* Image Slot */}
           <div
-            style={{ backgroundColor: "var(--retro-bg)" }}
+            style={{ backgroundColor: "var(--retro-bg)" /* Consistent yellow background */ }}
             className="flex-1 relative overflow-hidden perspective"
           >
             {isActive && (
-              <div className="relative w-full h-full">
+              <div className="relative w-full h-full flex items-center justify-center">
                 <div
-                  className="w-full h-full transition-all duration-500 ease-out"
-                  style={{ transform: `translateY(-${currentImageIndex * 100}%)` }}
+                  className="w-full h-full transition-all duration-500 ease-out flex flex-col"
+                  style={{ transform: `translateY(-${safeImageIndex * 100}%)` }}
                 >
                   {division.images.map((image, index) => (
-                    <div key={index} className="w-full h-full relative flex-shrink-0">
-                      <Image
-                        src={image || "/placeholder.svg"}
-                        alt={`${division.name} team image ${index + 1}`}
-                        fill
-                        className="object-cover"
-                        priority={index === 0}
-                      />
-                      <div
-                        style={{
-                          background: "linear-gradient(to bottom, transparent, transparent, rgba(42,42,42,0.2))",
-                        }}
-                        className="absolute inset-0 pointer-events-none"
-                      />
+                    <div key={index} className="w-full h-full relative flex-shrink-0 flex items-center justify-center">
+                      <div className="relative w-full h-full flex items-center justify-center p-2">
+                        <Image
+                          src={image || "/placeholder.svg"}
+                          alt={`${division.name} team image ${index + 1}`}
+                          fill
+                          className="object-contain" /* Changed from object-cover to object-contain */
+                          priority={index === 0}
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          style={{ 
+                            maxHeight: "100%", 
+                            maxWidth: "100%", 
+                            objectFit: "contain" /* Ensure image fits within bounds */
+                          }}
+                        />
+                        <div
+                          style={{
+                            background: "linear-gradient(to bottom, transparent, transparent, rgba(42,42,42,0.2))",
+                          }}
+                          className="absolute inset-0 pointer-events-none"
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -146,9 +158,9 @@ export default function DivisionCard({ division, currentImageIndex, isActive }: 
               <div
                 key={index}
                 style={{
-                  backgroundColor: currentImageIndex === index ? "var(--retro-primary)" : "var(--retro-light)",
+                  backgroundColor: safeImageIndex === index ? "var(--retro-primary)" : "var(--retro-light)",
                   borderColor: "var(--retro-primary)",
-                  width: currentImageIndex === index ? "32px" : "12px",
+                  width: safeImageIndex === index ? "32px" : "12px",
                 }}
                 className="h-3 transition-all duration-300 border-2"
               />
@@ -157,8 +169,8 @@ export default function DivisionCard({ division, currentImageIndex, isActive }: 
         </div>
 
         {/* Right Side Content */}
-        <div className="flex-1 flex flex-col items-center justify-center py-12">
-          <div className="space-y-8 max-w-md">
+        <div className="flex-1 flex flex-col items-center justify-center py-6 md:py-12">
+          <div className="space-y-6 md:space-y-8 max-w-md">
             {/* Division Label */}
             <div className="space-y-4">
               <div

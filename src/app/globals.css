@@ -130,3 +130,39 @@
   --color-secondary: #fcb315;
   --color-primary-foreground: #ffffff;
 }
+
+/* Smooth scroll transitions */
+.section-transition {
+  position: relative;
+}
+
+.section-transition::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(to bottom, var(--background) 0%, transparent 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.section-transition::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(to top, var(--background) 0%, transparent 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Special transition for events section */
+.events-section-transition {
+  position: relative;
+  will-change: opacity;
+  transition: opacity 0.5s ease-in-out;
+}

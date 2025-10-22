@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 // @ts-ignore: allow side-effect import of CSS without type declarations
 import "./globals.css";
+// @ts-ignore: allow side-effect import of CSS without type declarations
+import "./team-section.css";
 
 
 export const metadata: Metadata = {
