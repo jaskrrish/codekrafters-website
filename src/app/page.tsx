@@ -125,6 +125,77 @@ export default function Home() {
     return () => ctx.revert();
   }, []);
 
+  // -----------------------
+  // HERO IMAGE ANIMATION
+  // -----------------------
+  useEffect(() => {
+    const img = imageRef.current;
+    if (!img) return;
+
+    // subtle idle motion
+    gsap.to(img, {
+      keyframes: [
+        { y: -6, rotate: 0.3, duration: 2.2 },
+        { y: 0, rotate: 0, duration: 2.2 }
+      ],
+      repeat: -1,
+      ease: "sine.inOut"
+    });
+
+    // hover bump
+    const enter = () =>
+      gsap.to(img, {
+        scale: 1.03,
+        rotate: 0.7,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    const leave = () =>
+      gsap.to(img, { scale: 1, rotate: 0, duration: 0.4 });
+
+    img.addEventListener("mouseenter", enter);
+    img.addEventListener("mouseleave", leave);
+
+    return () => {
+      img.removeEventListener("mouseenter", enter);
+      img.removeEventListener("mouseleave", leave);
+    };
+  }, []);
+
+  // -----------------------
+  // BACKGROUND LAYERS SCROLL ROTATION
+  // -----------------------
+  useEffect(() => {
+    const yellowLayer = document.querySelector('.bg-layer-yellow');
+    const blackLayer = document.querySelector('.bg-layer-black');
+    
+    if (!yellowLayer || !blackLayer) return;
+
+    gsap.to(yellowLayer, {
+      rotation: -8,
+      scrollTrigger: {
+        trigger: "#home",
+        start: "top top",
+        end: "bottom top",
+        scrub: 1,
+      }
+    });
+
+    gsap.to(blackLayer, {
+      rotation: 8,
+      scrollTrigger: {
+        trigger: "#home",
+        start: "top top",
+        end: "bottom top",
+        scrub: 1,
+      }
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
   return (
     <main className="min-h-screen bg-background" style={{ scrollSnapType: "y mandatory" }}>
       <Navbar />
@@ -150,7 +221,7 @@ export default function Home() {
         <div className="relative w-full flex flex-1 px-[3vw] pt-[2.5vh] gap-6">
           
           {/* LEFT TAGLINE */}
-          <div ref={leftRailRef} className="flex flex-col justify-center ml-10 select-none" style={{ width: "35%" }}>
+          <div ref={leftRailRef} className="flex flex-col justify-center ml-10 select-none" style={{ width: "40%" }}>
 
             <div className="max-w-[700px]">
               {taglineLines.map((line, i) => (
@@ -180,7 +251,7 @@ export default function Home() {
           </div>
 
           {/* RIGHT IMAGE */}
-          <div className="relative flex items-center justify-end" style={{ width: "80%" }}>
+          <div className="relative flex items-center justify-end" style={{ width: "70%" }}>
             <div
               ref={imageRef}
               className="relative rounded-3xl overflow-hidden shadow-[0_0_40px_#0008]"
@@ -262,9 +333,6 @@ export default function Home() {
       </div>
       <div id="events">
         <EventSection />
-      </div>
-      <div id="team">
-        <TeamSection />
       </div>
       <div id="sponsors">
         <SponsorsComponent />
