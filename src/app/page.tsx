@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import { gsap } from "gsap";
+import { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { Navbar } from "@/components/navbar";
 import StoryComponent from "@/components/Story";
@@ -11,75 +12,123 @@ import TeamSection from "@/components/team-section";
 import SponsorsComponent from "@/components/sponsor";
 import Footer from "@/components/Footer";
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function Home() {
   const imageRef = useRef<HTMLDivElement | null>(null);
-  const ckTextRef = useRef<HTMLHeadingElement | null>(null);
 
+  const arrowRef = useRef<HTMLDivElement | null>(null);
+  const leftRailRef = useRef<HTMLDivElement | null>(null);
+
+  const taglineLines = useMemo(
+    () => ["IT'S", "MORE THAN", "A CLUB"],
+    []
+  );
+
+  const splitToSpans = (text: string) =>
+    text.split("").map((ch, idx) => (
+      <span
+        key={`${text}-${idx}`}
+        className="slot-char inline-block will-change-transform"
+        style={{ display: "inline-block" }}
+      >
+        {ch === " " ? "\u00A0" : ch}
+      </span>
+    ));
+
+  // -----------------------
+  // HERO IMAGE ANIMATION
+  // -----------------------
   useEffect(() => {
     const img = imageRef.current;
-    const text = ckTextRef.current;
+    if (!img) return;
 
-    if (!img || !text) return;
-
-    // ============================
-    // STATIC BREATHING ANIMATION (IMAGE)
-    // ============================
+    // subtle idle motion
     gsap.to(img, {
-      scale: 1.03,
-      y: -8,
-      duration: 3,
-      ease: "power1.inOut",
-      yoyo: true,
+      keyframes: [
+        { y: -6, rotate: 0.3, duration: 2.2 },
+        { y: 0, rotate: 0, duration: 2.2 }
+      ],
       repeat: -1,
+      ease: "sine.inOut"
     });
 
-    // ============================
-    // IMAGE HOVER BEAT PULSE
-    // ============================
-    img.addEventListener("mouseenter", () => {
-      gsap.fromTo(
-        img,
-        { scale: 1.03 },
-        {
-          scale: 1.09,
-          duration: 0.25,
-          ease: "power2.out",
+    // hover bump
+    const enter = () =>
+      gsap.to(img, {
+        scale: 1.03,
+        rotate: 0.7,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    const leave = () =>
+      gsap.to(img, { scale: 1, rotate: 0, duration: 0.4 });
+
+    img.addEventListener("mouseenter", enter);
+    img.addEventListener("mouseleave", leave);
+
+    return () => {
+      img.removeEventListener("mouseenter", enter);
+      img.removeEventListener("mouseleave", leave);
+    };
+  }, []);
+
+  // -----------------------------------
+  // LEFT TAGLINE — CASINO ROLLING FX
+  // -----------------------------------
+  useEffect(() => {
+    if (!leftRailRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const lines = gsap.utils.toArray<HTMLDivElement>(".slot-line");
+
+      lines.forEach((line, lineIndex) => {
+        const chars = line.querySelectorAll<HTMLSpanElement>(".slot-char");
+
+        chars.forEach((char, charIndex) => {
+          gsap.fromTo(
+            char,
+            { yPercent: 110, rotateX: -90 },
+            {
+              yPercent: 0,
+              rotateX: 0,
+              duration: gsap.utils.random(1, 1.25),
+              ease: "back.out(3)",
+              delay: charIndex * 0.04 + lineIndex * 0.15,
+              repeat: -1,
+              repeatDelay: gsap.utils.random(0.7, 1.2),
+              yoyo: true
+            }
+          );
+        });
+      });
+
+      // scroll-down indicator bounce
+      if (arrowRef.current) {
+        gsap.to(arrowRef.current, {
+          y: 10,
+          duration: 0.9,
+          repeat: -1,
           yoyo: true,
-          repeat: 1,
-        }
-      );
-    });
-
-    // ============================
-    // LETTER HOVER PULSE
-    // ============================
-    const letters = text.querySelectorAll(".ck-letter");
-
-    text.addEventListener("mouseenter", () => {
-      gsap.fromTo(
-        letters,
-        { scale: 1, y: 0 },
-        {
-          scale: 1.18,
-          y: -6,
-          duration: 0.23,
-          ease: "power2.out",
+          ease: "sine.inOut"
+        });
+        gsap.to(arrowRef.current, {
+          opacity: 0.35,
+          duration: 0.9,
+          repeat: -1,
           yoyo: true,
-          repeat: 1,
-          stagger: 0.03,
-        }
-      );
-    });
+          ease: "sine.inOut"
+        });
+      }
+    }, leftRailRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    <main
-      className="min-h-screen bg-background"
-      style={{ scrollSnapType: "y mandatory" }}
-    >
+    <main className="min-h-screen bg-background" style={{ scrollSnapType: "y mandatory" }}>
       <Navbar />
 
-      {/* ================= HERO SECTION ================= */}
       <section
         id="home"
         className="w-full relative overflow-hidden"
@@ -88,72 +137,98 @@ export default function Home() {
           scrollSnapStop: "always",
           height: "100vh",
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "column"
         }}
       >
-        {/* ======== CK BACKGROUND PLANES ======== */}
+        {/* background planes */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-[-18%] left-[-10%] w-[140%] h-[58%] bg-[#F9B000] rotate-[5deg] opacity-[0.18]" />
           <div className="absolute top-[32%] left-[-10%] w-[150%] h-[50%] bg-[#111111] rotate-[-6deg] opacity-[0.5]" />
         </div>
 
-        {/* ================= IMAGE (RIGHT SIDE) ================= */}
-        <div
-          className="relative w-full flex items-center justify-center"
-          style={{ height: "70vh", justifyContent: "flex-end" }}
-        >
-          <div
-            ref={imageRef}
-            className="relative w-[82%] md:w-[60%] lg:w-[45%] h-[70%] mr-10 mt-10 rounded-3xl overflow-hidden shadow-[0_0_40px_#0008]"
-            style={{ transformOrigin: "center center" }}
-          >
-            <Image
-              src="/ck-core.jpg"
-              alt="CK Group"
-              fill
-              priority
-              className="object-cover"
-            />
+        {/* HERO TOP */}
+        <div className="relative w-full flex flex-1 px-[3vw] pt-[2.5vh] gap-6">
+          
+          {/* LEFT TAGLINE */}
+          <div ref={leftRailRef} className="flex flex-col justify-center ml-10 select-none" style={{ width: "35%" }}>
+
+            <div className="max-w-[700px]">
+              {taglineLines.map((line, i) => (
+                <div
+                  key={line}
+                  className="slot-line font-extrabold leading-[0.86]"
+                  style={{
+                    fontSize: "clamp(2.4rem, 5vw, 5.4rem)",
+                    color: i % 2 === 0 ? "#F9B000" : "#FFFFFF",
+                    marginBottom: i === taglineLines.length - 1 ? 0 : "-0.08em"
+                  }}
+                >
+                  {splitToSpans(line)}
+                </div>
+              ))}
+            </div>
+
+            <div
+              ref={arrowRef}
+              className="mt-6 flex items-center gap-3 opacity-70"
+            >
+              <div className="relative w-8 h-8">
+                <Image src="/logo.png" alt="scroll" fill className="object-contain" />
+              </div>
+              <p className="text-white/70 uppercase tracking-[0.22em] text-sm">Scroll Down</p>
+            </div>
+          </div>
+
+          {/* RIGHT IMAGE */}
+          <div className="relative flex items-center justify-end" style={{ width: "80%" }}>
+            <div
+              ref={imageRef}
+              className="relative rounded-3xl overflow-hidden shadow-[0_0_40px_#0008]"
+              style={{
+                width: "clamp(400px, 70%, 700px)",
+                height: "70%",
+                marginRight: "clamp(20px, 3vw, 60px)",
+                marginTop: "clamp(20px, 2vh, 40px)"
+              }}
+            >
+              <Image
+                src="/ck-core.jpg"
+                alt="CK Group"
+                fill
+                priority
+                className="object-cover select-none pointer-events-none"
+              />
+            </div>
           </div>
         </div>
 
-        {/* ================= LOWER TEXT BAND ================= */}
+        {/* BOTTOM BAND — CODEKRAFTERS STATIC */}
         <div
-          className="w-full bg-black relative"
+          className="w-full bg-black"
           style={{
             height: "30vh",
             zIndex: 10,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "flex-start",
-            overflow: "hidden",
+            justifyContent: "flex-start"
           }}
         >
-          {/* Top-right text */}
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "flex-end",
-              paddingTop: "0.9rem",
-            }}
-          >
-            <div style={{ width: "100%", textAlign: "right", paddingRight: "1vw" }}>
-              <div
+          <div className="w-full flex justify-end pt-[0.9rem]">
+            <div className="w-full text-right pr-[1vw]">
+              <p
                 style={{
                   color: "rgba(255,255,255,0.85)",
                   fontSize: "clamp(20px, 1vw, 20px)",
                   letterSpacing: "0.16em",
                   marginBottom: 1,
-                  fontWeight: 600,
+                  fontWeight: 600
                 }}
               >
                 SRM RAMAPURAM
-              </div>
+              </p>
 
-              {/* ================= SPLIT LETTER TITLE ================= */}
+              {/* ✅ STATIC — NO ANIMATION */}
               <h1
-                ref={ckTextRef}
                 style={{
                   color: "#F9B000",
                   fontWeight: 900,
@@ -162,48 +237,19 @@ export default function Home() {
                   margin: 0,
                   textAlign: "right",
                   transform: "translateY(8%)",
-                  letterSpacing: "-0.02em",
-                  cursor: "pointer",
-                  display: "inline-block",
+                  letterSpacing: "-0.02em"
                 }}
               >
-                {"CODEKRAFTERS".split("").map((letter, i) => (
-                  <span
-                    key={i}
-                    className="ck-letter inline-block"
-                    style={{
-                      display: "inline-block",
-                      transformOrigin: "center bottom",
-                    }}
-                  >
-                    {letter}
-                  </span>
-                ))}
+                CODEKRAFTERS
               </h1>
             </div>
           </div>
 
-          {/* Bottom-left text */}
-          <div
-            style={{
-              paddingLeft: "4vw",
-              paddingRight: "4vw",
-              paddingTop: "6.5rem",
-              paddingBottom: "2.5rem",
-              color: "rgba(255,255,255,0.95)",
-              maxWidth: "1200px",
-            }}
-          >
-            <h2
-              style={{
-                margin: 0,
-                fontSize: "clamp(1rem, 2vw, 1.25rem)",
-                fontWeight: 700,
-              }}
-            >
+          <div className="px-[4vw] pt-[6.5rem] pb-[2.5rem] text-white max-w-[1200px]">
+            <h2 className="font-bold text-[clamp(1rem,2vw,1.25rem)] m-0">
               (Text area — replace this with your copy)
             </h2>
-            <p style={{ marginTop: 10, opacity: 0.9, lineHeight: 1.6 }}>
+            <p className="opacity-90 mt-2 leading-relaxed">
               This region remains the same as your original design.
             </p>
           </div>
@@ -211,23 +257,19 @@ export default function Home() {
       </section>
 
       {/* REST OF PAGE */}
-      <div id="story" style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }}>
+      <div id="story">
         <StoryComponent />
       </div>
-
-      <div id="events" style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }}>
+      <div id="events">
         <EventSection />
       </div>
-
-      <div id="team" style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }}>
+      <div id="team">
         <TeamSection />
       </div>
-
-      <div id="sponsors" style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }}>
+      <div id="sponsors">
         <SponsorsComponent />
       </div>
-
-      <div id="contact" style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }}>
+      <div id="contact">
         <Footer />
       </div>
     </main>
