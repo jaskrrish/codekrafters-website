@@ -59,7 +59,7 @@ function StoryComponent() {
             .to(bgLg.current, { transform: "translateZ(2200px)" })
             .to(manEnteringRef.current, { opacity: 1 })
             .pause();
-        },  
+        },
         // Mobile first section animations
         "(max-width: 767px)": () => {
           if (smthDivRef.current) {
@@ -71,7 +71,6 @@ function StoryComponent() {
                   scrub: 3,
                   start: "0% 0%",
                   endTrigger: anotherDivRef.current,
-                  pinSpacing: false,
                 },
               })
               .to(smthDivRef.current.querySelector('img[src="/story/srm-bg-png-mob.png"]'), { transform: "translateZ(2200px)" })
@@ -246,11 +245,11 @@ function StoryComponent() {
   });
 
   return (
-  <div className="w-full relative">
+    <div className="min-h-full max-w-full ">
       <ReactLenis root options={{ autoRaf: false }} ref={lenisRef} />
       <div
         ref={smthDivRef}
-        className="w-full min-h-screen relative perspective-[2200px] -mt-19"
+        className="min-h-screen max-w-full perspective-[2200px]"
         id="smth"
         onClick={() => {
           lenis?.scrollTo("#another-div", {
@@ -288,7 +287,7 @@ function StoryComponent() {
       </div>
 
       <div
-        className="w-full relative bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden"
+        className="min-h-screen max-w-full bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden"
         id="another-div"
         onClick={() => {
           lenis?.scrollTo("#smth", {
@@ -429,7 +428,7 @@ function StoryComponent() {
       </div> */}
 
       <div
-        className="w-full relative bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden overflow-x-hidden perspective-[500px]"
+        className="min-h-screen max-w-full bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden overflow-x-hidden perspective-[500px]"
         ref={walkingRef}
       >
         {/* Desktop walking images */}
@@ -475,7 +474,7 @@ function StoryComponent() {
         />
       </div>
       <div
-        className="w-full relative bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden overflow-x-hidden"
+        className="min-h-screen max-w-full bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden overflow-x-hidden"
         id="ck-badge"
       >
         {/* Desktop badge section */}

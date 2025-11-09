@@ -6,9 +6,10 @@ import { Menu, X } from "lucide-react"
 import Image from "next/image"
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [activeLink, setActiveLink] = useState("home")
-  const [isHovering, setIsHovering] = useState(false)
+  const [animatingId, setAnimatingId] = useState<string | null>(null)
+  const animTimerRef = useRef<any>(null)
 
   const navLinks = [
     { label: "HOME", href: "#", id: "home" },
@@ -19,9 +20,6 @@ export function Navbar() {
     { label: "CONTACT", href: "#contact", id: "contact" },
   ]
 
-  const [animatingId, setAnimatingId] = useState<string | null>(null)
-  const animTimerRef = useRef<any>(null)
-
   useEffect(() => {
     return () => {
       if (animTimerRef.current) {
@@ -30,7 +28,7 @@ export function Navbar() {
     }
   }, [])
 
-  const smoothScrollTo = (element: HTMLElement | null, duration: number = 1400) => {
+  const smoothScrollTo = (element: HTMLElement | null, duration = 1400) => {
     if (!element) return
 
     const targetPosition = element.getBoundingClientRect().top + window.pageYOffset
@@ -43,12 +41,9 @@ export function Navbar() {
       if (startTime === null) startTime = currentTime
       const timeElapsed = currentTime - startTime
       const progress = Math.min(timeElapsed / duration, 1)
-      
-      // Easing function to match the animation cubic-bezier(.2,.8,.2,1)
+
       const ease = (t: number) => {
-        return t < 0.5
-          ? 4 * t * t * t
-          : 1 - Math.pow(-2 * t + 2, 3) / 2
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
       }
 
       window.scrollTo(0, startPosition + distance * ease(progress))
@@ -58,18 +53,15 @@ export function Navbar() {
       }
     }
 
-    // Cancel any ongoing scroll animation
     if (animationFrameId !== null) {
       cancelAnimationFrame(animationFrameId)
     }
 
-    // Disable scroll-behavior: smooth temporarily to prevent conflicts
     const originalScrollBehavior = document.documentElement.style.scrollBehavior
-    document.documentElement.style.scrollBehavior = 'auto'
-    
+    document.documentElement.style.scrollBehavior = "auto"
+
     animationFrameId = requestAnimationFrame(animation)
-    
-    // Restore original scroll behavior after animation
+
     setTimeout(() => {
       document.documentElement.style.scrollBehavior = originalScrollBehavior
     }, duration)
@@ -78,32 +70,27 @@ export function Navbar() {
   const handleLabelClick = (link: { id: string; href?: string }) => {
     setActiveLink(link.id)
     setAnimatingId(link.id)
-    
-    // Scroll with custom timing to match animation duration
+
     if (link.href) {
       const hashIndex = link.href.indexOf("#")
       if (hashIndex !== -1) {
-        const hash = link.href.slice(hashIndex) 
-        if (hash === "#" || hash === "#0" || hash === "#\/") {
-          // Scroll to top with 1400ms duration
+        const hash = link.href.slice(hashIndex)
+        if (hash === "#" || hash === "#0" || hash === "#/") {
           const startPosition = window.pageYOffset
           const distance = -startPosition
           let startTime: number | null = null
           let animationFrameId: number | null = null
 
-          // Disable scroll-behavior: smooth temporarily
           const originalScrollBehavior = document.documentElement.style.scrollBehavior
-          document.documentElement.style.scrollBehavior = 'auto'
+          document.documentElement.style.scrollBehavior = "auto"
 
           const animation = (currentTime: number) => {
             if (startTime === null) startTime = currentTime
             const timeElapsed = currentTime - startTime
             const progress = Math.min(timeElapsed / 1400, 1)
-            
+
             const ease = (t: number) => {
-              return t < 0.5
-                ? 4 * t * t * t
-                : 1 - Math.pow(-2 * t + 2, 3) / 2
+              return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
             }
 
             window.scrollTo(0, startPosition + distance * ease(progress))
@@ -127,8 +114,7 @@ export function Navbar() {
         }
       }
     }
-    
-    // Clear animation after it completes
+
     if (animTimerRef.current) window.clearTimeout(animTimerRef.current)
     animTimerRef.current = window.setTimeout(() => {
       setAnimatingId(null)
@@ -137,123 +123,151 @@ export function Navbar() {
 
   return (
     <nav className="fixed top-0 w-full z-50 pt-6">
-      
-    <div className="hidden md:block">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div
-        className="flex flex-col items-center mb-8"
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-        >
-        <Link
-          href="/"
-          onClick={(e) => {
-            e.preventDefault()
-            setIsHovering((v) => !v)
-          }}
-          aria-expanded={isHovering}
-          className="px-6 py-2 border-2 rounded-full text-sm font-bold tracking-wider transition-all duration-300"
-          style={{
-            backgroundColor: '#0D0D0D',
-            borderColor: '#F2A516',
-            color: '#F2F2F2',
-          }}
-        >
-          <Image
-            src="/ck_logo.svg"
-            alt="Rekorder Logo"
-            width={60}
-            height={40}
-            className="object-contain"
-          />
-          
-        </Link>
-
-          <div className="flex justify-center -mt-0.5">
+      <div className="hidden md:block">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <div
-            className={`inline-flex nav-pill items-center gap-0 rounded-full px-0 py-0 shadow-md transition-all duration-300 transform ${
-            isHovering
-              ? "opacity-100 pointer-events-auto translate-y-0"
-              : "opacity-0 pointer-events-none -translate-y-2"
-            }`}
-            style={{
-              backgroundColor: '#0D0D0D',
-              borderColor: '#F2A516',
-              height: '48px',
-              overflow: 'hidden',
-            }}
+            className="flex flex-col items-center"
+            onMouseEnter={() => setIsExpanded(true)}
+            onMouseLeave={() => setIsExpanded(false)}
           >
-            {navLinks.map((link, index) => {
-            const isActive = activeLink === link.id
-            const isAnimating = animatingId === link.id
-            return (
-            <button
-              key={link.id}
-              onClick={() => handleLabelClick(link)}
-              className={`transition-all duration-200 transform flex items-center justify-center ${isAnimating ? 'money-roll' : ''}`}
+            {/* Logo Container */}
+            <div
+              className="flex items-center justify-center"
               style={{
-                flex: 1,
-                minWidth: 0,
-                height: '100%',
-                padding: '0 12px',
-                backgroundColor: isActive ? '#F2A516' : 'transparent',
-                color: isActive ? '#0D0D0D' : '#F2F2F2',
-                border: isActive ? 'none' : '1px solid rgba(242,242,242,0.08)',
-                transitionDelay: `${index * 40}ms`,
-                borderRadius: index === 0 ? '9999px 0 0 9999px' : index === navLinks.length - 1 ? '0 9999px 9999px 0' : '0',
-                zIndex: isActive ? 1 : 0,
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
+                backgroundColor: "#0D0D0D",
+                width: isExpanded ? "60px" : "200px",
+                height: isExpanded ? "48px" : "60px",
+                overflow: "hidden",
+                transition: "all 900ms cubic-bezier(0.16, 1, 0.3, 1)",
+                border: "1px solid rgba(242,242,242,0.15)",
+                borderRadius: isExpanded ? "12px" : "24px",
               }}
-              onMouseEnter={(e) => ((e.currentTarget.style.backgroundColor = isActive ? '#F2A516' : '#BF8211'))}
-              onMouseLeave={(e) => ((e.currentTarget.style.backgroundColor = isActive ? '#F2A516' : 'transparent'))}
             >
-              <span className="text-sm font-medium tracking-wider label">{link.label}</span>
-            </button>
-            )
-            })}
+              <Link
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsExpanded((v) => !v)
+                }}
+                className="flex items-center justify-center"
+              >
+                <Image src="/ck_logo.svg" alt="Rekorder Logo" width={40} height={32} className="object-contain" />
+              </Link>
+            </div>
+
+            {/* Menu Container - Appears below logo */}
+            <div
+              className="mt-2 overflow-hidden"
+              style={{
+                backgroundColor: "#0D0D0D",
+                opacity: isExpanded ? 1 : 0,
+                pointerEvents: isExpanded ? "auto" : "none",
+                transform: isExpanded ? "translateY(0) scale(1)" : "translateY(-15px) scale(0.92)",
+                transformOrigin: "top center",
+                transition: "opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1)",
+                maxHeight: isExpanded ? "200px" : "0px",
+                border: "1px solid rgba(242,242,242,0.15)",
+                borderRadius: "24px",
+              }}
+            >
+              <div
+                className="inline-flex nav-pill flex-row items-center gap-2 shadow-md transition-all duration-700"
+                style={{
+                  backgroundColor: "#0D0D0D",
+                  padding: "12px 16px",
+                }}
+              >
+                {navLinks.map((link, index) => {
+                  const isActive = activeLink === link.id
+                  const isAnimating = animatingId === link.id
+                  return (
+                    <button
+                      key={link.id}
+                      onClick={() => handleLabelClick(link)}
+                      className={`nav-link-button transition-all duration-200 transform flex items-center justify-center ${isAnimating ? "money-roll" : ""} ${isActive ? "active" : ""}`}
+                      style={{
+                        minWidth: "120px",
+                        height: "40px",
+                        padding: "0 16px",
+                        backgroundColor: isActive ? "#F2A516" : "transparent",
+                        color: isActive ? "#0D0D0D" : "#F2F2F2",
+                        border: isActive ? "none" : "1px solid rgba(242,242,242,0.08)",
+                        transitionDelay: `${index * 50}ms`,
+                        borderRadius: "6px",
+                        zIndex: isActive ? 1 : 0,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        position: "relative",
+                      }}
+                    >
+                      <div className="dot-indicator" style={{
+                        position: "absolute",
+                        top: "12px",
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        backgroundColor: isActive ? "#0D0D0D" : "#F2F2F2",
+                        transition: "all 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+                      }}></div>
+                      <span className="text-sm font-medium tracking-wider label label-bottom" style={{
+                        transition: "all 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+                      }}>{link.label}</span>
+                      <span className="text-sm font-medium tracking-wider label label-top" style={{
+                        transition: "all 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+                        position: "absolute",
+                      }}>{link.label}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
           </div>
         </div>
-        </div>
       </div>
-    </div>
 
-    <div className="md:hidden flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4 bg-white">
-      <Link href="/" className="text-black font-bold text-lg tracking-wider">
-        Rekorder
-      </Link>
+      <div className="md:hidden flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4" style={{ backgroundColor: "#0D0D0D" }}>
+        <Link href="/" className="flex items-center">
+          <Image src="/ck_logo.svg" alt="Rekorder Logo" width={40} height={32} className="object-contain" />
+        </Link>
 
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="p-2 hover:bg-black/10 rounded-lg transition-colors"
-        aria-label="Toggle menu"
-      >
-        {isOpen ? <X className="w-5 h-5 text-black" /> : <Menu className="w-5 h-5 text-black" />}
-      </button>
-    </div>
-
-    {isOpen && (
-      <div className="md:hidden py-4 space-y-2 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: '#0D0D0D', borderTop: '1px solid #F2F2F2' }}>
-        {navLinks.map((link) => (
         <button
-          key={link.id}
-          onClick={() => {
-            setActiveLink(link.id)
-            setIsOpen(false)
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="p-2 rounded-lg transition-colors"
+          style={{ 
+            backgroundColor: isExpanded ? "rgba(242,242,242,0.1)" : "transparent"
           }}
-          className={`block w-full text-left px-4 py-3 text-sm font-medium tracking-wider rounded-lg transition-all duration-300`}
-          style={{
-            color: activeLink === link.id ? '#F2A516' : '#F2F2F2',
-            backgroundColor: activeLink === link.id ? '#734E0A' : 'transparent',
-          }}
+          aria-label="Toggle menu"
         >
-          {link.label}
+          {isExpanded ? <X className="w-5 h-5" style={{ color: "#F2F2F2" }} /> : <Menu className="w-5 h-5" style={{ color: "#F2F2F2" }} />}
         </button>
-        ))}
       </div>
-    )}
+
+      {isExpanded && (
+        <div
+          className="md:hidden py-4 space-y-2 px-4 sm:px-6 lg:px-8"
+          style={{ backgroundColor: "#0D0D0D", borderTop: "1px solid rgba(242,242,242,0.15)" }}
+        >
+          {navLinks.map((link) => (
+            <button
+              key={link.id}
+              onClick={() => {
+                handleLabelClick(link)
+                setIsExpanded(false)
+              }}
+              className="block w-full text-left px-4 py-3 text-sm font-medium tracking-wider rounded-lg transition-all duration-300"
+              style={{
+                color: activeLink === link.id ? "#0D0D0D" : "#F2F2F2",
+                backgroundColor: activeLink === link.id ? "#F2A516" : "transparent",
+                border: activeLink === link.id ? "none" : "1px solid rgba(242,242,242,0.08)",
+              }}
+            >
+              {link.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       <style jsx>{`
         .nav-pill button {
           background: transparent;
@@ -266,7 +280,7 @@ export function Navbar() {
           perspective: 800px;
         }
         .nav-pill button:hover {
-          background: #BF8211; /* hover color */
+          background: #BF8211;
           color: #0D0D0D;
         }
         .nav-pill button.active {
@@ -274,13 +288,62 @@ export function Navbar() {
           color: #0D0D0D;
         }
 
-        /* the rolling / lucky-draw effect when clicked */
+        .nav-link-button .dot-indicator {
+          opacity: 1;
+          transform: translateY(-6px);
+        }
+        .nav-link-button:hover .dot-indicator {
+          opacity: 1;
+          transform: translateY(12px);
+        }
+        .nav-link-button.active .dot-indicator {
+          opacity: 1;
+          transform: translateY(-6px);
+        }
+        .nav-link-button.active:hover .dot-indicator {
+          opacity: 1;
+          transform: translateY(12px);
+        }
+
+        .nav-link-button .label-bottom {
+          opacity: 1;
+          transform: translateY(2px);
+        }
+        .nav-link-button:hover .label-bottom {
+          opacity: 0;
+          transform: translateY(25px);
+        }
+        .nav-link-button.active .label-bottom {
+          opacity: 1;
+          transform: translateY(2px);
+        }
+        .nav-link-button.active:hover .label-bottom {
+          opacity: 0;
+          transform: translateY(25px);
+        }
+
+        .nav-link-button .label-top {
+          opacity: 0;
+          transform: translateY(-25px);
+        }
+        .nav-link-button:hover .label-top {
+          opacity: 1;
+          transform: translateY(-10px);
+        }
+        .nav-link-button.active .label-top {
+          opacity: 0;
+          transform: translateY(-25px);
+        }
+        .nav-link-button.active:hover .label-top {
+          opacity: 1;
+          transform: translateY(-10px);
+        }
+
         .nav-pill button.money-roll {
           z-index: 2;
           animation: rollAndSettle 1400ms cubic-bezier(.2,.8,.2,1) both;
         }
 
-        /* moving stripe to evoke a money roll across the label */
         .nav-pill button.money-roll::before {
           content: "";
           position: absolute;

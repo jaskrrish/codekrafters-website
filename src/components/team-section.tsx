@@ -1,31 +1,29 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useLayoutEffect } from "react"
 import DivisionCard from "./division-card"
-
+import gsap from "gsap"
+import { ScrollTrigger } from "gsap/all"
+import { useScrollTriggerRefresh } from "@/lib/UseScrollTrigger"
+  
 const divisions = [
-  // 1️⃣ President (1 member)
   {
     id: 1,
     name: "President",
     quote: "Leading the club with vision and passion.",
     images: ["/images/PRESIDENT.png"],
-    members: [
-      { name: "Jas K Krish Singh", designation: "President" }
-    ]
+    members: [{ name: "Jas K Krish Singh", designation: "President" }],
   },
-  // 2️⃣ Operations Heads (2 members)
   {
     id: 2,
     name: "Operations Heads",
     quote: "Ensuring everything runs smoothly behind the scenes.",
-    images: ["/images/Abhinav.png", "/images/Yashvanth.png"],
+    images: ["/images/Abhinav4.png", "/images/Yashvanth.png"],
     members: [
       { name: "Abhinav", designation: "Head" },
-      { name: "Yaswanth", designation: "Head" }
-    ]
+      { name: "Yaswanth", designation: "Head" },
+    ],
   },
-  // 3️⃣ Content Team (3 members)
   {
     id: 3,
     name: "Content Team",
@@ -34,10 +32,9 @@ const divisions = [
     members: [
       { name: "Aaron", designation: "Head" },
       { name: "Hari Prasad Krishnamurthy", designation: "Head" },
-      { name: "Noorul Hatim", designation: "Lead" }
-    ]
+      { name: "Noorul Hatim", designation: "Lead" },
+    ],
   },
-  // 4️⃣ Creatives (3 members)
   {
     id: 4,
     name: "Creatives",
@@ -46,10 +43,9 @@ const divisions = [
     members: [
       { name: "Bhavna", designation: "Head" },
       { name: "Akash Ravindran", designation: "Head" },
-      { name: "Sashank", designation: "Lead" }
-    ]
+      { name: "Sashank", designation: "Lead" },
+    ],
   },
-  // 5️⃣ Competitive Programming (3 members)
   {
     id: 5,
     name: "Competitive Programming",
@@ -58,10 +54,9 @@ const divisions = [
     members: [
       { name: "Shashikumar", designation: "Head" },
       { name: "Manasa", designation: "Lead" },
-      { name: "Mrudhubashni", designation: "Lead" }
-    ]
+      { name: "Mrudhubashni", designation: "Lead" },
+    ],
   },
-  // 6️⃣ Web3 Team (3 members)
   {
     id: 6,
     name: "Web3 Team",
@@ -70,22 +65,20 @@ const divisions = [
     members: [
       { name: "Deepanshu", designation: "Head" },
       { name: "Achyuth", designation: "Lead" },
-      { name: "Sanjay Ganesh", designation: "Lead" }
-    ]
+      { name: "Sanjay Ganesh", designation: "Lead" },
+    ],
   },
-  // 7️⃣ Cybersecurity Team (3 members)
   {
     id: 7,
     name: "Cybersecurity Team",
     quote: "Protecting our digital assets and information.",
-    images: ["/images/DhanushAdithyan.png", "/images/Rishit.png", "/images/Adithya.png"],
+    images: ["/images/Dhanush-Adithyan.png", "/images/Rishit.png", "/images/Adithya.png"],
     members: [
       { name: "Dhanush Adithyan", designation: "Head" },
       { name: "Archangel", designation: "Head" },
-      { name: "Adithya", designation: "Lead" }
-    ]
+      { name: "Adithya", designation: "Lead" },
+    ],
   },
-  // 8️⃣ PR & Management (4 members)
   {
     id: 8,
     name: "PR & Management",
@@ -95,10 +88,9 @@ const divisions = [
       { name: "Kavya", designation: "Head" },
       { name: "Pragathi", designation: "Head" },
       { name: "Siddarth", designation: "Lead" },
-      { name: "Satya", designation: "Lead" }
-    ]
+      { name: "Satya", designation: "Lead" },
+    ],
   },
-  // 9️⃣ Development Team (4 members)
   {
     id: 9,
     name: "Development Team",
@@ -108,105 +100,210 @@ const divisions = [
       { name: "Nithesh", designation: "Head" },
       { name: "Srivatsa", designation: "Head" },
       { name: "Vikas", designation: "Lead" },
-      { name: "Vinoth", designation: "Lead" }
-    ]
+      { name: "Vinoth", designation: "Lead" },
+    ],
   },
 ]
 
 export default function TeamSection() {
+  if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger)
+  }
+  
+  // Use the custom hook to ensure ScrollTrigger refreshes properly
+  useScrollTriggerRefresh()
+
+  const sectionRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeDivision, setActiveDivision] = useState(0)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
-  const [isTransitioning, setIsTransitioning] = useState(false)
+  // Use a fixed yellow background color for consistency
+  const [bgColor, setBgColor] = useState("var(--retro-bg)")
 
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
+  useLayoutEffect(() => {
+    const section = sectionRef.current
+    if (!section || typeof window === 'undefined') return
 
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault()
-
-      if (isTransitioning) return
-
-      const imagesInCurrent = divisions[activeDivision].images.length
-      const scrollDown = e.deltaY > 0
-      const isAtStart = activeDivision === 0 && currentImageIndex === 0
-      const isAtEnd =
-        activeDivision === divisions.length - 1 &&
-        currentImageIndex === imagesInCurrent - 1
-
-      if ((scrollDown && isAtEnd) || (!scrollDown && isAtStart)) return
-
-      if (scrollDown) {
-        if (currentImageIndex < imagesInCurrent - 1) {
-          setCurrentImageIndex((prev) => prev + 1)
-        } else if (activeDivision < divisions.length - 1) {
-          setIsTransitioning(true)
-          setActiveDivision((prev) => prev + 1)
-          setCurrentImageIndex(0)
-          setTimeout(() => setIsTransitioning(false), 600)
-        }
-      } else {
-        if (currentImageIndex > 0) {
-          setCurrentImageIndex((prev) => prev - 1)
-        } else if (activeDivision > 0) {
-          setIsTransitioning(true)
-          setActiveDivision((prev) => prev - 1)
-          const prevImages = divisions[activeDivision - 1].images.length
-          setCurrentImageIndex(prevImages - 1)
-          setTimeout(() => setIsTransitioning(false), 600)
-        }
-      }
-    }
-
-    container.addEventListener("wheel", handleWheel, { passive: false })
-    return () => container.removeEventListener("wheel", handleWheel)
-  }, [activeDivision, currentImageIndex, isTransitioning])
-
-  useEffect(() => {
+    // Calculate total steps based on division images
     let totalSteps = 0
-    divisions.forEach((d) => (totalSteps += d.images.length))
-    let currentStep = 0
-    for (let i = 0; i < activeDivision; i++) {
-      currentStep += divisions[i].images.length
-    }
-    currentStep += currentImageIndex
-    setScrollProgress((currentStep / totalSteps) * 100)
-  }, [activeDivision, currentImageIndex])
+    
+    // Set fixed number of steps for each division
+    // First division (President) gets exactly 13 steps regardless of image count
+    const stepsPerDivision = divisions.map(d => d.id === 1 ? 13 : d.images.length);
+    
+    // Calculate total steps
+    totalSteps = stepsPerDivision.reduce((sum, steps) => sum + steps, 0);
+
+    // Add a small margin to ensure we don't hit the end of scroll exactly
+    // This helps prevent the blank screen issue
+    totalSteps -= 0.5;
+
+    // Create the GSAP context and ScrollTrigger
+    const ctx = gsap.context(() => {
+      // Create the timeline with ScrollTrigger
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top", 
+          // Increase scroll distance to accommodate more steps in President division
+          end: `+=${(divisions.length - 1 + 13/6) * 90}%`, // Adjusted for the 13 steps in President
+          pin: true,
+          scrub: 0.8, // Smoother scrub effect
+          anticipatePin: 1,
+          pinSpacing: true, // Ensure proper spacing
+          fastScrollEnd: true, // Better handling of fast scrolls
+          preventOverlaps: true, // Prevent section overlapping
+          onUpdate: (self) => {
+            // Get the scroll progress and clamp it to avoid edge issues
+            const progress = self.progress;
+            const clampedProgress = Math.min(progress, 0.98);
+            
+            // Calculate current step based on progress
+            const currentStep = Math.min(Math.floor(clampedProgress * totalSteps), totalSteps - 1);
+
+            // Determine which division and image to show
+            let stepCount = 0;
+            let newDivision = 0;
+            let newImageIndex = 0;
+            
+            // Create steps map for each division
+            const stepsPerDivision = divisions.map(d => d.id === 1 ? 12 : d.images.length);
+
+            // Loop through divisions to find current position
+            for (let i = 0; i < divisions.length; i++) {
+              const divisionSteps = stepsPerDivision[i];
+              
+              if (currentStep < stepCount + divisionSteps) {
+                newDivision = i;
+                
+                // For President division (id 1)
+                if (divisions[i].id === 1) {
+                  // Get step within this division
+                  const stepWithinDivision = currentStep - stepCount;
+                  
+                  // Check if we've completed all steps for President
+                  if (stepWithinDivision >= 13) {
+                    // Move to next division
+                    if (i + 1 < divisions.length) {
+                      newDivision = i + 1;
+                      newImageIndex = 0;
+                    }
+                  } else {
+                    // For the single image of President, repeat the same image but change
+                    // other visual aspects based on the step count
+                    newImageIndex = 0; // Always show first (only) image
+                    
+                    // We can update other visual aspects in render based on step if needed
+                    // For now, just log the step to verify it's working
+                    console.log(`President division, step ${stepWithinDivision} of 13`);
+                  }
+                } else {
+                  // Normal behavior for other divisions - cycle through images
+                  newImageIndex = Math.min(currentStep - stepCount, divisions[i].images.length - 1);
+                }
+                break;
+              }
+              
+              stepCount += divisionSteps;
+            }
+
+            // Update state variables
+            setActiveDivision(newDivision);
+            setCurrentImageIndex(newImageIndex);
+            setScrollProgress(clampedProgress * 100);
+
+            // Ensure the section has the yellow background
+            if (section) {
+              section.style.backgroundColor = "var(--retro-bg)";
+              section.classList.add("team-section");
+            }
+          },
+          onLeave: () => {
+            // When leaving this section, DON'T clear all props since that removes our background
+            // Only clear specific properties we need to reset
+            gsap.set(section, { 
+              clearProps: "transform,opacity,visibility"
+            });
+            
+            // Make sure the background color is preserved
+            if (section) {
+              section.style.backgroundColor = "var(--retro-bg)";
+              section.classList.add("team-section");
+            }
+          },
+          onEnterBack: () => {
+            // When scrolling back into this section
+            ScrollTrigger.refresh();
+            
+            // Explicitly set the background to yellow
+            if (section) {
+              section.style.backgroundColor = "var(--retro-bg)";
+              section.classList.add("team-section");
+            }
+          }
+        },
+      });
+      
+      // Add a small animation to smooth the transition to the next section
+      gsap.to("#events", {
+        scrollTrigger: {
+          trigger: "#events",
+          start: "top bottom-=10%",
+          toggleActions: "play none none reverse",
+        },
+        y: 0,
+        autoAlpha: 1,
+        duration: 0.5,
+        ease: "power2.out"
+      });
+    });
+
+    // Cleanup function
+    return () => {
+      // Kill all ScrollTrigger instances to prevent memory leaks
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.vars.trigger === section || 
+            trigger.vars.trigger === "#events") {
+          trigger.kill();
+        }
+      });
+      ctx.revert(); // Revert the GSAP context
+    };
+  }, []);
+
+  const handleDivisionClick = (index: number) => {
+    setActiveDivision(index)
+    setCurrentImageIndex(0)
+  }
+
+  const handleImageClick = (index: number) => {
+    setCurrentImageIndex(index)
+  }
 
   return (
     <section
-      ref={containerRef}
+      ref={sectionRef}
       style={{
-        backgroundColor: "var(--retro-bg)",
+        backgroundColor: "var(--retro-bg)", // Always use the CSS variable directly
         backgroundImage: `linear-gradient(0deg, transparent 24%, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.05) 26%, transparent 27%, transparent 74%, rgba(0,0,0,0.05) 75%, rgba(0,0,0,0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.05) 26%, transparent 27%, transparent 74%, rgba(0,0,0,0.05) 75%, rgba(0,0,0,0.05) 76%, transparent 77%, transparent)`,
         backgroundSize: "40px 40px",
+        transition: "background-color 0.5s ease",
       }}
-      className="relative w-full h-screen overflow-hidden"
+      className="team-section relative w-full h-screen overflow-hidden will-change-transform"
     >
       <div className="absolute inset-0 pointer-events-none" />
 
       {/* Main Content */}
-      <div className="relative w-full h-full">
+      <div ref={containerRef} className="relative w-full h-full">
         <div
           className="flex h-full transition-all duration-700 ease-out"
           style={{
             transform: `translateX(-${activeDivision * 100}%)`,
-            filter: isTransitioning ? "brightness(0.9)" : "brightness(1)",
           }}
         >
           {divisions.map((division) => (
-            <div
-              key={division.id}
-              className="w-full h-full flex-shrink-0 animate-in fade-in"
-              style={{
-                animation:
-                  isTransitioning && divisions[activeDivision].id === division.id
-                    ? "slideInRetro 0.6s cubic-bezier(0.34,1.56,0.64,1)"
-                    : "none",
-              }}
-            >
+            <div key={division.id} className="w-full h-full flex-shrink-0">
               <DivisionCard
                 division={division}
                 currentImageIndex={currentImageIndex}
@@ -239,12 +336,12 @@ export default function TeamSection() {
         {divisions.map((_, index) => (
           <button
             key={index}
-            onClick={() => {
-              setActiveDivision(index)
-              setCurrentImageIndex(0)
-            }}
+            onClick={() => handleDivisionClick(index)}
             style={{
-              backgroundColor: index === activeDivision ? "var(--retro-secondary)" : "var(--retro-light)",
+              backgroundColor:
+                index === activeDivision
+                  ? "var(--retro-secondary)"
+                  : "var(--retro-light)",
               color: "var(--retro-primary)",
               borderColor: "var(--retro-primary)",
               transform: index === activeDivision ? "scale(1.1)" : "scale(1)",
@@ -270,9 +367,12 @@ export default function TeamSection() {
         {divisions[activeDivision].images.map((_, index) => (
           <button
             key={index}
-            onClick={() => setCurrentImageIndex(index)}
+            onClick={() => handleImageClick(index)}
             style={{
-              backgroundColor: currentImageIndex === index ? "var(--retro-primary)" : "var(--retro-secondary)",
+              backgroundColor:
+                currentImageIndex === index
+                  ? "var(--retro-primary)"
+                  : "var(--retro-secondary)",
               borderColor: "var(--retro-primary)",
               width: currentImageIndex === index ? "32px" : "12px",
             }}
@@ -293,14 +393,6 @@ export default function TeamSection() {
       >
         <p className="uppercase tracking-widest">↓ SCROLL ↓</p>
       </div>
-
-      <style>{`
-        @keyframes slideInRetro {
-          0% { transform: translateX(100px) rotateY(45deg); opacity: 0; }
-          50% { transform: translateX(50px) rotateY(22.5deg); }
-          100% { transform: translateX(0) rotateY(0deg); opacity: 1; }
-        }
-      `}</style>
     </section>
   )
 }

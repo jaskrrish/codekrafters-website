@@ -48,9 +48,6 @@ export default function Home() {
       <div id="events" style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }}>
         <EventSection />
       </div>
-      <div id="team" style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }}>
-        <TeamSection />
-      </div>
       <div id="sponsors" style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }}>
         <SponsorsComponent />
       </div>
