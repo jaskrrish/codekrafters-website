@@ -8,7 +8,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Navbar } from "@/components/navbar";
 import StoryComponent from "@/components/Story";
 import EventSection from "@/components/Events";
-import TeamSection from "@/components/team-section";
 import SponsorsComponent from "@/components/sponsor";
 import Footer from "@/components/Footer";
 
@@ -36,14 +35,11 @@ export default function Home() {
       </span>
     ));
 
-  // -----------------------
-  // HERO IMAGE ANIMATION
-  // -----------------------
   useEffect(() => {
     const img = imageRef.current;
     if (!img) return;
 
-    // subtle idle motion
+    
     gsap.to(img, {
       keyframes: [
         { y: -6, rotate: 0.3, duration: 2.2 },
@@ -53,7 +49,7 @@ export default function Home() {
       ease: "sine.inOut"
     });
 
-    // hover bump
+    
     const enter = () =>
       gsap.to(img, {
         scale: 1.03,
@@ -73,9 +69,7 @@ export default function Home() {
     };
   }, []);
 
-  // -----------------------------------
-  // LEFT TAGLINE — CASINO ROLLING FX
-  // -----------------------------------
+  
   useEffect(() => {
     if (!leftRailRef.current) return;
 
@@ -103,7 +97,7 @@ export default function Home() {
         });
       });
 
-      // scroll-down indicator bounce
+      
       if (arrowRef.current) {
         gsap.to(arrowRef.current, {
           y: 10,
@@ -125,14 +119,10 @@ export default function Home() {
     return () => ctx.revert();
   }, []);
 
-  // -----------------------
-  // HERO IMAGE ANIMATION
-  // -----------------------
   useEffect(() => {
     const img = imageRef.current;
     if (!img) return;
 
-    // subtle idle motion
     gsap.to(img, {
       keyframes: [
         { y: -6, rotate: 0.3, duration: 2.2 },
@@ -142,7 +132,6 @@ export default function Home() {
       ease: "sine.inOut"
     });
 
-    // hover bump
     const enter = () =>
       gsap.to(img, {
         scale: 1.03,
@@ -162,9 +151,6 @@ export default function Home() {
     };
   }, []);
 
-  // -----------------------
-  // BACKGROUND LAYERS SCROLL ROTATION
-  // -----------------------
   useEffect(() => {
     const yellowLayer = document.querySelector('.bg-layer-yellow');
     const blackLayer = document.querySelector('.bg-layer-black');
@@ -298,7 +284,7 @@ export default function Home() {
                 SRM RAMAPURAM
               </p>
 
-              {/* ✅ STATIC — NO ANIMATION */}
+              {/* STATIC — NO ANIMATION */}
               <h1
                 style={{
                   color: "#F9B000",

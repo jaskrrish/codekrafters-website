@@ -1,8 +1,10 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from "react"
-import { Navbar } from "@/components/navbar"
-import Footer from "@/components/Footer"
+import React, { useEffect, useRef } from "react"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface TeamMember {
   id: number
@@ -100,7 +102,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     name: "Dhanush Adithyan",
     role: "Cyber Security Head",
     description: "Leads security strategy and threat prevention.",
-    imagePath: "/images/DhanushAdithyan.png",
+    imagePath: "/images/Dhanush-Adithyan.png",
     social: {
       instagram: "https://instagram.com/dhanushadithyan",
       github: "https://github.com/dhanushadithyan",
@@ -335,7 +337,6 @@ const TEAM_MEMBERS: TeamMember[] = [
   },
 ]
 
-
 interface TeamMemberCardProps {
   member: TeamMember
   isLeft: boolean
@@ -343,157 +344,65 @@ interface TeamMemberCardProps {
 }
 
 const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isLeft }) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLDivElement>(null)
 
-  // Visibility observer
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsVisible(true)
-      },
-      { threshold: 0.1 }
+    if (!cardRef.current || !imgRef.current) return
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: cardRef.current,
+        start: "top center",
+        end: "bottom+=250 center",
+        scrub: true,
+        pin: true,
+        pinSpacing: true
+      }
+    })
+
+    tl.fromTo(
+      imgRef.current,
+      { scale: 0.7, y: 120, opacity: 0 },
+      { scale: 1, y: 0, opacity: 1, ease: "power2.out" }
     )
 
-    if (ref.current) observer.observe(ref.current)
-    return () => {
-      if (ref.current) observer.unobserve(ref.current)
-    }
+    return () => tl.scrollTrigger?.kill()
   }, [])
 
-  // Scroll animation
-  useEffect(() => {
-    if (!isVisible) return
-
-    const handleScroll = () => {
-      if (!ref.current) return
-
-      const rect = ref.current.getBoundingClientRect()
-      const elementCenter = rect.top + rect.height / 2
-      const viewportCenter = window.innerHeight / 2
-
-      const distance = Math.abs(elementCenter - viewportCenter)
-      const maxDistance = window.innerHeight * 0.6
-
-      const progress = Math.max(0, Math.min(1, 1 - distance / maxDistance))
-      setScrollProgress(progress)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    handleScroll()
-
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [isVisible])
-
-  // Animation values
-  const circleWidth = 360
-  const minHeight = 200
-  const maxHeight = 600
-
-  const currentHeight = minHeight + (maxHeight - minHeight) * scrollProgress
-  const imageOpacity = scrollProgress
-  const imageYPosition = 100 - 100 * scrollProgress
-
-  const CircleContent = () => (
+  const ImageBubble = () => (
     <div
-      className="relative flex items-center justify-center overflow-hidden"
-      style={{
-        width: circleWidth,
-        height: currentHeight,
-        borderRadius: `${circleWidth / 2}px`,
-        backgroundColor: "white",
-        transition: "height 0.3s ease-out",
-        boxShadow: "0 10px 40px rgba(0, 0, 0, 0.1)"
-      }}
+      ref={imgRef}
+      className="relative flex items-center justify-center w-[320px] h-[520px] mx-auto overflow-hidden rounded-full bg-white shadow-xl"
     >
-      <div
-        className="absolute w-full h-full"
-        style={{
-          opacity: imageOpacity,
-          transition: "opacity 0.3s ease-out, transform 0.3s ease-out",
-          transform: `translateY(${imageYPosition}%)`
-        }}
-      >
-        <img
-          src={member.imagePath || "/placeholder.svg"}
-          alt={member.name}
-          className="w-full h-full object-cover object-center"
-        />
-      </div>
+      <img
+        src={member.imagePath}
+        alt={member.name}
+        className="w-full h-full object-cover object-center"
+      />
     </div>
   )
 
-  const TextContent = () => (
-    <div className="flex flex-col justify-center">
-      <h3 className="text-3xl font-bold text-gray-900 mb-2 md:text-4xl">{member.name}</h3>
-      <p className="text-lg font-semibold text-gray-700 mb-4 md:text-xl">{member.role}</p>
-      <p className="text-sm text-gray-600 leading-relaxed md:text-base mb-6">{member.description}</p>
-
-      <div className="flex gap-4">
-        {member.social.instagram && (
-          <a
-            href={member.social.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-700 hover:text-[#fcb416] transition-colors"
-          >
-            {/* Instagram svg */}
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07..." />
-            </svg>
-          </a>
-        )}
-        {member.social.github && (
-          <a
-            href={member.social.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-700 hover:text-[#fcb416] transition-colors"
-          >
-            {/* GitHub svg */}
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0c-6.626 0-12 5.373..." />
-            </svg>
-          </a>
-        )}
-        {member.social.linkedin && (
-          <a
-            href={member.social.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-700 hover:text-[#fcb416] transition-colors"
-          >
-            {/* LinkedIn svg */}
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M19 0h-14c-2.761 0-5 2.239..." />
-            </svg>
-          </a>
-        )}
-      </div>
+  const TextBlock = () => (
+    <div>
+      <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{member.name}</h3>
+      <p className="text-lg md:text-xl font-semibold text-gray-700 mb-4">{member.role}</p>
+      <p className="text-sm md:text-base text-gray-600 mb-6">{member.description}</p>
     </div>
   )
 
   return (
-    <div ref={ref} className="py-8 sm:py-12 md:py-16">
-      <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 max-w-6xl mx-auto px-4">
+    <div ref={cardRef} className="py-24">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-12 max-w-6xl mx-auto px-4">
         {isLeft ? (
           <>
-            <div className="w-full md:w-1/2 md:pl-8">
-              <CircleContent />
-            </div>
-            <div className="w-full md:w-1/2 md:pr-8">
-              <TextContent />
-            </div>
+            <div className="w-full md:w-1/2 md:pl-8"><ImageBubble /></div>
+            <div className="w-full md:w-1/2 md:pr-8"><TextBlock /></div>
           </>
         ) : (
           <>
-            <div className="w-full md:w-1/2 md:pl-8">
-              <TextContent />
-            </div>
-            <div className="w-full md:w-1/2 md:pr-8">
-              <CircleContent />
-            </div>
+            <div className="w-full md:w-1/2 md:pl-8"><TextBlock /></div>
+            <div className="w-full md:w-1/2 md:pr-8"><ImageBubble /></div>
           </>
         )}
       </div>
@@ -501,43 +410,42 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isLeft }) => {
   )
 }
 
-const TeamMemberSection: React.FC = () => {
+const ExistingTeamMembersSection: React.FC = () => {
   return (
-    <>
-      <section
-        className="w-full py-16 md:py-24 relative"
-        style={{
-          backgroundColor: "#fcb416",
-          backgroundImage: `
-            linear-gradient(rgba(100, 100, 100, 0.15) 4px, transparent 4px),
-            linear-gradient(90deg, rgba(100, 100, 100, 0.15) 4px, transparent 4px)
-          `,
-          backgroundSize: "100px 100px"
-        }}
-      >
-        <Navbar />
-        <div className="container mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">Our Team</h2>
-          <p className="text-center text-gray-800 mb-16 md:mb-24">
-            Meet the talented individuals driving innovation and excellence across our organization.
-          </p>
+    <section
+      className="w-full py-16 md:py-24 relative"
+      style={{
+        backgroundColor: "#fcb416",
+        backgroundImage: `
+          linear-gradient(rgba(100,100,100,0.12) 2px, transparent 2px),
+          linear-gradient(90deg, rgba(100,100,100,0.12) 2px, transparent 2px)
+        `,
+        backgroundSize: "50px 50px",
+        backgroundAttachment: "fixed"
+      }}
+    >
+      <div className="container mx-auto">
+        <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">
+          Our Team
+        </h2>
 
-          <div className="space-y-0">
-            {TEAM_MEMBERS.map((member, index) => (
-              <TeamMemberCard
-                key={member.id}
-                member={member}
-                isLeft={index % 2 === 0}
-                index={index}
-              />
-            ))}
-          </div>
+        <p className="text-center text-gray-800 mb-20 md:mb-28">
+          Meet the talented individuals driving innovation and excellence across our organization.
+        </p>
+
+        <div className="space-y-0">
+          {TEAM_MEMBERS.map((member, index) => (
+            <TeamMemberCard
+              key={member.id}
+              member={member}
+              isLeft={index % 2 === 0}
+              index={index}
+            />
+          ))}
         </div>
-        
-      </section>
-      <Footer />
-    </>
+      </div>
+    </section>
   )
 }
 
-export default TeamMemberSection
+export default ExistingTeamMembersSection
