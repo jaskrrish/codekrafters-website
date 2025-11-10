@@ -21,6 +21,16 @@ interface TeamMember {
 
 // Organized by domain with Heads first, then Leads
 const TEAM_MEMBERS: TeamMember[] = [
+  {
+    id: 0,
+    name: "President",
+    role: "Club President",
+    description: "Oversees all domains and leads CodeKrafters.",
+    imagePath: "/images/PRESIDENT.png",
+    domain: "president",
+    social: {}
+  },
+
   // Content Domain
   {
     id: 1,
@@ -364,6 +374,7 @@ const TEAM_MEMBERS: TeamMember[] = [
 ]
 
 const DOMAINS = [
+  { id: "president", label: "President" },
   { id: "content", label: "Content" },
   { id: "development", label: "Development" },
   { id: "cyber", label: "Cyber Security" },
@@ -436,23 +447,25 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isLeft, index }
     <div
       className={`flex ${isMobile ? "justify-center" : isLeft ? "justify-center md:justify-end" : "justify-center md:justify-start"} w-full`}
     >
-      <div
-        className="relative flex items-center justify-center overflow-hidden"
-        style={{
-          width: circleSize,
-          height: containerHeight,
-          borderRadius: "12px",
-          backgroundColor: "white",
-          boxShadow: isMobile ? "0 6px 20px rgba(0, 0, 0, 0.12)" : "0 10px 40px rgba(0, 0, 0, 0.15)",
-        }}
-      >
-        <div className="w-full h-full flex items-center justify-center">
-          <img
-            src={member.imagePath || "/placeholder.svg"}
-            alt={member.name}
-            className={`w-full h-full ${objectFitClass}`}
-            loading="lazy"
-          />
+      <div>
+        <div
+          className="relative flex items-center justify-center overflow-hidden transform transition-shadow duration-500 hover:shadow-2xl"
+          style={{
+            width: circleSize,
+            height: containerHeight,
+            borderRadius: "12px",
+            backgroundColor: "white",
+            boxShadow: isMobile ? "0 6px 20px rgba(0, 0, 0, 0.12)" : "0 10px 40px rgba(0, 0, 0, 0.15)",
+          }}
+        >
+          <div className="w-full h-full flex items-center justify-center overflow-hidden rounded-lg">
+            <img
+              src={member.imagePath || "/placeholder.svg"}
+              alt={member.name}
+              className={`w-full h-full ${objectFitClass} transform transition-transform duration-500 ease-out hover:scale-105 hover:-translate-y-2 hover:rotate-1`}
+              loading="lazy"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -509,7 +522,12 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isLeft, index }
   )
 
   return (
-    <div ref={ref} className="py-6 sm:py-8 md:py-12 lg:py-16" data-domain={member.domain}>
+    <div
+  id={`domain-${member.domain}`}
+  ref={ref}
+  className="py-6 sm:py-8 md:py-12 lg:py-16"
+  data-domain={member.domain}
+>
       <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 lg:gap-12 w-full max-w-6xl ml-auto px-4">
         {isLeft ? (
           <>
@@ -538,6 +556,98 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isLeft, index }
 const ExistingTeamMembersSection: React.FC = () => {
   const [activeDomain, setActiveDomain] = useState("content")
   const sectionRef = useRef<HTMLElement>(null)
+  const timelineRef = useRef<HTMLDivElement | null>(null)
+
+  // When the footer becomes visible, compute overlap and lift the fixed timeline up
+  useEffect(() => {
+    const footerEl = document.querySelector("footer") as HTMLElement | null
+    const timelineEl = timelineRef.current
+    if (!footerEl || !timelineEl) return
+
+    // keep refs outside observer so we can remove listeners in cleanup
+    let currentOnScroll: ((() => void) | null) = null
+    let currentRaf: number | null = null
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+
+        // helper to compute and apply overlap offset
+        const updateOverlap = () => {
+          if (!footerEl || !timelineEl) return
+          const footerRect = footerEl.getBoundingClientRect()
+          const timelineRect = timelineEl.getBoundingClientRect()
+          const overlap = Math.max(0, timelineRect.bottom - footerRect.top) + 24
+          if (overlap > 0) {
+            timelineEl.style.transform = `translateY(calc(-50% - ${overlap}px))`
+          } else {
+            timelineEl.style.transform = "translateY(-50%)"
+          }
+        }
+
+        const createScrollHandler = () => {
+          return () => {
+            if (currentRaf !== null) return
+            currentRaf = window.requestAnimationFrame(() => {
+              updateOverlap()
+              currentRaf = null
+            })
+          }
+        }
+
+        if (entry.isIntersecting) {
+          // footer is visible: update once and start listening to scroll so timeline moves up as user scrolls into footer
+          updateOverlap()
+          if (!currentOnScroll) {
+            currentOnScroll = createScrollHandler()
+            window.addEventListener("scroll", currentOnScroll, { passive: true })
+          }
+        } else {
+          // footer not visible — reset and remove listener
+          timelineEl.style.transform = "translateY(-50%)"
+          if (currentOnScroll) {
+            window.removeEventListener("scroll", currentOnScroll)
+            currentOnScroll = null
+          }
+          if (currentRaf) {
+            window.cancelAnimationFrame(currentRaf)
+            currentRaf = null
+          }
+        }
+      },
+      { root: null, threshold: 0 }
+    )
+
+    observer.observe(footerEl)
+
+    const handleResize = () => {
+      // recompute current state in case sizes changed
+      if (!footerEl || !timelineEl) return
+      const footerRect = footerEl.getBoundingClientRect()
+      const timelineRect = timelineEl.getBoundingClientRect()
+      const overlap = Math.max(0, timelineRect.bottom - footerRect.top) + 24
+      if (overlap > 0) {
+        timelineEl.style.transform = `translateY(calc(-50% - ${overlap}px))`
+      } else {
+        timelineEl.style.transform = "translateY(-50%)"
+      }
+    }
+
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener("resize", handleResize)
+      if (currentOnScroll) {
+        window.removeEventListener("scroll", currentOnScroll)
+        currentOnScroll = null
+      }
+      if (currentRaf) {
+        window.cancelAnimationFrame(currentRaf)
+        currentRaf = null
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -571,7 +681,8 @@ const ExistingTeamMembersSection: React.FC = () => {
       <Navbar />
       <section
         ref={sectionRef}
-        className="w-full py-10 sm:py-12 md:py-16 lg:py-24 relative overflow-hidden"
+        // Reduced top padding so the title sits closer under the Navbar
+        className="w-full pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-10 sm:pb-12 md:pb-16 lg:pb-24 relative overflow-hidden"
         style={{
           backgroundColor: "#F2EFDC",
         backgroundImage:
@@ -582,32 +693,46 @@ const ExistingTeamMembersSection: React.FC = () => {
       <div className="w-full flex px-4 relative">
         {/* Timeline Sidebar */}
         <div className="hidden md:block md:w-1/2 lg:w-2/5">
-          <div className="fixed top-1/2 -translate-y-1/2 pl-8 lg:pl-20 xl:pl-24 z-10 w-1/2 lg:w-2/5">
+          <div
+            ref={timelineRef}
+            // start the timeline lower so the top items are visible (not cut off)
+            className="fixed top-[94%] -translate-y-1/2 pl-8 lg:pl-20 xl:pl-24 z-10 w-1/2 lg:w-2/5 transition-transform duration-300"
+          >
             <div className="flex flex-col gap-6 lg:gap-8">
               {DOMAINS.map((domain) => {
                 const isActive = activeDomain === domain.id
                 return (
                   <div
-                    key={domain.id}
-                    className={`transition-all duration-500 ease-out ${
-                      isActive ? "transform scale-110 translate-x-2" : "opacity-50"
-                    }`}
-                  >
+  key={domain.id}
+  onClick={() => {
+    const el = document.getElementById(`domain-${domain.id}`)
+    if (el) {
+      window.scrollTo({
+        top: el.offsetTop - window.innerHeight * 0.3,
+        behavior: "smooth"
+      })
+    }
+  }}
+  className="cursor-pointer transition-all duration-500 ease-out ..."
+>
+
                     <div className="flex items-center gap-4 lg:gap-6">
                       <div
                         className={`rounded-full transition-all duration-500 ease-out ${
-                          isActive ? "w-2 h-20 lg:h-24 bg-gray-900 shadow-lg" : "w-1.5 h-12 lg:h-14 bg-gray-800"
+                          // Reduced heights: smaller on both active and inactive states
+                          isActive ? "w-2 h-12 lg:h-16 bg-gray-900 shadow-lg" : "w-1.5 h-8 lg:h-10 bg-gray-800"
                         }`}
                       />
                       <span
                         className={`transition-all duration-500 ease-out leading-tight ${
-                          isActive
-                            ? "text-3xl lg:text-4xl xl:text-5xl font-black text-gray-900 tracking-tight"
-                            : "text-lg lg:text-xl xl:text-2xl font-semibold text-gray-700"
+                              isActive
+                                ? "text-2xl lg:text-3xl xl:text-4xl font-black tracking-tight"
+                                : "text-lg lg:text-xl xl:text-2xl font-semibold text-gray-700"
                         }`}
-                        style={{
-                          textShadow: isActive ? "0 2px 8px rgba(0,0,0,0.1)" : "none"
-                        }}
+                            style={{
+                              color: isActive ? "#F2A516" : undefined,
+                              textShadow: isActive ? "0 2px 8px rgba(0,0,0,0.06)" : "none"
+                            }}
                       >
                         {domain.label}
                       </span>
@@ -622,13 +747,16 @@ const ExistingTeamMembersSection: React.FC = () => {
         {/* Content column */}
         <div className="w-full md:w-1/2 lg:w-3/5 flex justify-end">
           <div className="w-full max-w-3xl">
-            {/* Title */}
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-right text-gray-900 mb-3 md:mb-4">
+            {/* Title (centered, placed closer to navbar) */}
+            <h2
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center text-transparent bg-clip-text mb-3 md:mb-4"
+              style={{ backgroundImage: 'linear-gradient(90deg, #F2A516 0%, #000 50%, #1f2937 100%)' }}
+            >
               Our Team
             </h2>
 
-            <p className="text-right text-gray-700 mb-10 sm:mb-12 md:mb-16 lg:mb-24 text-sm sm:text-base ml-auto max-w-lg">
-              Meet the talented individuals driving innovation and excellence across our organization.
+            <p className="text-center text-gray-700 mb-10 sm:mb-12 md:mb-16 lg:mb-24 text-sm sm:text-base mx-auto max-w-lg">
+              <span style={{ color: '#F2A516' }} className="font-semibold">Meet</span> the talented individuals driving innovation and excellence across our organization.
             </p>
 
             {/* Members */}
