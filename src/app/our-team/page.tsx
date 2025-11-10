@@ -93,28 +93,32 @@ export default function PaperTearPage() {
         <div
           ref={leftHalf}
           className="
-            w-[45%] h-[70vh] bg-zinc-900 border-r border-white/20
-            rounded-l-3xl p-10 flex flex-col justify-center
-            absolute left-[5%] top-[15%]
+            w-[45%] md:w-[45%] h-[35vh] md:h-[70vh] 
+            bg-zinc-900 border-r border-white/20
+            rounded-l-3xl p-4 md:p-10 
+            flex flex-col justify-center
+            absolute left-[2.5%] md:left-[5%] top-[20%] md:top-[15%]
           "
           style={{ transformOrigin: "right center" }}
         >
-          <h1 className="text-4xl font-bold">{card.title}</h1>
-          <p className="opacity-60 mt-3">{card.quote}</p>
+          <h1 className="text-2xl md:text-4xl font-bold">{card.title}</h1>
+          <p className="opacity-60 mt-2 md:mt-3 text-sm md:text-base">{card.quote}</p>
         </div>
 
         {/* RIGHT TEAR HALF */}
         <div
           ref={rightHalf}
           className="
-            w-[45%] h-[70vh] bg-zinc-900 border-l border-white/20
-            rounded-r-3xl p-10 flex flex-col justify-center
-            absolute right-[5%] top-[15%]
+            w-[45%] md:w-[45%] h-[35vh] md:h-[70vh]
+            bg-zinc-900 border-l border-white/20
+            rounded-r-3xl p-4 md:p-10 
+            flex flex-col justify-center
+            absolute right-[2.5%] md:right-[5%] top-[20%] md:top-[15%]
           "
           style={{ transformOrigin: "left center" }}
         >
-          <h2 className="text-2xl mb-4">Members</h2>
-          <ul className="opacity-70 text-lg space-y-2">
+          <h2 className="text-lg md:text-2xl mb-2 md:mb-4">Members</h2>
+          <ul className="opacity-70 text-sm md:text-lg space-y-1 md:space-y-2">
             {card.members.map((m, i) => (
               <li key={i}>• {m}</li>
             ))}
@@ -122,7 +126,7 @@ export default function PaperTearPage() {
         </div>
       </div>
 
-      <p className="text-center text-white/50 mt-10">Scroll to tear the page</p>
+      <p className="text-center text-white/50 mt-10 text-sm md:text-base px-4">Scroll to tear the page</p>
     </div>
   );
 }

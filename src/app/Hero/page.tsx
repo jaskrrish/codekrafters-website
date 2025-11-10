@@ -41,25 +41,19 @@ export default function Hero() {
       </div>
 
       {/* CONTENT GRID */}
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-10 w-full max-w-7xl px-6">
-
-        {/* LEFT TEXT */}
-        <div className="flex flex-col justify-center pt-20 md:pt-40">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight">
+      <div className="relative z-10 w-full max-w-7xl px-6">
+        
+        {/* MOBILE LAYOUT */}
+        <div className="md:hidden flex flex-col items-center text-center pt-20 pb-10 space-y-8">
+          {/* HEADING */}
+          <h1 className="text-5xl font-extrabold text-white leading-tight">
             Step into the <br /> Spotlight
           </h1>
-          <p className="mt-4 text-gray-200 max-w-sm">
-            Where ideas meet execution.  
-            Where students turn into creators.  
-            Where CodeKrafters rise.
-          </p>
-        </div>
-
-        {/* CENTER HERO IMAGE */}
-        <div className="flex items-center justify-center">
+          
+          {/* IMAGE */}
           <div
             ref={imgRef}
-            className="relative w-[90%] md:w-[110%] h-[320px] md:h-[380px] rounded-3xl overflow-hidden shadow-2xl"
+            className="relative w-[85%] h-[280px] rounded-3xl overflow-hidden shadow-2xl"
           >
             <Image
               src="/ck-core.jpg"
@@ -68,14 +62,56 @@ export default function Hero() {
               className="object-cover"
             />
           </div>
-        </div>
-
-        {/* RIGHT TEXT */}
-        <div className="flex flex-col justify-center pt-10 md:pt-40 text-gray-200">
-          <p className="text-lg leading-relaxed max-w-xs">
+          
+          {/* TEXT BLOCKS */}
+          <p className="text-gray-200 max-w-sm px-4">
+            Where ideas meet execution.  
+            Where students turn into creators.  
+            Where CodeKrafters rise.
+          </p>
+          
+          <p className="text-lg leading-relaxed text-gray-200 max-w-sm px-4">
             We build experiences, events, products and memories  
             that elevate ambition and spark creativity across campus.
           </p>
+        </div>
+
+        {/* DESKTOP LAYOUT */}
+        <div className="hidden md:grid grid-cols-3 gap-10">
+          {/* LEFT TEXT */}
+          <div className="flex flex-col justify-center pt-40">
+            <h1 className="text-5xl font-extrabold text-white leading-tight">
+              Step into the <br /> Spotlight
+            </h1>
+            <p className="mt-4 text-gray-200 max-w-sm">
+              Where ideas meet execution.  
+              Where students turn into creators.  
+              Where CodeKrafters rise.
+            </p>
+          </div>
+
+          {/* CENTER HERO IMAGE */}
+          <div className="flex items-center justify-center">
+            <div
+              ref={imgRef}
+              className="relative w-[110%] h-[380px] rounded-3xl overflow-hidden shadow-2xl"
+            >
+              <Image
+                src="/ck-core.jpg"
+                fill
+                alt="CodeKrafters"
+                className="object-cover"
+              />
+            </div>
+          </div>
+
+          {/* RIGHT TEXT */}
+          <div className="flex flex-col justify-center pt-40 text-gray-200">
+            <p className="text-lg leading-relaxed max-w-xs">
+              We build experiences, events, products and memories  
+              that elevate ambition and spark creativity across campus.
+            </p>
+          </div>
         </div>
       </div>
 

@@ -23,16 +23,19 @@ export default function LandingPage() {
         <img
           src="/ck_group.png"
           alt="CodeKrafters Team"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-center md:object-cover"
         />
-        {/* Overlay gradient for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div className="text-center z-10 animate-fade-in-up">
-            
+        
+        {/* Overlay gradient for text readability - stronger on mobile */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:from-black md:via-transparent" />
+        
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8">
+          <div className="text-center z-10 animate-fade-in-up max-w-4xl">
+            {/* Add your content here if needed */}
           </div>
         </div>
       </div>
+      
       <style jsx>{`
         @keyframes fade-in-up {
           from {
@@ -46,6 +49,12 @@ export default function LandingPage() {
         }
         .animate-fade-in-up {
           animation: fade-in-up 0.8s ease-out 0.3s both;
+        }
+        
+        @media (max-width: 768px) {
+          img {
+            object-position: center;
+          }
         }
       `}</style>
     </main>

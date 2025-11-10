@@ -20,6 +20,9 @@ export function Navbar() {
     { label: "CONTACT", href: "#contact", id: "contact" },
   ]
 
+  // Filter out STORY for mobile
+  const mobileNavLinks = navLinks.filter(link => link.id !== "story")
+
   useEffect(() => {
     return () => {
       if (animTimerRef.current) {
@@ -122,7 +125,8 @@ export function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 w-full z-50 pt-6">
+    <nav className="fixed top-0 w-full z-50 pt-4 sm:pt-6">
+      {/* DESKTOP NAVBAR */}
       <div className="hidden md:block">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <div
@@ -151,7 +155,7 @@ export function Navbar() {
                 }}
                 className="flex items-center justify-center"
               >
-                <Image src="/ck_logo.svg" alt="Rekorder Logo" width={40} height={32} className="object-contain" />
+                <Image src="/ck_logo.svg" alt="CodeKrafters Logo" width={40} height={32} className="object-contain" />
               </Link>
             </div>
 
@@ -226,47 +230,71 @@ export function Navbar() {
         </div>
       </div>
 
-      <div className="md:hidden flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4" style={{ backgroundColor: "#0D0D0D" }}>
-        <Link href="/" className="flex items-center">
-          <Image src="/ck_logo.svg" alt="Rekorder Logo" width={40} height={32} className="object-contain" />
-        </Link>
+      {/* MOBILE NAVBAR - OPTIMIZED WITHOUT STORY */}
+      <div 
+        className="md:hidden fixed top-0 left-0 right-0 shadow-lg"
+        style={{ 
+          backgroundColor: "#0D0D0D",
+          borderBottom: "1px solid rgba(242,242,242,0.15)"
+        }}
+      >
+        <div className="flex justify-between items-center px-4 py-3">
+          <Link href="/" className="flex items-center">
+            <Image 
+              src="/ck_logo.svg" 
+              alt="CodeKrafters Logo" 
+              width={36} 
+              height={28} 
+              className="object-contain" 
+            />
+          </Link>
 
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="p-2 rounded-lg transition-colors"
-          style={{ 
-            backgroundColor: isExpanded ? "rgba(242,242,242,0.1)" : "transparent"
-          }}
-          aria-label="Toggle menu"
-        >
-          {isExpanded ? <X className="w-5 h-5" style={{ color: "#F2F2F2" }} /> : <Menu className="w-5 h-5" style={{ color: "#F2F2F2" }} />}
-        </button>
-      </div>
-
-      {isExpanded && (
-        <div
-          className="md:hidden py-4 space-y-2 px-4 sm:px-6 lg:px-8"
-          style={{ backgroundColor: "#0D0D0D", borderTop: "1px solid rgba(242,242,242,0.15)" }}
-        >
-          {navLinks.map((link) => (
-            <button
-              key={link.id}
-              onClick={() => {
-                handleLabelClick(link)
-                setIsExpanded(false)
-              }}
-              className="block w-full text-left px-4 py-3 text-sm font-medium tracking-wider rounded-lg transition-all duration-300"
-              style={{
-                color: activeLink === link.id ? "#0D0D0D" : "#F2F2F2",
-                backgroundColor: activeLink === link.id ? "#F2A516" : "transparent",
-                border: activeLink === link.id ? "none" : "1px solid rgba(242,242,242,0.08)",
-              }}
-            >
-              {link.label}
-            </button>
-          ))}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="p-2 rounded-lg transition-colors active:scale-95"
+            style={{ 
+              backgroundColor: isExpanded ? "rgba(242,165,22,0.15)" : "rgba(242,242,242,0.08)",
+              border: "1px solid rgba(242,242,242,0.1)"
+            }}
+            aria-label="Toggle menu"
+          >
+            {isExpanded ? (
+              <X className="w-5 h-5" style={{ color: "#F2A516" }} />
+            ) : (
+              <Menu className="w-5 h-5" style={{ color: "#F2F2F2" }} />
+            )}
+          </button>
         </div>
-      )}
+
+        {/* MOBILE MENU DROPDOWN - WITHOUT STORY */}
+        <div
+          className="overflow-hidden transition-all duration-300 ease-in-out"
+          style={{
+            maxHeight: isExpanded ? "400px" : "0px",
+            borderTop: isExpanded ? "1px solid rgba(242,242,242,0.1)" : "none"
+          }}
+        >
+          <div className="py-2 px-4 space-y-1">
+            {mobileNavLinks.map((link) => (
+              <button
+                key={link.id}
+                onClick={() => {
+                  handleLabelClick(link)
+                  setIsExpanded(false)
+                }}
+                className="block w-full text-left px-4 py-3 text-sm font-medium tracking-wider rounded-lg transition-all duration-200 active:scale-98"
+                style={{
+                  color: activeLink === link.id ? "#0D0D0D" : "#F2F2F2",
+                  backgroundColor: activeLink === link.id ? "#F2A516" : "rgba(242,242,242,0.05)",
+                  border: activeLink === link.id ? "none" : "1px solid rgba(242,242,242,0.08)",
+                }}
+              >
+                {link.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <style jsx>{`
         .nav-pill button {
@@ -387,6 +415,16 @@ export function Navbar() {
           60% { transform: rotateX(240deg); filter: blur(0.2px); }
           85% { transform: rotateX(20deg); }
           100% { transform: rotateX(0); }
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+          .active\\:scale-95:active {
+            transform: scale(0.95);
+          }
+          .active\\:scale-98:active {
+            transform: scale(0.98);
+          }
         }
       `}</style>
     </nav>

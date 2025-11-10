@@ -16,7 +16,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
   const imageRef = useRef<HTMLDivElement | null>(null);
-
   const arrowRef = useRef<HTMLDivElement | null>(null);
   const leftRailRef = useRef<HTMLDivElement | null>(null);
 
@@ -74,14 +73,13 @@ export default function Home() {
   }, []);
 
   // -----------------------------------
-  // LEFT TAGLINE — CASINO ROLLING FX
+  // LEFT TAGLINE — CASINO ROLLING FX (WORKS ON BOTH MOBILE & DESKTOP)
   // -----------------------------------
   useEffect(() => {
-    if (!leftRailRef.current) return;
-
-    const ctx = gsap.context(() => {
-      const lines = gsap.utils.toArray<HTMLDivElement>(".slot-line");
-
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      const lines = document.querySelectorAll<HTMLDivElement>(".slot-line");
+      
       lines.forEach((line, lineIndex) => {
         const chars = line.querySelectorAll<HTMLSpanElement>(".slot-char");
 
@@ -120,45 +118,11 @@ export default function Home() {
           ease: "sine.inOut"
         });
       }
-    }, leftRailRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  // -----------------------
-  // HERO IMAGE ANIMATION
-  // -----------------------
-  useEffect(() => {
-    const img = imageRef.current;
-    if (!img) return;
-
-    // subtle idle motion
-    gsap.to(img, {
-      keyframes: [
-        { y: -6, rotate: 0.3, duration: 2.2 },
-        { y: 0, rotate: 0, duration: 2.2 }
-      ],
-      repeat: -1,
-      ease: "sine.inOut"
-    });
-
-    // hover bump
-    const enter = () =>
-      gsap.to(img, {
-        scale: 1.03,
-        rotate: 0.7,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-    const leave = () =>
-      gsap.to(img, { scale: 1, rotate: 0, duration: 0.4 });
-
-    img.addEventListener("mouseenter", enter);
-    img.addEventListener("mouseleave", leave);
+    }, 100);
 
     return () => {
-      img.removeEventListener("mouseenter", enter);
-      img.removeEventListener("mouseleave", leave);
+      clearTimeout(timer);
+      gsap.killTweensOf(".slot-char");
     };
   }, []);
 
@@ -217,50 +181,15 @@ export default function Home() {
           <div className="absolute top-[32%] left-[-10%] w-[150%] h-[50%] bg-[#111111] rotate-[-6deg] opacity-[0.5]" />
         </div>
 
-        {/* HERO TOP */}
-        <div className="relative w-full flex flex-1 px-[3vw] pt-[2.5vh] gap-6">
+        {/* HERO TOP - MOBILE OPTIMIZED */}
+        <div className="relative w-full flex flex-1 px-4 md:px-[3vw] pt-4 md:pt-[2.5vh] gap-3 md:gap-6">
           
-          {/* LEFT TAGLINE */}
-          <div ref={leftRailRef} className="flex flex-col justify-center ml-10 select-none" style={{ width: "40%" }}>
-
-            <div className="max-w-[700px]">
-              {taglineLines.map((line, i) => (
-                <div
-                  key={line}
-                  className="slot-line font-extrabold leading-[0.86]"
-                  style={{
-                    fontSize: "clamp(2.4rem, 5vw, 5.4rem)",
-                    color: i % 2 === 0 ? "#F9B000" : "#FFFFFF",
-                    marginBottom: i === taglineLines.length - 1 ? 0 : "-0.08em"
-                  }}
-                >
-                  {splitToSpans(line)}
-                </div>
-              ))}
-            </div>
-
+          {/* MOBILE: Column Layout (Image on top, Text below) */}
+          <div className="flex md:hidden flex-col w-full items-center gap-6">
+            {/* IMAGE - MOBILE TOP */}
             <div
-              ref={arrowRef}
-              className="mt-6 flex items-center gap-3 opacity-70"
-            >
-              <div className="relative w-8 h-8">
-                <Image src="/logo.png" alt="scroll" fill className="object-contain" />
-              </div>
-              <p className="text-white/70 uppercase tracking-[0.22em] text-sm">Scroll Down</p>
-            </div>
-          </div>
-
-          {/* RIGHT IMAGE */}
-          <div className="relative flex items-center justify-end" style={{ width: "70%" }}>
-            <div
-              ref={imageRef}
-              className="relative rounded-3xl overflow-hidden shadow-[0_0_40px_#0008]"
-              style={{
-                width: "clamp(400px, 70%, 700px)",
-                height: "70%",
-                marginRight: "clamp(20px, 3vw, 60px)",
-                marginTop: "clamp(20px, 2vh, 40px)"
-              }}
+              className="relative rounded-3xl overflow-hidden shadow-[0_0_40px_#0008] w-full max-w-[90%]"
+              style={{ height: "40vh" }}
             >
               <Image
                 src="/ck-core.jpg"
@@ -270,6 +199,86 @@ export default function Home() {
                 className="object-cover select-none pointer-events-none"
               />
             </div>
+
+            {/* TAGLINE - MOBILE BELOW IMAGE WITH ANIMATION */}
+            <div 
+              ref={leftRailRef} 
+              className="flex flex-col justify-center items-center select-none w-full"
+            >
+              <div className="max-w-[700px] text-center">
+                {taglineLines.map((line, i) => (
+                  <div
+                    key={line}
+                    className="slot-line font-extrabold leading-[0.86]"
+                    style={{
+                      fontSize: "clamp(2rem, 12vw, 5.4rem)",
+                      color: i % 2 === 0 ? "#F9B000" : "#FFFFFF",
+                      marginBottom: i === taglineLines.length - 1 ? 0 : "-0.08em"
+                    }}
+                  >
+                    {splitToSpans(line)}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* DESKTOP: Side-by-side Layout */}
+          <div className="hidden md:flex w-full gap-6">
+            {/* LEFT TAGLINE - DESKTOP */}
+            <div 
+              ref={leftRailRef} 
+              className="flex flex-col justify-center items-start ml-10 select-none w-[40%]"
+            >
+              <div className="max-w-[700px] text-left">
+                {taglineLines.map((line, i) => (
+                  <div
+                    key={line}
+                    className="slot-line font-extrabold leading-[0.86]"
+                    style={{
+                      fontSize: "clamp(2rem, 5vw, 5.4rem)",
+                      color: i % 2 === 0 ? "#F9B000" : "#FFFFFF",
+                      marginBottom: i === taglineLines.length - 1 ? 0 : "-0.08em"
+                    }}
+                  >
+                    {splitToSpans(line)}
+                  </div>
+                ))}
+              </div>
+
+              {/* SCROLL INDICATOR - DESKTOP ONLY */}
+              <div
+                ref={arrowRef}
+                className="flex mt-6 items-center gap-3 opacity-70"
+              >
+                <div className="relative w-8 h-8">
+                  <Image src="/logo.png" alt="scroll" fill className="object-contain" />
+                </div>
+                <p className="text-white/70 uppercase tracking-[0.22em] text-sm">Scroll Down</p>
+              </div>
+            </div>
+
+            {/* RIGHT IMAGE - DESKTOP */}
+            <div className="flex relative items-center justify-end" style={{ width: "70%" }}>
+              <div
+                ref={imageRef}
+                className="relative rounded-3xl overflow-hidden shadow-[0_0_40px_#0008]"
+                style={{
+                  width: "clamp(400px, 70%, 700px)",
+                  height: "70%",
+                  marginRight: "clamp(20px, 3vw, 60px)",
+                  marginTop: "clamp(20px, 2vh, 40px)"
+                }}
+              >
+                <Image
+                  src="/ck-core.jpg"
+                  alt="CK Group"
+                  fill
+                  priority
+                  className="object-cover select-none pointer-events-none"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -277,37 +286,27 @@ export default function Home() {
         <div
           className="w-full bg-black"
           style={{
-            height: "30vh",
+            height: "auto",
+            minHeight: "30vh",
             zIndex: 10,
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-start"
           }}
         >
-          <div className="w-full flex justify-end pt-[0.9rem]">
-            <div className="w-full text-right pr-[1vw]">
+          <div className="w-full flex justify-center md:justify-end pt-3 md:pt-[0.9rem] px-4">
+            <div className="w-full text-center md:text-right md:pr-[1vw]">
               <p
-                style={{
-                  color: "rgba(255,255,255,0.85)",
-                  fontSize: "clamp(20px, 1vw, 20px)",
-                  letterSpacing: "0.16em",
-                  marginBottom: 1,
-                  fontWeight: 600
-                }}
+                className="text-white/85 text-sm md:text-base lg:text-lg font-semibold tracking-[0.16em] mb-1"
               >
                 SRM RAMAPURAM
               </p>
 
               {/* ✅ STATIC — NO ANIMATION */}
               <h1
+                className="text-[#F9B000] font-black leading-[0.88] m-0"
                 style={{
-                  color: "#F9B000",
-                  fontWeight: 900,
-                  fontSize: "clamp(3.5rem, 10vw, 8.5rem)",
-                  lineHeight: 0.88,
-                  margin: 0,
-                  textAlign: "right",
-                  transform: "translateY(8%)",
+                  fontSize: "clamp(2.5rem, 10vw, 8.5rem)",
                   letterSpacing: "-0.02em"
                 }}
               >
@@ -316,23 +315,28 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="px-[4vw] pt-[6.5rem] pb-[2.5rem] text-white max-w-[1200px]">
-            <h2 className="font-bold text-[clamp(1rem,2vw,1.25rem)] m-0">
+          {/*<div className="px-4 md:px-[4vw] pt-8 md:pt-[6.5rem] pb-6 md:pb-[2.5rem] text-white max-w-[1200px]">
+            <h2 className="font-bold text-base md:text-lg lg:text-xl m-0">
               (Text area — replace this with your copy)
             </h2>
-            <p className="opacity-90 mt-2 leading-relaxed">
+            <p className="opacity-90 mt-2 text-sm md:text-base leading-relaxed">
               This region remains the same as your original design.
             </p>
-          </div>
+          </div>*/}
         </div>
       </section>
 
-      {/* REST OF PAGE */}
-      <div id="story">
+      {/* STORY SECTION - HIDDEN ON MOBILE, SHOWN ON MD+ */}
+      <div id="story" className="hidden md:block">
         <StoryComponent />
       </div>
+
+      {/* REST OF PAGE */}
       <div id="events">
         <EventSection />
+      </div>
+      <div id="team">
+        <TeamSection/>
       </div>
       <div id="sponsors">
         <SponsorsComponent />

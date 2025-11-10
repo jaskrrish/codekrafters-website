@@ -1,34 +1,53 @@
 "use client";
 import ReactLenis, { useLenis } from "lenis/react";
 import gsap from "gsap";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/all";
 
 function StoryComponent() {
   gsap.registerPlugin(ScrollTrigger);
-  // gsap.registerPlugin(ScrollSmoother)
+  
+  const [isMobile, setIsMobile] = useState(false);
   const lenisRef = useRef(null);
+  
+  // Section refs
   const smthDivRef = useRef<HTMLDivElement>(null);
-  const bgLg = useRef(null);
-  // const bgSm = useRef(null);
-  const manEnteringRef = useRef(null);
   const anotherDivRef = useRef<HTMLDivElement>(null);
+  const walkingRef = useRef<HTMLDivElement>(null);
+  const ckBadgeRef = useRef<HTMLDivElement>(null);
+  
+  // Desktop refs
+  const bgLg = useRef<HTMLImageElement>(null);
+  const manEnteringRef = useRef<HTMLImageElement>(null);
   const commentOneRef = useRef<HTMLImageElement>(null);
   const commentTwoRef = useRef<HTMLImageElement>(null);
   const commentThreeRef = useRef<HTMLImageElement>(null);
-  const sideLookingRef = useRef<HTMLImageElement>(null);
-  const walkingRef = useRef<HTMLDivElement>(null);
   const walkingManRef = useRef<HTMLImageElement>(null);
-  const walkingManMobRef = useRef<HTMLImageElement>(null);
   const ckRef = useRef<HTMLImageElement>(null);
+  
+  // Mobile refs
+  const bgMobRef = useRef<HTMLImageElement>(null);
+  const manEnteringMobRef = useRef<HTMLImageElement>(null);
+  const commentOneMobRef = useRef<HTMLImageElement>(null);
+  const commentTwoMobRef = useRef<HTMLImageElement>(null);
+  const commentThreeMobRef = useRef<HTMLImageElement>(null);
+  const walkingManMobRef = useRef<HTMLImageElement>(null);
   const ckMobRef = useRef<HTMLImageElement>(null);
-  const moiRef = useRef<HTMLImageElement>(null);
-  const moiMobRef = useRef<HTMLImageElement>(null);
 
   const lenis = useLenis((lenis) => {
-    // called every scroll
     console.log(lenis);
   });
+
+  // Detect mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     function update(time: number): void {
@@ -36,474 +55,490 @@ function StoryComponent() {
     }
 
     gsap.ticker.add(update);
-
     return () => gsap.ticker.remove(update);
   }, []);
 
+  // First section: Entrance animation
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Use ScrollTrigger.matchMedia for responsive first section animations
-      ScrollTrigger.matchMedia({
-        // Desktop first section animations
-        "(min-width: 768px)": () => {
-          gsap
-            .timeline({
-              scrollTrigger: {
-                trigger: smthDivRef.current,
-                pin: smthDivRef.current,
-                scrub: 3,
-                start: "0% 0%",
-                endTrigger: anotherDivRef.current,
-              },
-            })
-            .to(bgLg.current, { transform: "translateZ(2200px)" })
-            .to(manEnteringRef.current, { opacity: 1 })
-            .pause();
-        },
-        // Mobile first section animations
-        "(max-width: 767px)": () => {
-          if (smthDivRef.current) {
-            gsap
-              .timeline({
-                scrollTrigger: {
-                  trigger: smthDivRef.current,
-                  pin: smthDivRef.current,
-                  scrub: 3,
-                  start: "0% 0%",
-                  endTrigger: anotherDivRef.current,
-                },
-              })
-              .to(smthDivRef.current.querySelector('img[src="/story/srm-bg-png-mob.png"]'), { transform: "translateZ(2200px)" })
-              .to(smthDivRef.current.querySelector('img[src="/story/man-entering-png-mob.png"]'), { opacity: 1 })
-              .pause();
+      if (isMobile) {
+        // Mobile entrance animation
+        if (smthDivRef.current && bgMobRef.current && manEnteringMobRef.current) {
+          gsap.timeline({
+            scrollTrigger: {
+              trigger: smthDivRef.current,
+              pin: smthDivRef.current,
+              scrub: 2,
+              start: "top top",
+              end: "+=150%",
+              anticipatePin: 1,
+            },
+          })
+          .to(bgMobRef.current, { 
+            scale: 1.5,
+            ease: "power2.inOut"
+          })
+          .to(manEnteringMobRef.current, { 
+            opacity: 1,
+            duration: 0.5 
+          }, "-=0.3");
+        }
+      } else {
+        // Desktop entrance animation
+        if (smthDivRef.current && bgLg.current && manEnteringRef.current) {
+          gsap.timeline({
+            scrollTrigger: {
+              trigger: smthDivRef.current,
+              pin: smthDivRef.current,
+              scrub: 3,
+              start: "top top",
+              end: "+=200%",
+            },
+          })
+          .to(bgLg.current, { 
+            transform: "translateZ(2200px)"
+          })
+          .to(manEnteringRef.current, { 
+            opacity: 1 
+          });
+        }
+      }
+    });
+    return () => ctx.revert();
+  }, [isMobile]);
+
+  // Second section: Comments appearing
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      if (isMobile) {
+        // Mobile comments animation
+        if (anotherDivRef.current) {
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: anotherDivRef.current,
+              pin: anotherDivRef.current,
+              scrub: 1,
+              start: "top top",
+              end: "+=150%",
+              anticipatePin: 1,
+            },
+          });
+
+          if (commentOneMobRef.current) {
+            tl.to(commentOneMobRef.current, {
+              yPercent: -100,
+              xPercent: 20,
+              opacity: 1,
+              ease: "power2.out"
+            });
           }
-        },
-      });
-    });
-    return () => ctx.revert();
-  }, []);
-
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      // Use ScrollTrigger.matchMedia for responsive comment section animations
-      ScrollTrigger.matchMedia({
-        // Desktop comment section animations
-        "(min-width: 768px)": () => {
-          gsap
-            .timeline({
-              scrollTrigger: {
-                trigger: anotherDivRef.current,
-                pin: anotherDivRef.current,
-                scrub: 1,
-                start: "0% 0%",
-                endTrigger: walkingRef.current,
-              },
-            })
-            .to(commentOneRef.current, {
-              yPercent: -120,
-              xPercent: 55,
+          
+          if (commentTwoMobRef.current) {
+            tl.to(commentTwoMobRef.current, {
+              yPercent: -150,
+              xPercent: 50,
               opacity: 1,
-            })
-            .to(commentTwoRef.current, {
-              yPercent: -180,
+              ease: "power2.out"
+            }, "-=0.3");
+          }
+          
+          if (commentThreeMobRef.current) {
+            tl.to(commentThreeMobRef.current, {
+              yPercent: -120,
               xPercent: 100,
               opacity: 1,
-            })
-            .to(commentThreeRef.current, {
-              yPercent: -180,
-              xPercent: 215,
-              opacity: 1,
-            })
-            .to("#panick", {
-              opacity: 0,
-            });
-        },
-        // Mobile comment section animations
-        "(max-width: 767px)": () => {
-          gsap
-            .timeline({
-              scrollTrigger: {
-                trigger: anotherDivRef.current,
-                pin: anotherDivRef.current,
-                scrub: 1,
-                start: "0% 0%",
-                endTrigger: walkingRef.current,
-              },
-            })
-            .to("#comment-1-mob", {
-              yPercent: -120,
-              xPercent: 55,
-              opacity: 1,
-            })
-            .to("#comment-2-mob", {
-              yPercent: -180,
-              xPercent: 100,
-              opacity: 1,
-            })
-            .to("#comment-3-mob", {
-              yPercent: -180,
-              xPercent: 215,
-              opacity: 1,
-            })
-            .to("#panick-mob", {
-              opacity: 0,
-            });
-        },
-      });
+              ease: "power2.out"
+            }, "-=0.3");
+          }
+          
+          tl.to("#panick-mob", {
+            opacity: 0,
+            ease: "power2.in"
+          });
+        }
+      } else {
+        // Desktop comments animation
+        if (anotherDivRef.current) {
+          gsap.timeline({
+            scrollTrigger: {
+              trigger: anotherDivRef.current,
+              pin: anotherDivRef.current,
+              scrub: 1,
+              start: "top top",
+              end: "+=200%",
+            },
+          })
+          .to(commentOneRef.current, {
+            yPercent: -120,
+            xPercent: 55,
+            opacity: 1,
+          })
+          .to(commentTwoRef.current, {
+            yPercent: -180,
+            xPercent: 100,
+            opacity: 1,
+          })
+          .to(commentThreeRef.current, {
+            yPercent: -180,
+            xPercent: 215,
+            opacity: 1,
+          })
+          .to("#panick", {
+            opacity: 0,
+          });
+        }
+      }
     });
     return () => ctx.revert();
-  }, []);
+  }, [isMobile]);
 
+  // Third section: Walking animation
   useLayoutEffect(() => {
-    // gsap.registerEffect({
-    //   name: "zoom",
-    //   effect: (targets: any, config: any) => {
-    //     const vars = { transformOrigin: "0px 0px", ...config },
-    //       { scale, origin } = config,
-    //       clamp = gsap.utils.clamp(-100 * (scale - 1), 0);
-    //     delete vars.origin;
-    //     vars.xPercent = clamp((0.5 - origin[0] * scale) * 100);
-    //     vars.yPercent = clamp((0.5 - origin[1] * scale) * 100);
-    //     vars.overwrite = "auto";
-    //     return gsap.to(targets, vars);
-    //   },
-    //   extendTimeline: true,
-    //   defaults: { origin: [0.5, 0.5], scale: 2 },
-    // });
     const ctx = gsap.context(() => {
-      // Use ScrollTrigger.matchMedia for responsive animations
-      ScrollTrigger.matchMedia({
-        // Desktop animations
-        "(min-width: 768px)": () => {
-          gsap
-            .timeline({
-              scrollTrigger: {
-                trigger: walkingRef.current,
-                pin: walkingRef.current,
-                scrub: 1,
-                start: "0% 0%",
-                endTrigger: "#ck-badge",
-              },
-            })
-            .to(walkingManRef.current, {
-              transform: "translateZ(300px)",
-            })
-            .to(walkingManRef.current, {
-              opacity: 0,
-            })
-            .to(ckRef.current, {
-              opacity: 0,
-            });
-        },
-        // Mobile animations
-        "(max-width: 767px)": () => {
-          gsap
-            .timeline({
-              scrollTrigger: {
-                trigger: walkingRef.current,
-                pin: walkingRef.current,
-                scrub: 1,
-                start: "0% 0%",
-                endTrigger: "#ck-badge",
-              },
-            })
-            .to(walkingManMobRef.current, {
-              transform: "translateZ(300px)",
-            })
-            .to(walkingManMobRef.current, {
-              opacity: 0,
-            })
-            .to(ckMobRef.current, {
-              opacity: 0,
-            });
-        },
-      });
+      if (isMobile) {
+        // Mobile walking animation
+        if (walkingRef.current && walkingManMobRef.current && ckMobRef.current) {
+          gsap.timeline({
+            scrollTrigger: {
+              trigger: walkingRef.current,
+              pin: walkingRef.current,
+              scrub: 1,
+              start: "top top",
+              end: "+=150%",
+              anticipatePin: 1,
+            },
+          })
+          .to(walkingManMobRef.current, {
+            scale: 1.3,
+            ease: "power2.inOut"
+          })
+          .to(walkingManMobRef.current, {
+            opacity: 0,
+            ease: "power2.in"
+          })
+          .to(ckMobRef.current, {
+            opacity: 0,
+            ease: "power2.in"
+          }, "-=0.2");
+        }
+      } else {
+        // Desktop walking animation
+        if (walkingRef.current && walkingManRef.current && ckRef.current) {
+          gsap.timeline({
+            scrollTrigger: {
+              trigger: walkingRef.current,
+              pin: walkingRef.current,
+              scrub: 1,
+              start: "top top",
+              end: "+=200%",
+            },
+          })
+          .to(walkingManRef.current, {
+            transform: "translateZ(300px)",
+          })
+          .to(walkingManRef.current, {
+            opacity: 0,
+          })
+          .to(ckRef.current, {
+            opacity: 0,
+          });
+        }
+      }
     });
     return () => ctx.revert();
-  });
+  }, [isMobile]);
 
+  // Fourth section: Badge reveal
   useLayoutEffect(() => {
-    // Only using id's here. No refs.
     const ctx = gsap.context(() => {
-      gsap
-        .timeline({
+      const badgeId = isMobile ? "#man-with-badge-mob" : "#man-with-badge";
+      
+      if (ckBadgeRef.current) {
+        gsap.timeline({
           scrollTrigger: {
-            pin: "#ck-badge",
-            trigger: "#ck-badge",
+            pin: ckBadgeRef.current,
+            trigger: ckBadgeRef.current,
             scrub: 1,
-            start: "0% 0%",
+            start: "top top",
+            end: isMobile ? "+=100%" : "+=150%",
+            anticipatePin: 1,
           },
         })
-        .to("#man-with-badge", {
+        .to(badgeId, {
           opacity: 0,
-        })
-        .to("#man-with-badge-mob", {
-          opacity: 0,
+          scale: 0.9,
+          ease: "power2.in"
         });
+      }
     });
     return () => ctx.revert();
-  });
+  }, [isMobile]);
+
+  const handleSectionClick = (targetId: string) => {
+    lenis?.scrollTo(targetId, {
+      duration: isMobile ? 1 : 1.5,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+    });
+  };
 
   return (
-    <div className="min-h-full max-w-full ">
-      <ReactLenis root options={{ autoRaf: false }} ref={lenisRef} />
+    <div className="min-h-screen w-full overflow-x-hidden bg-gray-900">
+      <ReactLenis 
+        root 
+        options={{ 
+          autoRaf: false,
+          lerp: isMobile ? 0.08 : 0.1,
+          duration: isMobile ? 1 : 1.2,
+          smoothWheel: true,
+          touchMultiplier: isMobile ? 1.5 : 2,
+        }} 
+        ref={lenisRef} 
+      />
+      
+      {/* Section 1: Entrance */}
       <div
         ref={smthDivRef}
-        className="min-h-screen max-w-full perspective-[2200px]"
-        id="smth"
-        onClick={() => {
-          lenis?.scrollTo("#another-div", {
-            duration: 1.5,
-          });
+        className="relative min-h-screen w-full overflow-hidden"
+        style={{ 
+          perspective: isMobile ? '1000px' : '2200px',
+          touchAction: 'pan-y pinch-zoom'
         }}
+        onClick={() => handleSectionClick("#another-div")}
       >
-        {/* Desktop first section images */}
+        {/* Desktop images */}
         <img
           src="/story/srm-bg-cropped-png.png"
-          alt="Your clg bruv"
-          className="z-10 w-full h-full absolute hidden md:block"
-          id="zoom-in"
+          alt="College entrance"
+          className="absolute inset-0 w-full h-full object-cover hidden md:block"
           ref={bgLg}
+          loading="eager"
         />
         <img
           src="/story/man-entering-png.png"
-          alt="Goi Entering SRM"
-          className="z-0 w-full h-full absolute opacity-0 hidden md:block"
+          alt="Man entering"
+          className="absolute inset-0 w-full h-full object-cover opacity-0 hidden md:block"
           ref={manEnteringRef}
+          loading="eager"
         />
 
-        {/* Mobile first section images */}
+        {/* Mobile images */}
         <img
           src="/story/srm-bg-png-mob.png"
-          alt="Your clg bruv (mobile)"
-          className="z-10 w-full h-full absolute md:hidden"
+          alt="College entrance"
+          className="absolute inset-0 w-full h-full object-cover md:hidden"
+          ref={bgMobRef}
+          loading="eager"
         />
         <img
           src="/story/man-entering-png-mob.png"
-          alt="Goi Entering SRM (mobile)"
-          className="z-0 w-full h-full absolute opacity-0 md:hidden"
-          id="man-entering-mob"
+          alt="Man entering"
+          className="absolute inset-0 w-full h-full object-cover opacity-0 md:hidden"
+          ref={manEnteringMobRef}
+          loading="eager"
         />
+        
+        {/* Touch indicator for mobile */}
+        {isMobile && (
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white text-sm opacity-70 animate-bounce pointer-events-none">
+            <svg className="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+            <span className="text-xs">Scroll</span>
+          </div>
+        )}
       </div>
 
+      {/* Section 2: Comments */}
       <div
-        className="min-h-screen max-w-full bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden"
-        id="another-div"
-        onClick={() => {
-          lenis?.scrollTo("#smth", {
-            duration: 1.5,
-          });
-        }}
         ref={anotherDivRef}
+        className="relative min-h-screen w-full bg-gray-100 flex items-center justify-center overflow-hidden"
+        style={{ touchAction: 'pan-y pinch-zoom' }}
+        onClick={() => handleSectionClick("#walking")}
+        id="another-div"
       >
-        {/* Desktop panicked man section */}
+        {/* Desktop version */}
         <div
-          className="flex items-center justify-center z-20 w-full h-full overflow-hidden hidden md:flex"
+          className="relative flex items-center justify-center w-full h-full hidden md:flex"
           id="panick"
         >
-          <div className="z-20 flex items-center justify-center">
+          <div className="relative z-20 w-full h-full flex items-center justify-center">
             <img
               src="/story/comment-1-png.png"
-              alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-60 bottom-40"
-              id="comment-1"
+              alt="Comment 1"
+              className="absolute w-1/5 h-auto opacity-0 left-[15%] bottom-[35%]"
               ref={commentOneRef}
-            />{" "}
+              loading="lazy"
+            />
             <img
               src="/story/comment-2-png.png"
-              alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-80 bottom-50"
-              id="comment-2"
+              alt="Comment 2"
+              className="absolute w-1/5 h-auto opacity-0 left-[25%] bottom-[25%]"
               ref={commentTwoRef}
+              loading="lazy"
             />
             <img
               src="/story/comment-3-png.png"
-              alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-10 bottom-10"
-              id="comment-3"
+              alt="Comment 3"
+              className="absolute w-1/5 h-auto opacity-0 left-[10%] bottom-[15%]"
               ref={commentThreeRef}
+              loading="lazy"
             />
           </div>
           <img
             src="/story/oat-with-man-png.png"
-            alt="Panicked Goi"
-            className="z-10 w-full h-full"
+            alt="Panicked person"
+            className="absolute inset-0 w-full h-full object-cover z-10"
+            loading="lazy"
           />
         </div>
 
-        {/* Mobile panicked man section */}
+        {/* Mobile version */}
         <div
-          className="flex items-center justify-center z-20 w-full h-full overflow-hidden md:hidden"
+          className="relative flex items-center justify-center w-full h-full md:hidden"
           id="panick-mob"
         >
-          <div className="z-20 flex items-center justify-center">
+          <div className="relative z-20 w-full h-full flex items-center justify-center">
             <img
               src="/story/comment-1-png.png"
-              alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-5 bottom-10"
-              id="comment-1-mob"
+              alt="Comment 1"
+              className="absolute w-[30%] h-auto opacity-0 left-[5%] bottom-[30%]"
+              ref={commentOneMobRef}
+              loading="lazy"
             />
             <img
               src="/story/comment-2-png.png"
-              alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-15 -bottom-10"
-              id="comment-2-mob"
+              alt="Comment 2"
+              className="absolute w-[30%] h-auto opacity-0 left-[10%] bottom-[20%]"
+              ref={commentTwoMobRef}
+              loading="lazy"
             />
             <img
               src="/story/comment-3-png.png"
-              alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-8 -bottom-25"
-              id="comment-3-mob"
+              alt="Comment 3"
+              className="absolute w-[30%] h-auto opacity-0 left-[8%] bottom-[10%]"
+              ref={commentThreeMobRef}
+              loading="lazy"
             />
           </div>
           <img
             src="/story/oat-man-with-bg-png-mob.png"
-            alt="Panicked Goi (mobile)"
-            className="z-10 w-full h-full"
+            alt="Panicked person"
+            className="absolute inset-0 w-full h-full object-cover z-10"
+            loading="lazy"
           />
         </div>
 
-        {/* Desktop shocked man background */}
+        {/* Background images */}
         <img
           src="/story/shocked-man-bg-png.png"
-          className="h-full w-full absolute z-0 overflow-y-hidden hidden md:block"
-          ref={sideLookingRef}
+          className="absolute inset-0 w-full h-full object-cover z-0 hidden md:block"
+          alt="Background"
+          loading="lazy"
         />
-
-        {/* Mobile shocked man background */}
         <img
           src="/story/shocked-man-png-mob.png"
-          className="h-full w-full absolute z-0 overflow-y-hidden md:hidden"
+          className="absolute inset-0 w-full h-full object-cover z-0 md:hidden"
+          alt="Background"
+          loading="lazy"
         />
       </div>
 
-      {/* <div
-        className="min-h-screen max-w-full bg-gray-100 bg-[url(/oat-bg-png.png)] bg-no-repeat bg-cover flex items-end justify-center z-10 overflow-y-hidden"
-        id="another-div"
-        onClick={() => {
-          lenis?.scrollTo("#smth", {
-            duration: 1.5,
-          });
-        }}
-        ref={anotherDivRef}
-      >
-        <div
-          className="flex items-end justify-center z-20 bg-[url(/oat-bg-png.png)] bg-no-repeat bg-cover w-full h-full overflow-hidden"
-          id="panick"
-        >
-          <div className="flex items-center justify-center">
-            <img
-              src="/comment-1-png.png"
-              alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-60 bottom-40"
-              id="comment-1"
-              ref={commentOneRef}
-            />{" "}
-            <img
-              src="/comment-2-png.png"
-              alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-80 bottom-50"
-              id="comment-2"
-              ref={commentTwoRef}
-            />
-            <img
-              src="/comment-3-png.png"
-              alt=""
-              className="absolute w-1/4 h-1/4 opacity-0 left-100 bottom-50"
-              id="comment-3"
-              ref={commentThreeRef}
-            />
-          </div>
-          <img
-            src="/panicked-man-png.png"
-            alt="Panicked Goi"
-            className="relative z-10 bottom-[-22.5vh] right-[5vw]"
-          />
-        </div>
-        <img
-          src="/shocked-man-bg-png.png"
-          className="h-full w-full absolute z-0 overflow-y-hidden"
-          ref={sideLookingRef}
-        />
-      </div> */}
-
+      {/* Section 3: Walking */}
       <div
-        className="min-h-screen max-w-full bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden overflow-x-hidden perspective-[500px]"
         ref={walkingRef}
+        id="walking"
+        className="relative min-h-screen w-full bg-gray-100 flex items-center justify-center overflow-hidden"
+        style={{ 
+          perspective: isMobile ? '300px' : '500px',
+          touchAction: 'pan-y pinch-zoom'
+        }}
       >
-        {/* Desktop walking images */}
+        {/* Desktop version */}
         <img
           src="/story/oat-walking-bg-png.png"
-          alt="Goi walking"
-          className="w-full h-full absolute z-10 hidden md:block"
+          alt="Walking scene"
+          className="absolute inset-0 w-full h-full object-cover z-10 hidden md:block"
           ref={walkingManRef}
+          loading="lazy"
         />
         <img
           src="/story/ck-png.png"
-          alt="Goi walking"
-          className="w-full h-full absolute z-0 hidden md:block"
-          id="ck"
+          alt="CK"
+          className="absolute inset-0 w-full h-full object-cover z-0 hidden md:block"
           ref={ckRef}
+          loading="lazy"
         />
         <img
           src="/story/moi-png.png"
-          alt="Ck moi"
-          className="w-full h-full absolute -z-10 hidden md:block"
-          ref={moiRef}
+          alt="Background detail"
+          className="absolute inset-0 w-full h-full object-cover -z-10 hidden md:block"
+          loading="lazy"
         />
 
-        {/* Mobile walking images */}
+        {/* Mobile version */}
         <img
           src="/story/oat-walking-bg-png-mob.png"
-          alt="Goi walking (mob)"
-          className="w-full h-full absolute z-10 md:hidden"
+          alt="Walking scene"
+          className="absolute inset-0 w-full h-full object-cover z-10 md:hidden"
           ref={walkingManMobRef}
+          loading="lazy"
         />
         <img
           src="/story/ck-png-mob.png"
-          alt="Goi walking (mob)"
-          className="w-full h-full absolute z-0 md:hidden"
-          id="ck-mob"
+          alt="CK"
+          className="absolute inset-0 w-full h-full object-cover z-0 md:hidden"
           ref={ckMobRef}
+          loading="lazy"
         />
         <img
           src="/story/moi-png-mob.png"
-          alt="Ck moi (mob)"
-          className="w-full h-full absolute -z-10 md:hidden"
-          ref={moiMobRef}
+          alt="Background detail"
+          className="absolute inset-0 w-full h-full object-cover -z-10 md:hidden"
+          loading="lazy"
         />
       </div>
+
+      {/* Section 4: Badge */}
       <div
-        className="min-h-screen max-w-full bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden overflow-x-hidden"
-        id="ck-badge"
+        ref={ckBadgeRef}
+        className="relative min-h-screen w-full bg-gray-100 flex items-center justify-center overflow-hidden"
+        style={{ touchAction: 'pan-y pinch-zoom' }}
       >
-        {/* Desktop badge section */}
+        {/* Desktop version */}
         <img
           src="/story/man-ck-badge-png.png"
-          alt="Man kuthifying ck badge"
-          className="z-0 w-full h-full hidden md:block"
+          alt="Badge achievement"
+          className="absolute inset-0 w-full h-full object-cover z-0 hidden md:block"
           id="man-with-badge"
+          loading="lazy"
         />
         <img
           src="/story/placement-png.png"
-          alt="My goi got placedd!!"
-          className="absolute -z-10 w-full h-full hidden md:block"
-          id="placement"
+          alt="Placement success"
+          className="absolute inset-0 w-full h-full object-cover -z-10 hidden md:block"
+          loading="lazy"
         />
 
-        {/* Mobile badge section */}
+        {/* Mobile version */}
         <img
           src="/story/man-ck-badge-png-mob.png"
-          alt="Man kuthifying ck badge (mobile)"
-          className="z-0 w-full h-full md:hidden"
+          alt="Badge achievement"
+          className="absolute inset-0 w-full h-full object-cover z-0 md:hidden"
           id="man-with-badge-mob"
+          loading="lazy"
         />
         <img
           src="/story/placement-png-mob.png"
-          alt="My goi got placedd!! (mobile)"
-          className="absolute -z-10 w-full h-full md:hidden"
-          id="placement-mob"
+          alt="Placement success"
+          className="absolute inset-0 w-full h-full object-cover -z-10 md:hidden"
+          loading="lazy"
         />
+        
+        {/* End indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-700 text-sm opacity-70 pointer-events-none z-10">
+          <span className="text-lg">🎉</span>
+          <p className="text-xs mt-1">The End</p>
+        </div>
       </div>
     </div>
   );

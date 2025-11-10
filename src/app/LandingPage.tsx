@@ -1,12 +1,8 @@
 "use client"
 
-
-
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-
-
 
 export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,7 +11,6 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
   useEffect(() => {
     setIsVisible(true);
   }, []);
-
 
   function handleEnter() {
     setIsExiting(true);
@@ -26,7 +21,7 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
 
   return (
     <main
-      className={`w-full h-screen bg-black flex flex-col items-center justify-center overflow-hidden`}
+      className={`w-full h-screen bg-black flex flex-col items-center justify-center overflow-hidden px-4`}
     >
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <AnimatePresence>
@@ -36,22 +31,30 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.1 }}
               transition={{ duration: 0.9, ease: "easeInOut" }}
-              className="flex flex-col items-center justify-center focus:outline-none"
+              className="flex flex-col items-center justify-center focus:outline-none px-6"
               style={{ background: "none", border: "none", cursor: "pointer", perspective: 1000 }}
               onClick={handleEnter}
               disabled={isExiting}
             >
               <motion.div
-                className="mb-8"
+                className="mb-6 sm:mb-8"
                 initial={{ rotateY: 0 }}
                 animate={{ rotateY: 0 }}
                 exit={{ rotateY: 180 }}
                 transition={{ duration: 0.9, ease: "easeInOut" }}
                 style={{ willChange: "transform" }}
               >
-                <Image src="/logo.png" alt="CodeKrafters" width={160} height={160} />
+                <Image 
+                  src="/logo.png" 
+                  alt="CodeKrafters" 
+                  width={120} 
+                  height={120}
+                  className="w-25 h-20 sm:w-32 sm:h-30 md:w-40 md:h-40"
+                />
               </motion.div>
-              <span className="text-2xl text-yellow-400 font-bold animate-heartbeat">Press to enter</span>
+              <span className="text-lg sm:text-xl md:text-2xl text-yellow-400 font-bold animate-heartbeat text-center">
+                Press to enter
+              </span>
             </motion.button>
           )}
         </AnimatePresence>

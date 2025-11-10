@@ -1,38 +1,14 @@
 "use client"
 
-import { motion } from "framer-motion"
-import Image from "next/image"
+import { motion, AnimatePresence } from "framer-motion"
 import { useEffect, useState, useMemo, memo } from "react"
-import { Poppins, Orbitron, League_Spartan } from 'next/font/google';
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['400', '700'], // Specify desired weights
-  variable: '--font-poppins', // Optional: for use with CSS variables
-});
-
-const orbitron = Orbitron({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['400', '700','900'], // Specify desired weights
-  variable: '--font-orbitron', // Optional: for use with CSS variables
-});
-
-const leagueSpartan = League_Spartan({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['400', '600', '700'], // Specify desired weights
-  variable: '--font-league-spartan', // Optional: for use with CSS variables
-});
 
 interface TeamMember {
   id: number
   name: string
   role: string
-  imagePath: string // Add this field
+  imagePath: string
 }
-
 
 interface TeamMemberCardProps {
   member: TeamMember
@@ -81,107 +57,54 @@ const getRoleLabel = (role: string): string => {
 // Memoized team member card component
 const TeamMemberCard = memo<TeamMemberCardProps>(({ member, delay = 0, activeImageId, onImageClick }) => {
   const [isMounted, setIsMounted] = useState(false)
-  const [deviceType, setDeviceType] = useState<"mobile" | "tablet" | "desktop">("desktop")
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
 
-  // Check if this image is the active one
   const isActive = activeImageId === member.id
+  const isPresident = member.id === 1
 
   useEffect(() => {
     setIsMounted(true)
-    // Set device type on mount and on resize
-    const updateDeviceType = () => {
-      if (window.innerWidth < 640) setDeviceType("mobile")
-      else if (window.innerWidth < 1024) setDeviceType("tablet")
-      else setDeviceType("desktop")
+    const updateDevice = () => {
+      setIsMobile(window.innerWidth < 640)
+      setIsTablet(window.innerWidth >= 640 && window.innerWidth < 1024)
     }
 
-    updateDeviceType()
-    window.addEventListener("resize", updateDeviceType)
-    return () => window.removeEventListener("resize", updateDeviceType)
+    updateDevice()
+    window.addEventListener("resize", updateDevice)
+    return () => window.removeEventListener("resize", updateDevice)
   }, [])
 
-  // const textShadowStyle = useMemo(
-  //   () => ({
-  //     textShadow:
-  //       "1px 1px 2px rgba(0,0,0,0.8), -1px -1px 2px rgba(0,0,0,0.8), 1px -1px 2px rgba(0,0,0,0.8), -1px 1px 2px rgba(0,0,0,0.8)",
-  //   }),
-  //   [],
-  // )
-
-  // Role label styling with League Spartan, larger font size, and reduced letter spacing to match Canva
-  const roleLabelStyle = useMemo(
-    () => ({
-      fontSize: '25px', // Very slight increase from 24px
-      letterSpacing: '1.5px', // Slightly reduced from 2px
-      lineHeight: '1.63', // Line spacing 1.63 from Canva
-      textTransform: 'uppercase' as const, // Ensure uppercase like in Canva
-      fontWeight: '700', // Make it bolder to match Canva appearance
-    }),
-    [],
-  )
-
-  // Toggle overlay and color on mobile/tablet
   const handleCardClick = () => {
-    if (deviceType === "mobile" || deviceType === "tablet") {
-      if (onImageClick) {
-        // If clicking the same image, toggle it off, otherwise set it as active
-        onImageClick(isActive ? -1 : member.id)
-      }
+    if ((isMobile || isTablet) && onImageClick) {
+      onImageClick(isActive ? -1 : member.id)
     }
   }
 
-  // Get container dimensions based on device type
   const getContainerStyle = () => {
-    switch (deviceType) {
-      case "mobile":
-        return { width: "320px", height: "340px" } // Increased from 200px width and 280px height
-      case "tablet":
-        return { width: "160.8px", height: "171.78px" }
-      case "desktop":
-        return { width: "212.8px", height: "253.78px" }
-      default:
-        return { width: "212.8px", height: "253.78px" }
-    }
+    if (isMobile) return { width: "280px", height: "300px" }
+    if (isTablet) return { width: "160px", height: "172px" }
+    return { width: "213px", height: "254px" }
   }
 
   const roleLabel = getRoleLabel(member.role)
-  
-  // Check if this is the first member (President)
-  const isPresident = member.id === 1
 
   if (!isMounted) {
     return (
-      <div className="relative group">
-        {/* Fixed size container based on device type */}
+      <div className="relative">
         <div style={getContainerStyle()}>
           <div className="w-full h-full overflow-hidden shadow-lg bg-yellow-400 relative rounded-lg flex flex-col">
-            {/* Role label - consistent 25% for all cards */}
             <div className="h-1/4 flex items-center justify-center bg-yellow-400">
-              <span 
-                className={`${leagueSpartan.className} text-black font-bold text-center px-2`}
-                style={roleLabelStyle}
-              >
+              <span className="font-bold text-black text-center px-2 uppercase" style={{ fontSize: '20px', letterSpacing: '1.5px' }}>
                 {roleLabel}
               </span>
             </div>
-            {/* Image container - consistent 75% for all cards */}
             <div className="h-3/4 relative overflow-hidden">
-              <Image
+              <img
                 src={member.imagePath}
                 alt={member.name}
-                fill
-                className={`object-cover transition-all duration-300 ${isPresident ? 'object-center' : 'object-top'}`}
-                priority={member.id <= 12}
-                sizes="(max-width: 640px) 200px, (max-width: 1024px) 160.8px, 273px"
+                className={`w-full h-full object-cover ${isPresident ? 'object-center' : 'object-top'}`}
               />
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent p-2 opacity-0 transition-opacity duration-300">
-              <p className="font-bold text-white text-sm leading-tight" >
-                {member.name}
-              </p>
-              <p className="text-white text-sm leading-tight">
-                {member.role}
-              </p>
             </div>
           </div>
         </div>
@@ -194,64 +117,53 @@ const TeamMemberCard = memo<TeamMemberCardProps>(({ member, delay = 0, activeIma
       <motion.div
         style={{
           ...getContainerStyle(),
-          cursor: deviceType === "mobile" || deviceType === "tablet" ? "pointer" : "default",
+          cursor: isMobile || isTablet ? "pointer" : "default",
         }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay }}
-        whileHover={deviceType === "desktop" ? { scale: 1.1, transition: { duration: 0.2 } } : {}}
+        whileHover={!isMobile && !isTablet ? { scale: 1.05, transition: { duration: 0.2 } } : {}}
         onClick={handleCardClick}
       >
-        <div className="w-full h-full overflow-hidden shadow-lg bg-yellow-400 ring-2 ring-white/20 group-hover:ring-4 group-hover:ring-white/40 transition-all duration-300 relative flex flex-col">
-          {/* Role label - consistent 25% for all cards */}
+        <div className="w-full h-full overflow-hidden shadow-xl bg-yellow-400 ring-2 ring-white/20 group-hover:ring-4 group-hover:ring-white/40 transition-all duration-300 relative flex flex-col rounded-lg">
+          {/* Role label */}
           <div className="h-1/4 flex items-center justify-center bg-yellow-400">
             <span 
-              className={`${leagueSpartan.className} text-black font-bold text-center px-2`}
-              style={roleLabelStyle}
+              className="font-bold text-black text-center px-2 uppercase"
+              style={{ 
+                fontSize: isMobile ? '18px' : '20px', 
+                letterSpacing: '1.5px',
+                fontWeight: '700'
+              }}
             >
               {roleLabel}
             </span>
           </div>
-          {/* Image container - consistent 75% for all cards */}
+          
+          {/* Image container */}
           <div className="h-3/4 relative overflow-hidden">
-            <Image
+            <img
               src={member.imagePath}
               alt={member.name}
-              fill
-              className={`object-cover transition-all duration-300 ${isPresident ? 'object-center' : 'object-top'}`}
-              priority={member.id <= 12}
-              sizes="(max-width: 640px) 200px, (max-width: 1024px) 160.8px, 273px"
+              className={`w-full h-full object-cover transition-all duration-300 ${isPresident ? 'object-center' : 'object-top'}`}
+              loading={member.id <= 12 ? "eager" : "lazy"}
             />
           </div>
 
+          {/* Hover/Active overlay */}
           <div
-            className={
-              `absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent p-1 sm:p-2 transition-opacity duration-300 ` +
-              (deviceType === "desktop" ? "opacity-0 group-hover:opacity-100" : isActive ? "opacity-100" : "opacity-0")
-            }
+            className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent p-2 transition-opacity duration-300 ${
+              !isMobile && !isTablet
+                ? "opacity-0 group-hover:opacity-100"
+                : isActive
+                  ? "opacity-100"
+                  : "opacity-0"
+            }`}
           >
-            <p
-              className={`font-bold text-white leading-tight ${
-                deviceType === "desktop"
-                  ? "text-xs sm:text-xs md:text-sm"
-                  : deviceType === "mobile"
-                    ? "text-sm"
-                    : "text-xs"
-              }`}
-              // style={textShadowStyle}
-            >
+            <p className={`font-bold text-white leading-tight ${isMobile ? 'text-sm' : 'text-xs'}`}>
               {member.name}
             </p>
-            <p
-              className={`text-white leading-tight ${
-                deviceType === "desktop"
-                  ? "text-xs sm:text-xs md:text-xs"
-                  : deviceType === "mobile"
-                    ? "text-xs"
-                    : "text-xs"
-              }`}
-              // style={textShadowStyle}
-            >
+            <p className={`text-white leading-tight ${isMobile ? 'text-xs' : 'text-xs'}`}>
               {member.role}
             </p>
           </div>
@@ -263,23 +175,24 @@ const TeamMemberCard = memo<TeamMemberCardProps>(({ member, delay = 0, activeIma
 
 TeamMemberCard.displayName = "TeamMemberCard"
 
-// Memoized title component
-const AnimatedTitle = memo<{ isMounted: boolean; className: string; delay: number }>(
-  ({ isMounted, className, delay }) => {
+// Animated Title Component
+const AnimatedTitle = memo<{ isMounted: boolean; isMobile?: boolean; delay: number }>(
+  ({ isMounted, isMobile = false, delay }) => {
     const content = (
-      <div className={className + " flex flex-col items-center justify-center"}>
-        <span className={`${orbitron.className} font-extrabold`}>
+      <div className={`flex flex-col items-center justify-center ${isMobile ? 'mb-6' : ''}`}>
+        <span className={`font-extrabold ${isMobile ? 'text-xl' : 'text-4xl lg:text-5xl'}`}>
           CODE<span className="text-yellow-500">KRAFTERS</span>
         </span>
-        <span className={`${poppins.className} block`}>CORE TEAM</span>
+        <span className={`font-semibold block ${isMobile ? 'text-base text-gray-800' : 'text-2xl'}`}>
+          CORE TEAM
+        </span>
       </div>
     )
 
-    if (!isMounted) return <div className="flex flex-col items-center justify-center">{content}</div>
+    if (!isMounted) return content
 
     return (
       <motion.div
-        className="flex flex-col items-center justify-center"
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut", delay }}
@@ -287,57 +200,39 @@ const AnimatedTitle = memo<{ isMounted: boolean; className: string; delay: numbe
         {content}
       </motion.div>
     )
-  },
+  }
 )
 
 AnimatedTitle.displayName = "AnimatedTitle"
-
-// Memoized mobile title component
-const MobileTitle = memo<{ isMounted: boolean; delay: number }>(({ isMounted, delay }) => {
-  const content = (
-    <div className="flex flex-col items-center justify-center mb-6">
-      <span className={`text-lg font-bold ${orbitron.className}`}>CODE<span className="text-yellow-500">KRAFTERS</span></span>
-      <span className={`text-sm font-semibold text-gray-800 text-center ${poppins.className}`}>CORE TEAM</span>
-    </div>
-  )
-
-  if (!isMounted) {
-    return <div className="flex flex-col items-center justify-center mb-6">{content}</div>
-  }
-
-  return (
-    <motion.div
-      className="flex flex-col items-center justify-center mb-6"
-      initial={{ opacity: 0, y: -30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut", delay }}
-    >
-      {content}
-    </motion.div>
-  )
-})
-
-MobileTitle.displayName = "MobileTitle"
 
 const TeamMemberComponent = () => {
   const [isMounted, setIsMounted] = useState(false)
   const [activeImageId, setActiveImageId] = useState<number | null>(null)
   const [currentGroupIndex, setCurrentGroupIndex] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     setIsMounted(true)
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // Mobile group rotation effect
+  // Auto-rotate mobile groups
   useEffect(() => {
+    if (!isMobile) return
+    
     const interval = setInterval(() => {
-      setCurrentGroupIndex((prevIndex) => (prevIndex + 1) % 6) // 6 groups total (24 members / 4 per group)
-    }, 6000) // Change every 6 seconds
+      setCurrentGroupIndex((prev) => (prev + 1) % 7)
+    }, 5000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [isMobile])
 
-  // Memoized team member slices
+  // Team slices for desktop/tablet
   const teamSlices = useMemo(
     () => ({
       first5: TEAM_MEMBERS.slice(0, 5),
@@ -346,22 +241,23 @@ const TeamMemberComponent = () => {
       member11: TEAM_MEMBERS[11],
       third5: TEAM_MEMBERS.slice(12, 17),
       fourth5: TEAM_MEMBERS.slice(17, 22),
-      last2: TEAM_MEMBERS.slice(22, 26),
+      last4: TEAM_MEMBERS.slice(22, 26),
     }),
-    [],
+    []
   )
 
-  // Mobile team member groups - organizing all 24 members into 6 groups of 4
+  // Mobile groups - 2x2 grid
   const mobileTeamGroups = useMemo(
     () => [
-      TEAM_MEMBERS.slice(0, 4), // Group 1: Members 1-4
-      TEAM_MEMBERS.slice(4, 8), // Group 2: Members 5-8
-      TEAM_MEMBERS.slice(8, 12), // Group 3: Members 9-12
-      TEAM_MEMBERS.slice(12, 16), // Group 4: Members 13-16
-      TEAM_MEMBERS.slice(16, 20), // Group 5: Members 17-20
-      TEAM_MEMBERS.slice(20, 26), // Group 6: Members 21-24
+      TEAM_MEMBERS.slice(0, 4),
+      TEAM_MEMBERS.slice(4, 8),
+      TEAM_MEMBERS.slice(8, 12),
+      TEAM_MEMBERS.slice(12, 16),
+      TEAM_MEMBERS.slice(16, 20),
+      TEAM_MEMBERS.slice(20, 24),
+      TEAM_MEMBERS.slice(24, 26), // Last 2
     ],
-    [],
+    []
   )
 
   const handleImageClick = (id: number) => {
@@ -369,204 +265,189 @@ const TeamMemberComponent = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f0f0d5] flex flex-col items-center justify-start px-4 py-8 overflow-y-auto relative">
-      <div className="flex-grow flex flex-col items-center justify-center">
-        {/* Desktop Layout (>= 1024px) */}
-        <div className="hidden lg:block">
-          <div className="grid grid-cols-5 gap-12 place-items-center">
-            {/* Row 1: 5 images */}
-            {teamSlices.first5.map((member, index) => (
-              <TeamMemberCard
-                key={member.id}
-                member={member}
-                delay={index * 0.05}
-                activeImageId={activeImageId}
-                onImageClick={handleImageClick}
-              />
-            ))}
-            {/* Row 2: 5 images */}
-            {teamSlices.second5.map((member, index) => (
-              <TeamMemberCard
-                key={member.id}
-                member={member}
-                delay={(index + 5) * 0.05}
-                activeImageId={activeImageId}
-                onImageClick={handleImageClick}
-              />
-            ))}
-            {/* Row 3: 2 images with title in middle */}
+    <div className="min-h-screen bg-[#f0f0d5] flex flex-col items-center justify-center px-4 py-8 overflow-hidden">
+      {/* Desktop Layout (>= 1024px) */}
+      <div className="hidden lg:block">
+        <div className="grid grid-cols-5 gap-8 xl:gap-12 place-items-center">
+          {/* Row 1 */}
+          {teamSlices.first5.map((member, index) => (
             <TeamMemberCard
-              member={teamSlices.member10}
-              delay={1.0}
+              key={member.id}
+              member={member}
+              delay={index * 0.05}
               activeImageId={activeImageId}
               onImageClick={handleImageClick}
             />
-            <div className="col-span-3 flex justify-center">
-              <AnimatedTitle
-                isMounted={isMounted}
-                className="text-4xl lg:text-5xl font-bold text-gray-900 drop-shadow-lg text-center"
-                delay={1.2}
-              />
-            </div>
+          ))}
+          {/* Row 2 */}
+          {teamSlices.second5.map((member, index) => (
             <TeamMemberCard
-              member={teamSlices.member11}
-              delay={1.0}
+              key={member.id}
+              member={member}
+              delay={(index + 5) * 0.05}
               activeImageId={activeImageId}
               onImageClick={handleImageClick}
             />
-            {/* Row 4: 5 images */}
-            {teamSlices.third5.map((member, index) => (
-              <TeamMemberCard
-                key={member.id}
-                member={member}
-                delay={(index + 13) * 0.05}
-                activeImageId={activeImageId}
-                onImageClick={handleImageClick}
-              />
-            ))}
-            {/* Row 5: 5 images */}
-            {teamSlices.fourth5.map((member, index) => (
-              <TeamMemberCard
-                key={member.id}
-                member={member}
-                delay={(index + 18) * 0.05}
-                activeImageId={activeImageId}
-                onImageClick={handleImageClick}
-              />
-            ))}
-            {/* Row 6: 2 images centered in first 2 columns */}
-            {teamSlices.last2.map((member, index) => (
-              <TeamMemberCard
-                key={member.id}
-                member={member}
-                delay={(index + 23) * 0.05}
-                activeImageId={activeImageId}
-                onImageClick={handleImageClick}
-              />
-            ))}
-            <div className="col-span-3"></div>
+          ))}
+          {/* Row 3: Title in middle */}
+          <TeamMemberCard
+            member={teamSlices.member10}
+            delay={0.5}
+            activeImageId={activeImageId}
+            onImageClick={handleImageClick}
+          />
+          <div className="col-span-3 flex justify-center">
+            <AnimatedTitle isMounted={isMounted} delay={0.6} />
           </div>
+          <TeamMemberCard
+            member={teamSlices.member11}
+            delay={0.5}
+            activeImageId={activeImageId}
+            onImageClick={handleImageClick}
+          />
+          {/* Row 4 */}
+          {teamSlices.third5.map((member, index) => (
+            <TeamMemberCard
+              key={member.id}
+              member={member}
+              delay={(index + 13) * 0.05}
+              activeImageId={activeImageId}
+              onImageClick={handleImageClick}
+            />
+          ))}
+          {/* Row 5 */}
+          {teamSlices.fourth5.map((member, index) => (
+            <TeamMemberCard
+              key={member.id}
+              member={member}
+              delay={(index + 18) * 0.05}
+              activeImageId={activeImageId}
+              onImageClick={handleImageClick}
+            />
+          ))}
+          {/* Row 6: Last 4 */}
+          {teamSlices.last4.map((member, index) => (
+            <TeamMemberCard
+              key={member.id}
+              member={member}
+              delay={(index + 23) * 0.05}
+              activeImageId={activeImageId}
+              onImageClick={handleImageClick}
+            />
+          ))}
+          <div className="col-span-1"></div>
+        </div>
+      </div>
+
+      {/* Tablet Layout (640px - 1024px) */}
+      <div className="hidden sm:block lg:hidden">
+        <div className="grid grid-cols-5 gap-6 place-items-center max-w-4xl mx-auto">
+          {teamSlices.first5.map((member, index) => (
+            <TeamMemberCard
+              key={member.id}
+              member={member}
+              delay={index * 0.05}
+              activeImageId={activeImageId}
+              onImageClick={handleImageClick}
+            />
+          ))}
+          {teamSlices.second5.map((member, index) => (
+            <TeamMemberCard
+              key={member.id}
+              member={member}
+              delay={(index + 5) * 0.05}
+              activeImageId={activeImageId}
+              onImageClick={handleImageClick}
+            />
+          ))}
+          <TeamMemberCard
+            member={teamSlices.member10}
+            delay={0.5}
+            activeImageId={activeImageId}
+            onImageClick={handleImageClick}
+          />
+          <div className="col-span-3 flex justify-center">
+            <AnimatedTitle isMounted={isMounted} delay={0.6} />
+          </div>
+          <TeamMemberCard
+            member={teamSlices.member11}
+            delay={0.5}
+            activeImageId={activeImageId}
+            onImageClick={handleImageClick}
+          />
+          {teamSlices.third5.map((member, index) => (
+            <TeamMemberCard
+              key={member.id}
+              member={member}
+              delay={(index + 13) * 0.05}
+              activeImageId={activeImageId}
+              onImageClick={handleImageClick}
+            />
+          ))}
+          {teamSlices.fourth5.map((member, index) => (
+            <TeamMemberCard
+              key={member.id}
+              member={member}
+              delay={(index + 18) * 0.05}
+              activeImageId={activeImageId}
+              onImageClick={handleImageClick}
+            />
+          ))}
+          {teamSlices.last4.map((member, index) => (
+            <TeamMemberCard
+              key={member.id}
+              member={member}
+              delay={(index + 23) * 0.05}
+              activeImageId={activeImageId}
+              onImageClick={handleImageClick}
+            />
+          ))}
+          <div className="col-span-1"></div>
+        </div>
+      </div>
+
+      {/* Mobile Layout (< 640px) - 2x2 Grid */}
+      <div className="block sm:hidden w-full max-w-lg mx-auto">
+        <AnimatedTitle isMounted={isMounted} isMobile delay={0.2} />
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentGroupIndex}
+            className="grid grid-cols-2 gap-4 place-items-center px-2"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.5 }}
+          >
+            {mobileTeamGroups[currentGroupIndex].map((member, index) => (
+              <TeamMemberCard
+                key={member.id}
+                member={member}
+                delay={index * 0.1}
+                activeImageId={activeImageId}
+                onImageClick={handleImageClick}
+              />
+            ))}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Pagination dots */}
+        <div className="flex justify-center gap-2 mt-6">
+          {mobileTeamGroups.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentGroupIndex(index)}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                index === currentGroupIndex ? "bg-yellow-500 w-6" : "bg-gray-400"
+              }`}
+              aria-label={`Go to group ${index + 1}`}
+            />
+          ))}
         </div>
 
-        {/* Tablet Layout (640px - 1024px) */}
-        <div className="hidden sm:block lg:hidden">
-          <div className="grid grid-cols-5 gap-8 place-items-center max-w-4xl mx-auto">
-            {/* Row 1: 5 images */}
-            {teamSlices.first5.map((member, index) => (
-              <TeamMemberCard
-                key={member.id}
-                member={member}
-                delay={index * 0.05}
-                activeImageId={activeImageId}
-                onImageClick={handleImageClick}
-              />
-            ))}
-            {/* Row 2: 5 images */}
-            {teamSlices.second5.map((member, index) => (
-              <TeamMemberCard
-                key={member.id}
-                member={member}
-                delay={(index + 5) * 0.05}
-                activeImageId={activeImageId}
-                onImageClick={handleImageClick}
-              />
-            ))}
-            {/* Row 3: 2 images with title in middle */}
-            <TeamMemberCard
-              member={teamSlices.member10}
-              delay={1.0}
-              activeImageId={activeImageId}
-              onImageClick={handleImageClick}
-            />
-            <div className="col-span-3 flex justify-center">
-              <AnimatedTitle
-                isMounted={isMounted}
-                className="text-2xl sm:text-3xl font-bold text-gray-900 drop-shadow-lg text-center"
-                delay={1.2}
-              />
-            </div>
-            <TeamMemberCard
-              member={teamSlices.member11}
-              delay={1.0}
-              activeImageId={activeImageId}
-              onImageClick={handleImageClick}
-            />
-            {/* Row 4: 5 images */}
-            {teamSlices.third5.map((member, index) => (
-              <TeamMemberCard
-                key={member.id}
-                member={member}
-                delay={(index + 13) * 0.05}
-                activeImageId={activeImageId}
-                onImageClick={handleImageClick}
-              />
-            ))}
-            {/* Row 5: 5 images */}
-            {teamSlices.fourth5.map((member, index) => (
-              <TeamMemberCard
-                key={member.id}
-                member={member}
-                delay={(index + 18) * 0.05}
-                activeImageId={activeImageId}
-                onImageClick={handleImageClick}
-              />
-            ))}
-            {/* Row 6: 2 images in first 2 columns */}
-            {teamSlices.last2.map((member, index) => (
-              <TeamMemberCard
-                key={member.id}
-                member={member}
-                delay={(index + 23) * 0.05}
-                activeImageId={activeImageId}
-                onImageClick={handleImageClick}
-              />
-            ))}
-            <div className="col-span-3"></div>
-          </div>
-        </div>
-
-        {/* Mobile Layout (< 640px) */}
-        <div className="block sm:hidden">
-          <div className="flex flex-col items-center max-w-sm mx-auto">
-            {/* Mobile Title */}
-            <MobileTitle isMounted={isMounted} delay={0.2} />
-
-            {/* Mobile Grid - Rotating groups of 4 members vertically */}
-            <motion.div
-              key={currentGroupIndex}
-              className="flex flex-col gap-6 items-center"
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -30, scale: 0.95 }}
-              transition={{
-                duration: 0.8,
-                ease: [0.25, 0.46, 0.45, 0.94],
-                staggerChildren: 0.1,
-              }}
-            >
-              {mobileTeamGroups[currentGroupIndex].map((member, index) => (
-                <TeamMemberCard
-                  key={member.id}
-                  member={member}
-                  delay={index * 0.1}
-                  activeImageId={activeImageId}
-                  onImageClick={handleImageClick}
-                />
-              ))}
-            </motion.div>
-
-            {/* Group indicator dots */}
-            <div className="flex gap-2 mt-6">
-              {mobileTeamGroups.map((_, index) => (
-                <div
-                  key={index}
-                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                    index === currentGroupIndex ? "bg-yellow-500" : "bg-gray-400"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
+        {/* Progress indicator */}
+        <div className="text-center mt-3 text-sm text-gray-700">
+          Group {currentGroupIndex + 1} of {mobileTeamGroups.length}
         </div>
       </div>
     </div>

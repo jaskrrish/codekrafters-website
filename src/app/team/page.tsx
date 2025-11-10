@@ -139,74 +139,78 @@ const values = [
 export default function TeamPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      <section className="relative overflow-hidden px-6 py-24 sm:px-12">
+      {/* HERO SECTION */}
+      <section className="relative overflow-hidden px-4 py-16 sm:px-6 sm:py-24 md:px-12">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.25),_transparent_55%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(140deg,_rgba(192,132,252,0.15),_transparent_60%)]" />
         <div className="relative mx-auto max-w-5xl text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Meet the crew</p>
-          <h1 className="mt-6 text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
+          <p className="text-xs sm:text-sm uppercase tracking-[0.3em] text-slate-400">Meet the crew</p>
+          <h1 className="mt-4 sm:mt-6 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-semibold leading-tight">
             A collective of builders, storytellers and strategists shaping CK
           </h1>
-          <p className="mt-6 text-lg text-slate-300 sm:text-xl">
+          <p className="mt-4 sm:mt-6 text-base sm:text-lg lg:text-xl text-slate-300 px-2">
             Inspired by the vibrant culture at Goodway, our team page celebrates the people behind CK. Dive into
             leadership, meet chapter leads and discover how we collaborate to deliver memorable student experiences.
           </p>
         </div>
-        <div className="relative mx-auto mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl">
+
+        {/* LEADERSHIP CARDS */}
+        <div className="relative mx-auto mt-12 sm:mt-16 grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl">
           {leadership.map((leader) => (
             <article
               key={leader.name}
-              className="group relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 p-8 backdrop-blur"
+              className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 backdrop-blur"
             >
               <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-transparent to-purple-500/30" />
               </div>
               <div className="relative flex flex-col items-center text-center">
-                <div className="relative h-40 w-40 overflow-hidden rounded-full border border-slate-700">
+                <div className="relative h-32 w-32 sm:h-40 sm:w-40 overflow-hidden rounded-full border border-slate-700">
                   <Image
                     src={leader.image}
                     alt={leader.name}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    sizes="160px"
+                    sizes="(max-width: 640px) 128px, 160px"
                   />
                 </div>
-                <h3 className="mt-6 text-2xl font-semibold text-white">{leader.name}</h3>
-                <p className="text-sm uppercase tracking-widest text-cyan-300/90">{leader.role}</p>
-                <p className="mt-4 text-sm leading-relaxed text-slate-300">{leader.bio}</p>
+                <h3 className="mt-4 sm:mt-6 text-xl sm:text-2xl font-semibold text-white">{leader.name}</h3>
+                <p className="text-xs sm:text-sm uppercase tracking-widest text-cyan-300/90">{leader.role}</p>
+                <p className="mt-3 sm:mt-4 text-xs sm:text-sm leading-relaxed text-slate-300">{leader.bio}</p>
               </div>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="px-6 py-20 sm:px-12">
-        <div className="mx-auto flex max-w-6xl flex-col gap-12 lg:flex-row">
+      {/* CHAPTERS SECTION */}
+      <section className="px-4 py-16 sm:px-6 sm:py-20 md:px-12">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 sm:gap-12 lg:flex-row">
           <div className="lg:w-1/3">
-            <p className="text-sm uppercase tracking-[0.3em] text-slate-400">How we operate</p>
-            <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">
+            <p className="text-xs sm:text-sm uppercase tracking-[0.3em] text-slate-400">How we operate</p>
+            <h2 className="mt-3 sm:mt-4 text-2xl sm:text-3xl lg:text-4xl font-semibold text-white">
               Chapters powering programs, products and community impact
             </h2>
-            <p className="mt-4 text-base text-slate-300">
+            <p className="mt-3 sm:mt-4 text-sm sm:text-base text-slate-300">
               Every chapter owns its craft—from production studios to engineering labs. Together we co-create everything
               that shows up across CK, ensuring every initiative feels polished, intentional and people-first.
             </p>
           </div>
-          <div className="grid flex-1 gap-6 sm:grid-cols-2">
+          <div className="grid flex-1 gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
             {teamChapters.map((chapter) => (
               <article
                 key={chapter.name}
-                className="group relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur"
+                className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6 backdrop-blur"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${chapter.accent} opacity-0 transition-opacity duration-500 group-hover:opacity-100`} />
                 <div className="relative">
-                  <h3 className="text-xl font-semibold text-white">{chapter.name}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-slate-300">{chapter.summary}</p>
-                  <ul className="mt-4 space-y-2 text-sm text-slate-200">
+                  <h3 className="text-lg sm:text-xl font-semibold text-white">{chapter.name}</h3>
+                  <p className="mt-2 sm:mt-3 text-xs sm:text-sm leading-relaxed text-slate-300">{chapter.summary}</p>
+                  <ul className="mt-3 sm:mt-4 space-y-2 text-sm text-slate-200">
                     {chapter.members.map((member) => (
-                      <li key={member.name} className="flex items-center justify-between gap-4 rounded-full bg-slate-800/60 px-4 py-2 text-xs uppercase tracking-widest text-slate-300">
-                        <span>{member.name}</span>
-                        <span className="text-slate-400">{member.role}</span>
+                      <li key={member.name} className="flex items-center justify-between gap-2 sm:gap-4 rounded-full bg-slate-800/60 px-3 sm:px-4 py-1.5 sm:py-2 text-xs uppercase tracking-widest text-slate-300">
+                        <span className="truncate">{member.name}</span>
+                        <span className="text-slate-400 flex-shrink-0">{member.role}</span>
                       </li>
                     ))}
                   </ul>
@@ -217,51 +221,55 @@ export default function TeamPage() {
         </div>
       </section>
 
-      <section className="border-y border-slate-800 bg-slate-900/40 px-6 py-20 sm:px-12">
+      {/* IMPACT SECTION */}
+      <section className="border-y border-slate-800 bg-slate-900/40 px-4 py-16 sm:px-6 sm:py-20 md:px-12">
         <div className="mx-auto max-w-6xl">
-          <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Impact in motion</p>
-          <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">
+          <p className="text-xs sm:text-sm uppercase tracking-[0.3em] text-slate-400">Impact in motion</p>
+          <h2 className="mt-3 sm:mt-4 text-2xl sm:text-3xl lg:text-4xl font-semibold text-white">
             Scaling student-led innovation across our ecosystem
           </h2>
-          <div className="mt-12 grid gap-6 sm:grid-cols-3">
+          <div className="mt-8 sm:mt-12 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-3">
             {impactHighlights.map((item) => (
               <div
                 key={item.label}
-                className="rounded-3xl border border-slate-800 bg-slate-950/80 p-8 text-center shadow-[0_0_30px_rgba(15,23,42,0.3)]"
+                className="rounded-2xl sm:rounded-3xl border border-slate-800 bg-slate-950/80 p-6 sm:p-8 text-center shadow-[0_0_30px_rgba(15,23,42,0.3)]"
               >
-                <p className="text-4xl font-semibold text-cyan-300">{item.stat}</p>
-                <p className="mt-2 text-sm uppercase tracking-widest text-slate-400">{item.label}</p>
-                <p className="mt-4 text-sm leading-relaxed text-slate-300">{item.description}</p>
+                <p className="text-3xl sm:text-4xl font-semibold text-cyan-300">{item.stat}</p>
+                <p className="mt-2 text-xs sm:text-sm uppercase tracking-widest text-slate-400">{item.label}</p>
+                <p className="mt-3 sm:mt-4 text-xs sm:text-sm leading-relaxed text-slate-300">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="px-6 py-20 sm:px-12">
+      {/* VALUES SECTION */}
+      <section className="px-4 py-16 sm:px-6 sm:py-20 md:px-12">
         <div className="mx-auto max-w-5xl text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Why we do it</p>
-          <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">Values that keep the team in sync</h2>
-          <div className="mt-10 grid gap-6 sm:grid-cols-3">
+          <p className="text-xs sm:text-sm uppercase tracking-[0.3em] text-slate-400">Why we do it</p>
+          <h2 className="mt-3 sm:mt-4 text-2xl sm:text-3xl lg:text-4xl font-semibold text-white">Values that keep the team in sync</h2>
+          <div className="mt-8 sm:mt-10 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-3">
             {values.map((value) => (
               <article
                 key={value.title}
-                className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 text-left"
+                className="rounded-2xl sm:rounded-3xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6 text-left"
               >
-                <h3 className="text-lg font-semibold text-white">{value.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-slate-300">{value.detail}</p>
+                <h3 className="text-base sm:text-lg font-semibold text-white">{value.title}</h3>
+                <p className="mt-2 sm:mt-3 text-xs sm:text-sm leading-relaxed text-slate-300">{value.detail}</p>
               </article>
             ))}
           </div>
-          <div className="mt-16 rounded-3xl border border-slate-800 bg-gradient-to-r from-cyan-500/10 via-transparent to-purple-500/10 p-10">
-            <h3 className="text-2xl font-semibold text-white">Join the crew</h3>
-            <p className="mt-4 text-base text-slate-200">
+
+          {/* CTA SECTION */}
+          <div className="mt-12 sm:mt-16 rounded-2xl sm:rounded-3xl border border-slate-800 bg-gradient-to-r from-cyan-500/10 via-transparent to-purple-500/10 p-6 sm:p-10">
+            <h3 className="text-xl sm:text-2xl font-semibold text-white">Join the crew</h3>
+            <p className="mt-3 sm:mt-4 text-sm sm:text-base text-slate-200 px-2">
               Want to contribute to CK? We are always scouting for designers, developers, storytellers and strategists who
               love building community-first experiences.
             </p>
             <a
               href="mailto:team@ckgroup.io"
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-cyan-500 px-6 py-3 text-sm font-semibold uppercase tracking-widest text-slate-950 transition hover:bg-cyan-400"
+              className="mt-4 sm:mt-6 inline-flex items-center justify-center rounded-full bg-cyan-500 px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold uppercase tracking-widest text-slate-950 transition hover:bg-cyan-400"
             >
               Email the team
             </a>
