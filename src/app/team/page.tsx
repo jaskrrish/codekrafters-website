@@ -28,7 +28,11 @@ const TEAM_MEMBERS: TeamMember[] = [
     description: "Oversees all domains and leads CodeKrafters.",
     imagePath: "/images/PRESIDENT.png",
     domain: "president",
-    social: {}
+    social: {
+      instagram: "https://instagram.com/jass",
+      github: "https://github.com/jass",
+      linkedin: "https://linkedin.com/in/jass",
+    }
   },
 
   // Content Domain
@@ -572,14 +576,36 @@ const ExistingTeamMembersSection: React.FC = () => {
       (entries) => {
         const entry = entries[0]
 
-        // helper to compute and apply overlap offset
+        // helper to compute and apply overlap offset and scaling
         const updateOverlap = () => {
           if (!footerEl || !timelineEl) return
           const footerRect = footerEl.getBoundingClientRect()
           const timelineRect = timelineEl.getBoundingClientRect()
           const overlap = Math.max(0, timelineRect.bottom - footerRect.top) + 24
-          if (overlap > 0) {
-            timelineEl.style.transform = `translateY(calc(-50% - ${overlap}px))`
+
+          // scale down timeline items progressively as overlap increases
+          // map overlap 0..300 -> scale 1..0.55
+          const maxShrinkOverlap = 300
+          const rawScale = 1 - Math.min(overlap, maxShrinkOverlap) / maxShrinkOverlap * 0.45
+          const scale = Math.max(0.55, rawScale)
+          timelineEl.style.setProperty("--timeline-scale", String(scale))
+
+          // Base lift to prevent overlap
+          let lift = overlap
+
+          // When overlap becomes large, add an extra upward animation to hide the timeline further
+          const hideThreshold = 220
+          if (overlap > hideThreshold) {
+            const extra = Math.min(200, (overlap - hideThreshold) * 1.2)
+            lift = overlap + extra
+            // lengthen transition when hiding
+            timelineEl.style.transitionDuration = "500ms"
+          } else {
+            timelineEl.style.transitionDuration = "300ms"
+          }
+
+          if (lift > 0) {
+            timelineEl.style.transform = `translateY(calc(-50% - ${lift}px))`
           } else {
             timelineEl.style.transform = "translateY(-50%)"
           }
@@ -696,7 +722,8 @@ const ExistingTeamMembersSection: React.FC = () => {
           <div
             ref={timelineRef}
             // start the timeline lower so the top items are visible (not cut off)
-            className="fixed top-[94%] -translate-y-1/2 pl-8 lg:pl-20 xl:pl-24 z-10 w-1/2 lg:w-2/5 transition-transform duration-300"
+            className="timeline-container fixed top-[94%] -translate-y-1/2 pl-8 lg:pl-20 xl:pl-24 z-10 w-1/2 lg:w-2/5 transition-transform duration-300"
+            style={{ ['--timeline-scale' as any]: '1' }}
           >
             <div className="flex flex-col gap-6 lg:gap-8">
               {DOMAINS.map((domain) => {
@@ -713,7 +740,7 @@ const ExistingTeamMembersSection: React.FC = () => {
       })
     }
   }}
-  className="cursor-pointer transition-all duration-500 ease-out ..."
+  className="cursor-pointer transition-all duration-500 ease-out ... timeline-item"
 >
 
                     <div className="flex items-center gap-4 lg:gap-6">
@@ -721,7 +748,7 @@ const ExistingTeamMembersSection: React.FC = () => {
                         className={`rounded-full transition-all duration-500 ease-out ${
                           // Reduced heights: smaller on both active and inactive states
                           isActive ? "w-2 h-12 lg:h-16 bg-gray-900 shadow-lg" : "w-1.5 h-8 lg:h-10 bg-gray-800"
-                        }`}
+                        } timeline-bar`}
                       />
                       <span
                         className={`transition-all duration-500 ease-out leading-tight ${
@@ -755,7 +782,7 @@ const ExistingTeamMembersSection: React.FC = () => {
               Our Team
             </h2>
 
-            <p className="text-center text-gray-700 mb-10 sm:mb-12 md:mb-16 lg:mb-24 text-sm sm:text-base mx-auto max-w-lg">
+            <p className="text-center text-gray-700 mb-5 sm:mb-6 md:mb-8 lg:mb-12 text-sm sm:text-base mx-auto max-w-lg">
               <span style={{ color: '#F2A516' }} className="font-semibold">Meet</span> the talented individuals driving innovation and excellence across our organization.
             </p>
 
@@ -774,10 +801,28 @@ const ExistingTeamMembersSection: React.FC = () => {
       </div>
 
       <style>{`
+        /* Responsive background grid tweak */
         @media (max-width: 767px) {
           section {
             background-size: 15px 15px !important;
           }
+        }
+
+        /* Timeline scaling while footer intersects. Uses --timeline-scale set on .timeline-container */
+        .timeline-container .timeline-item {
+          transform-origin: left center;
+          transform: scale(var(--timeline-scale, 1));
+          transition: transform 220ms ease, opacity 220ms ease;
+          opacity: 1;
+        }
+
+        .timeline-container .timeline-bar {
+          transition: height 220ms ease, width 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
+        }
+
+        /* When scale is small, slightly reduce gap between items visually */
+        .timeline-container .timeline-item + .timeline-item {
+          margin-top: 0.25rem;
         }
       `}</style>
     </section>
