@@ -1,398 +1,534 @@
 "use client"
 
-import { useRef, useState, useLayoutEffect } from "react"
-import DivisionCard from "./division-card"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/all"
-import { useScrollTriggerRefresh } from "@/lib/UseScrollTrigger"
-  
-const divisions = [
+import type React from "react"
+import { useEffect, useRef, useState } from "react"
+
+interface TeamMember {
+  id: number
+  name: string
+  role: string
+  description: string
+  imagePath: string
+  social: {
+    instagram?: string
+    github?: string
+    linkedin?: string
+  }
+}
+
+// Organized by domain with Heads first, then Leads
+const TEAM_MEMBERS: TeamMember[] = [
+  // Content Domain
   {
     id: 1,
-    name: "President",
-    quote: "Leading the club with vision and passion.",
-    images: ["/images/PRESIDENT.png"],
-    members: [{ name: "Jas K Krish Singh", designation: "President" }],
+    name: "Hari Prasad",
+    role: "Content Head",
+    description: "Leads the content strategy and vision for the organization.",
+    imagePath: "/images/Hari-prasad.png",
+    social: {
+      instagram: "https://instagram.com/hariprasad",
+      github: "https://github.com/hariprasad",
+      linkedin: "https://linkedin.com/in/hariprasad",
+    },
   },
   {
     id: 2,
-    name: "Operations Heads",
-    quote: "Ensuring everything runs smoothly behind the scenes.",
-    images: ["/images/Abhinav4.png", "/images/Yashvanth.png"],
-    members: [
-      { name: "Abhinav", designation: "Head" },
-      { name: "Yaswanth", designation: "Head" },
-    ],
+    name: "Aaron Samuel",
+    role: "Content Lead",
+    description: "Drives content initiatives and execution.",
+    imagePath: "/images/Aaron.png",
+    social: {
+      instagram: "https://instagram.com/aaronsamuel",
+      github: "https://github.com/aaronsamuel",
+      linkedin: "https://linkedin.com/in/aaronsamuel",
+    },
   },
   {
+    id: 19,
+    name: "Noorul Hatim",
+    role: "Content Lead",
+    description: "Leads content talent development.",
+    imagePath: "/images/hatim.png",
+    social: {
+      instagram: "https://instagram.com/noorulhatim",
+      github: "https://github.com/noorulhatim",
+      linkedin: "https://linkedin.com/in/noorulhatim",
+    },
+  },
+
+  // Development Domain
+  {
     id: 3,
-    name: "Content Team",
-    quote: "Creating content that inspires and engages.",
-    images: ["/images/Aaron.png", "/images/Hari-prasad.png", "/images/hatim.png"],
-    members: [
-      { name: "Aaron", designation: "Head" },
-      { name: "Hari Prasad Krishnamurthy", designation: "Head" },
-      { name: "Noorul Hatim", designation: "Lead" },
-    ],
+    name: "Srivatsa",
+    role: "Development Head",
+    description: "Oversees all development operations and technical strategy.",
+    imagePath: "/images/Srivatsa.png",
+    social: {
+      instagram: "https://instagram.com/srivatsa",
+      github: "https://github.com/srivatsa",
+      linkedin: "https://linkedin.com/in/srivatsa",
+    },
   },
   {
     id: 4,
-    name: "Creatives",
-    quote: "Bringing ideas to life through visuals and design.",
-    images: ["/images/bhavna.png", "/images/Akash.png", "/images/Sashank.png"],
-    members: [
-      { name: "Bhavna", designation: "Head" },
-      { name: "Akash Ravindran", designation: "Head" },
-      { name: "Sashank", designation: "Lead" },
-    ],
+    name: "Nithesh",
+    role: "Development Head",
+    description: "Manages development teams and project delivery.",
+    imagePath: "/images/Nitesh.png",
+    social: {
+      instagram: "https://instagram.com/nithesh",
+      github: "https://github.com/nithesh",
+      linkedin: "https://linkedin.com/in/nithesh",
+    },
   },
   {
     id: 5,
-    name: "Competitive Programming",
-    quote: "Coding challenges that sharpen our skills.",
-    images: ["/images/shashi.png", "/images/Manasa.png", "/images/mrudu.png"],
-    members: [
-      { name: "Shashikumar", designation: "Head" },
-      { name: "Manasa", designation: "Lead" },
-      { name: "Mrudhubashni", designation: "Lead" },
-    ],
+    name: "Vikas Pritam",
+    role: "Development Lead",
+    description: "Drives technical excellence and innovation.",
+    imagePath: "/images/Vikas.png",
+    social: {
+      instagram: "https://instagram.com/vikaspritam",
+      github: "https://github.com/vikaspritam",
+      linkedin: "https://linkedin.com/in/vikaspritam",
+    },
   },
   {
     id: 6,
-    name: "Web3 Team",
-    quote: "Exploring the decentralized future.",
-    images: ["/images/Deepanshu.png", "/images/Achyuth.png", "/images/Sanjay.png"],
-    members: [
-      { name: "Deepanshu", designation: "Head" },
-      { name: "Achyuth", designation: "Lead" },
-      { name: "Sanjay Ganesh", designation: "Lead" },
-    ],
+    name: "Vinoth Anand Gani",
+    role: "Development Lead",
+    description: "Leads development initiatives and team growth.",
+    imagePath: "/images/VinothAnandgani.png",
+    social: {
+      instagram: "https://instagram.com/vinothanandhgani",
+      github: "https://github.com/vinothanandhgani",
+      linkedin: "https://linkedin.com/in/vinothanandhgani",
+    },
   },
+
+  // Cyber Security Domain
   {
     id: 7,
-    name: "Cybersecurity Team",
-    quote: "Protecting our digital assets and information.",
-    images: ["/images/Dhanush-Adithyan.png", "/images/Rishit.png", "/images/Adithya.png"],
-    members: [
-      { name: "Dhanush Adithyan", designation: "Head" },
-      { name: "Archangel", designation: "Head" },
-      { name: "Adithya", designation: "Lead" },
-    ],
+    name: "Dhanush Adithyan",
+    role: "Cyber Security Head",
+    description: "Leads security strategy and threat prevention.",
+    imagePath: "/images/Dhanush-Adithyan.png",
+    social: {
+      instagram: "https://instagram.com/dhanushadithyan",
+      github: "https://github.com/dhanushadithyan",
+      linkedin: "https://linkedin.com/in/dhanushadithyan",
+    },
   },
   {
     id: 8,
-    name: "PR & Management",
-    quote: "Connecting people and managing the club image.",
-    images: ["/images/Kavya.png", "/images/pragathi.png", "/images/Siddharth.png", "/images/Satya.png"],
-    members: [
-      { name: "Kavya", designation: "Head" },
-      { name: "Pragathi", designation: "Head" },
-      { name: "Siddarth", designation: "Lead" },
-      { name: "Satya", designation: "Lead" },
-    ],
+    name: "Rishit Chanda",
+    role: "Cyber Security Head",
+    description: "Manages security operations and compliance.",
+    imagePath: "/images/Rishit.png",
+    social: {
+      instagram: "https://instagram.com/rishitchanda",
+      github: "https://github.com/rishitchanda",
+      linkedin: "https://linkedin.com/in/rishitchanda",
+    },
   },
   {
     id: 9,
-    name: "Development Team",
-    quote: "Building tools and platforms to empower the club.",
-    images: ["/images/Nitesh.png", "/images/Srivatsa.png", "/images/Vikas.png", "/images/VinothAnandgani.png"],
-    members: [
-      { name: "Nithesh", designation: "Head" },
-      { name: "Srivatsa", designation: "Head" },
-      { name: "Vikas", designation: "Lead" },
-      { name: "Vinoth", designation: "Lead" },
-    ],
+    name: "Adithya Krishna",
+    role: "Cybersecurity Lead",
+    description: "Drives security initiatives and team development.",
+    imagePath: "/images/Adithya.png",
+    social: {
+      instagram: "https://instagram.com/adithyakrishna",
+      github: "https://github.com/adithyakrishna",
+      linkedin: "https://linkedin.com/in/adithyakrishna",
+    },
+  },
+
+  // Competitive Programming Domain
+  {
+    id: 10,
+    name: "Shashi Kumar",
+    role: "Competitive Programming Head",
+    description: "Oversees competitive programming initiatives.",
+    imagePath: "/images/shashi.png",
+    social: {
+      instagram: "https://instagram.com/shashikumar",
+      github: "https://github.com/shashikumar",
+      linkedin: "https://linkedin.com/in/shashikumar",
+    },
+  },
+  {
+    id: 11,
+    name: "Mrudu Bhashini",
+    role: "Competitive Programming Lead",
+    description: "Leads training and competition strategy.",
+    imagePath: "/images/mrudu.png",
+    social: {
+      instagram: "https://instagram.com/mrudubhashini",
+      github: "https://github.com/mrudubhashini",
+      linkedin: "https://linkedin.com/in/mrudubhashini",
+    },
+  },
+  {
+    id: 12,
+    name: "Manasa Dhavala",
+    role: "Competitive Programming Lead",
+    description: "Manages program growth and talent development.",
+    imagePath: "/images/Manasa.png",
+    social: {
+      instagram: "https://instagram.com/manasadhavala",
+      github: "https://github.com/manasadhavala",
+      linkedin: "https://linkedin.com/in/manasadhavala",
+    },
+  },
+
+  // Web3 Domain
+  {
+    id: 13,
+    name: "Deepanshu Sinha",
+    role: "Web3 Head",
+    description: "Leads Web3 strategy and blockchain initiatives.",
+    imagePath: "/images/Deepanshu.png",
+    social: {
+      instagram: "https://instagram.com/deepanshusinha",
+      github: "https://github.com/deepanshusinha",
+      linkedin: "https://linkedin.com/in/deepanshusinha",
+    },
+  },
+  {
+    id: 14,
+    name: "Achyuth PV",
+    role: "Web3 Lead",
+    description: "Drives Web3 projects and innovation.",
+    imagePath: "/images/Achyuth.png",
+    social: {
+      instagram: "https://instagram.com/achyuthpv",
+      github: "https://github.com/achyuthpv",
+      linkedin: "https://linkedin.com/in/achyuthpv",
+    },
+  },
+  {
+    id: 15,
+    name: "Sanjay Ganesh K",
+    role: "Web3 Lead",
+    description: "Manages Web3 ecosystem and partnerships.",
+    imagePath: "/images/Sanjay.png",
+    social: {
+      instagram: "https://instagram.com/sanjayganeshk",
+      github: "https://github.com/sanjayganeshk",
+      linkedin: "https://linkedin.com/in/sanjayganeshk",
+    },
+  },
+
+  // Creatives Domain
+  {
+    id: 16,
+    name: "Bhavna J",
+    role: "Creatives Head",
+    description: "Leads creative vision and design excellence.",
+    imagePath: "/images/bhavna.png",
+    social: {
+      instagram: "https://instagram.com/bhavnaj",
+      github: "https://github.com/bhavnaj",
+      linkedin: "https://linkedin.com/in/bhavnaj",
+    },
+  },
+  {
+    id: 17,
+    name: "Akash R",
+    role: "Creatives Head",
+    description: "Manages creative team and projects.",
+    imagePath: "/images/Akash.png",
+    social: {
+      instagram: "https://instagram.com/akashr",
+      github: "https://github.com/akashr",
+      linkedin: "https://linkedin.com/in/akashr",
+    },
+  },
+  {
+    id: 18,
+    name: "Sashank",
+    role: "Creatives Lead",
+    description: "Drives creative initiatives and brand growth.",
+    imagePath: "/images/Sashank.png",
+    social: {
+      instagram: "https://instagram.com/sashank",
+      github: "https://github.com/sashank",
+      linkedin: "https://linkedin.com/in/sashank",
+    },
+  },
+
+  // PR & Management Domain
+  {
+    id: 20,
+    name: "Banu Pragathi",
+    role: "PR & Management Head",
+    description: "Oversees PR strategy and management operations.",
+    imagePath: "/images/pragathi.png",
+    social: {
+      instagram: "https://instagram.com/banupragathi",
+      github: "https://github.com/banupragathi",
+      linkedin: "https://linkedin.com/in/banupragathi",
+    },
+  },
+  {
+    id: 21,
+    name: "Kavya Reddy Ch",
+    role: "PR & Management Head",
+    description: "Manages organizational relationships and growth.",
+    imagePath: "/images/Kavya.png",
+    social: {
+      instagram: "https://instagram.com/kavyareddych",
+      github: "https://github.com/kavyareddych",
+      linkedin: "https://linkedin.com/in/kavyareddych",
+    },
+  },
+  {
+    id: 22,
+    name: "Siddarth Kilari",
+    role: "PR & Management Lead",
+    description: "Drives PR initiatives and communications.",
+    imagePath: "/images/Siddharth.png",
+    social: {
+      instagram: "https://instagram.com/siddarthkilari",
+      github: "https://github.com/siddarthkilari",
+      linkedin: "https://linkedin.com/in/siddarthkilari",
+    },
+  },
+  {
+    id: 23,
+    name: "Satya Lohith",
+    role: "PR & Management Lead",
+    description: "Leads management strategy and team development.",
+    imagePath: "/images/Satya.png",
+    social: {
+      instagram: "https://instagram.com/satyalohith",
+      github: "https://github.com/satyalohith",
+      linkedin: "https://linkedin.com/in/satyalohith",
+    },
+  },
+
+  // Operations Domain
+  {
+    id: 24,
+    name: "Yashvanth MR",
+    role: "Operations Head",
+    description: "Leads operational efficiency and scaling.",
+    imagePath: "/images/Yashvanth.png",
+    social: {
+      instagram: "https://instagram.com/yashvanthmr",
+      github: "https://github.com/yashvanthmr",
+      linkedin: "https://linkedin.com/in/yashvanthmr",
+    },
+  },
+  {
+    id: 25,
+    name: "Abhinav KA",
+    role: "Operations Head",
+    description: "Manages operations and process optimization.",
+    imagePath: "/images/Abhinav.png",
+    social: {
+      instagram: "https://instagram.com/abhinavka",
+      github: "https://github.com/abhinavka",
+      linkedin: "https://linkedin.com/in/abhinavka",
+    },
   },
 ]
 
-export default function TeamSection() {
-  if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-  }
-  
-  // Use the custom hook to ensure ScrollTrigger refreshes properly
-  useScrollTriggerRefresh()
+interface TeamMemberCardProps {
+  member: TeamMember
+  isLeft: boolean
+  index: number
+}
 
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [activeDivision, setActiveDivision] = useState(0)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [scrollProgress, setScrollProgress] = useState(0)
-  // Use a fixed yellow background color for consistency
-  const [bgColor, setBgColor] = useState("var(--retro-bg)")
+const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member, isLeft, index }) => {
+  const ref = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
-  useLayoutEffect(() => {
-    const section = sectionRef.current
-    if (!section || typeof window === 'undefined') return
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
 
-    // Calculate total steps based on division images
-    let totalSteps = 0
-    
-    // Set fixed number of steps for each division
-    // First division (President) gets exactly 13 steps regardless of image count
-    const stepsPerDivision = divisions.map(d => d.id === 1 ? 13 : d.images.length);
-    
-    // Calculate total steps
-    totalSteps = stepsPerDivision.reduce((sum, steps) => sum + steps, 0);
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
-    // Add a small margin to ensure we don't hit the end of scroll exactly
-    // This helps prevent the blank screen issue
-    totalSteps -= 0.5;
-
-    // Create the GSAP context and ScrollTrigger
-    const ctx = gsap.context(() => {
-      // Create the timeline with ScrollTrigger
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top top", 
-          // Increase scroll distance to accommodate more steps in President division
-          end: `+=${(divisions.length - 1 + 13/6) * 90}%`, // Adjusted for the 13 steps in President
-          pin: true,
-          scrub: 0.8, // Smoother scrub effect
-          anticipatePin: 1,
-          pinSpacing: true, // Ensure proper spacing
-          fastScrollEnd: true, // Better handling of fast scrolls
-          preventOverlaps: true, // Prevent section overlapping
-          onUpdate: (self) => {
-            // Get the scroll progress and clamp it to avoid edge issues
-            const progress = self.progress;
-            const clampedProgress = Math.min(progress, 0.98);
-            
-            // Calculate current step based on progress
-            const currentStep = Math.min(Math.floor(clampedProgress * totalSteps), totalSteps - 1);
-
-            // Determine which division and image to show
-            let stepCount = 0;
-            let newDivision = 0;
-            let newImageIndex = 0;
-            
-            // Create steps map for each division
-            const stepsPerDivision = divisions.map(d => d.id === 1 ? 12 : d.images.length);
-
-            // Loop through divisions to find current position
-            for (let i = 0; i < divisions.length; i++) {
-              const divisionSteps = stepsPerDivision[i];
-              
-              if (currentStep < stepCount + divisionSteps) {
-                newDivision = i;
-                
-                // For President division (id 1)
-                if (divisions[i].id === 1) {
-                  // Get step within this division
-                  const stepWithinDivision = currentStep - stepCount;
-                  
-                  // Check if we've completed all steps for President
-                  if (stepWithinDivision >= 13) {
-                    // Move to next division
-                    if (i + 1 < divisions.length) {
-                      newDivision = i + 1;
-                      newImageIndex = 0;
-                    }
-                  } else {
-                    // For the single image of President, repeat the same image but change
-                    // other visual aspects based on the step count
-                    newImageIndex = 0; // Always show first (only) image
-                    
-                    // We can update other visual aspects in render based on step if needed
-                    // For now, just log the step to verify it's working
-                    console.log(`President division, step ${stepWithinDivision} of 13`);
-                  }
-                } else {
-                  // Normal behavior for other divisions - cycle through images
-                  newImageIndex = Math.min(currentStep - stepCount, divisions[i].images.length - 1);
-                }
-                break;
-              }
-              
-              stepCount += divisionSteps;
-            }
-
-            // Update state variables
-            setActiveDivision(newDivision);
-            setCurrentImageIndex(newImageIndex);
-            setScrollProgress(clampedProgress * 100);
-
-            // Ensure the section has the yellow background
-            if (section) {
-              section.style.backgroundColor = "var(--retro-bg)";
-              section.classList.add("team-section");
-            }
-          },
-          onLeave: () => {
-            // When leaving this section, DON'T clear all props since that removes our background
-            // Only clear specific properties we need to reset
-            gsap.set(section, { 
-              clearProps: "transform,opacity,visibility"
-            });
-            
-            // Make sure the background color is preserved
-            if (section) {
-              section.style.backgroundColor = "var(--retro-bg)";
-              section.classList.add("team-section");
-            }
-          },
-          onEnterBack: () => {
-            // When scrolling back into this section
-            ScrollTrigger.refresh();
-            
-            // Explicitly set the background to yellow
-            if (section) {
-              section.style.backgroundColor = "var(--retro-bg)";
-              section.classList.add("team-section");
-            }
-          }
-        },
-      });
-      
-      // Add a small animation to smooth the transition to the next section
-      gsap.to("#events", {
-        scrollTrigger: {
-          trigger: "#events",
-          start: "top bottom-=10%",
-          toggleActions: "play none none reverse",
-        },
-        y: 0,
-        autoAlpha: 1,
-        duration: 0.5,
-        ease: "power2.out"
-      });
-    });
-
-    // Cleanup function
-    return () => {
-      // Kill all ScrollTrigger instances to prevent memory leaks
-      ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.vars.trigger === section || 
-            trigger.vars.trigger === "#events") {
-          trigger.kill();
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
         }
-      });
-      ctx.revert(); // Revert the GSAP context
-    };
-  }, []);
+      },
+      { threshold: 0.1, rootMargin: "50px" },
+    )
 
-  const handleDivisionClick = (index: number) => {
-    setActiveDivision(index)
-    setCurrentImageIndex(0)
-  }
+    if (ref.current) {
+      observer.observe(ref.current)
+    }
 
-  const handleImageClick = (index: number) => {
-    setCurrentImageIndex(index)
-  }
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current)
+      }
+    }
+  }, [])
+
+  // Static circle dimensions - no elongation
+  const circleSize = isMobile ? 240 : 320
+  const containerHeight = isMobile ? 300 : 400
+
+  const needsTopFocus = [
+    "Vikas Pritam",
+    "Vinoth Anand Gani",
+    "Mrudu Bhashini",
+    "Manasa Dhavala",
+    "Bhavna J",
+    "Siddarth Kilari",
+    "Satya Lohith",
+  ]
+
+  const shouldUseObjectTop = needsTopFocus.includes(member.name)
+  const objectFitClass = shouldUseObjectTop ? "object-cover object-top" : "object-contain"
+
+  const CircleContent = () => (
+    <div
+      className={`flex ${isMobile ? "justify-center" : isLeft ? "justify-center md:justify-end" : "justify-center md:justify-start"} w-full`}
+    >
+      <div
+        className="relative flex items-center justify-center overflow-hidden"
+        style={{
+          width: circleSize,
+          height: containerHeight,
+          borderRadius: "12px",
+          backgroundColor: "white",
+          boxShadow: isMobile ? "0 6px 20px rgba(0, 0, 0, 0.08)" : "0 10px 40px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <div className="w-full h-full flex items-center justify-center">
+          <img
+            src={member.imagePath || "/placeholder.svg"}
+            alt={member.name}
+            className={`w-full h-full ${objectFitClass}`}
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  )
+
+  const TextContent = () => (
+    <div className={`flex flex-col justify-center ${isMobile ? "text-center items-center" : ""}`}>
+      <h3 className="text-2xl font-bold text-gray-900 mb-2 md:text-3xl lg:text-4xl">{member.name}</h3>
+      <p className="text-base font-semibold text-gray-700 mb-3 md:text-lg lg:text-xl md:mb-4">{member.role}</p>
+      <p className="text-sm text-gray-600 leading-relaxed mb-4 md:text-base md:mb-6 max-w-md">{member.description}</p>
+
+      <div className="flex gap-3 md:gap-4">
+        {member.social.instagram && (
+          <a
+            href={member.social.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-700 hover:text-[#fcb416] transition-colors p-2 -ml-2 rounded-lg hover:bg-white/50 active:scale-95"
+            aria-label={`${member.name}'s Instagram`}
+          >
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.012-3.584.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+            </svg>
+          </a>
+        )}
+        {member.social.github && (
+          <a
+            href={member.social.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-700 hover:text-[#fcb416] transition-colors p-2 rounded-lg hover:bg-white/50 active:scale-95"
+            aria-label={`${member.name}'s GitHub`}
+          >
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+            </svg>
+          </a>
+        )}
+        {member.social.linkedin && (
+          <a
+            href={member.social.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-700 hover:text-[#fcb416] transition-colors p-3 rounded-lg hover:bg-white/50 active:scale-95"
+            aria-label={`${member.name}'s LinkedIn`}
+          >
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+            </svg>
+          </a>
+        )}
+      </div>
+    </div>
+  )
 
   return (
-    <section
-      ref={sectionRef}
-      style={{
-        backgroundColor: "var(--retro-bg)", // Always use the CSS variable directly
-        backgroundImage: `linear-gradient(0deg, transparent 24%, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.05) 26%, transparent 27%, transparent 74%, rgba(0,0,0,0.05) 75%, rgba(0,0,0,0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.05) 26%, transparent 27%, transparent 74%, rgba(0,0,0,0.05) 75%, rgba(0,0,0,0.05) 76%, transparent 77%, transparent)`,
-        backgroundSize: "40px 40px",
-        transition: "background-color 0.5s ease",
-      }}
-      className="team-section relative w-full h-screen overflow-hidden will-change-transform"
-    >
-      <div className="absolute inset-0 pointer-events-none" />
-
-      {/* Main Content */}
-      <div ref={containerRef} className="relative w-full h-full">
-        <div
-          className="flex h-full transition-all duration-700 ease-out"
-          style={{
-            transform: `translateX(-${activeDivision * 100}%)`,
-          }}
-        >
-          {divisions.map((division) => (
-            <div key={division.id} className="w-full h-full flex-shrink-0">
-              <DivisionCard
-                division={division}
-                currentImageIndex={currentImageIndex}
-                isActive={divisions[activeDivision].id === division.id}
-              />
+    <div ref={ref} className="py-6 sm:py-8 md:py-12 lg:py-16">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 lg:gap-12 max-w-6xl mx-auto px-4">
+        {isLeft ? (
+          <>
+            <div className="w-full md:w-1/2">
+              <CircleContent />
             </div>
+            <div className="w-full md:w-1/2">
+              <TextContent />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="w-full md:w-1/2 order-2 md:order-1">
+              <TextContent />
+            </div>
+            <div className="w-full md:w-1/2 order-1 md:order-2">
+              <CircleContent />
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+const ExistingTeamMembersSection: React.FC = () => {
+  return (
+    <section
+      className="w-full py-10 sm:py-12 md:py-16 lg:py-24 relative overflow-hidden"
+      style={{
+        backgroundColor: "#fcb416",
+  backgroundImage: "linear-gradient(rgba(100, 100, 100, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(100, 100, 100, 0.15) 1px, transparent 1px)",
+        backgroundSize: "20px 20px",
+      }}
+    >
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-900 mb-3 md:mb-4">Our Team</h2>
+        <p className="text-center text-gray-800 mb-10 sm:mb-12 md:mb-16 lg:mb-24 text-sm sm:text-base max-w-2xl mx-auto">
+          Meet the talented individuals driving innovation and excellence across our organization.
+        </p>
+
+        <div className="space-y-0">
+          {TEAM_MEMBERS.map((member, index) => (
+            <TeamMemberCard key={member.id} member={member} isLeft={index % 2 === 0} index={index} />
           ))}
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div
-        style={{
-          backgroundColor: "var(--retro-primary)",
-          borderTop: "4px solid var(--retro-secondary)",
-        }}
-        className="absolute bottom-0 left-0 right-0 h-3 shadow-lg"
-      >
-        <div
-          style={{
-            backgroundColor: "var(--retro-secondary)",
-            width: `${scrollProgress}%`,
-          }}
-          className="h-full transition-all duration-300 shadow-lg"
-        />
-      </div>
-
-      {/* Division Buttons */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex gap-3 z-10">
-        {divisions.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handleDivisionClick(index)}
-            style={{
-              backgroundColor:
-                index === activeDivision
-                  ? "var(--retro-secondary)"
-                  : "var(--retro-light)",
-              color: "var(--retro-primary)",
-              borderColor: "var(--retro-primary)",
-              transform: index === activeDivision ? "scale(1.1)" : "scale(1)",
-            }}
-            className={`transition-all duration-300 font-black text-xs uppercase tracking-widest border-4 px-3 py-1 ${
-              index === activeDivision ? "px-4 py-2 shadow-lg" : "hover:bg-retro-secondary"
-            }`}
-            aria-label={`Go to ${divisions[index].name} division`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
-
-      {/* Image Indicators */}
-      <div
-        style={{
-          backgroundColor: "var(--retro-light)",
-          borderColor: "var(--retro-primary)",
-        }}
-        className="absolute top-8 right-8 flex gap-2 z-10 px-4 py-3 border-4 shadow-lg"
-      >
-        {divisions[activeDivision].images.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handleImageClick(index)}
-            style={{
-              backgroundColor:
-                currentImageIndex === index
-                  ? "var(--retro-primary)"
-                  : "var(--retro-secondary)",
-              borderColor: "var(--retro-primary)",
-              width: currentImageIndex === index ? "32px" : "12px",
-            }}
-            className="h-3 transition-all duration-300 border-2"
-            aria-label={`Go to image ${index + 1}`}
-          />
-        ))}
-      </div>
-
-      {/* Scroll Indicator */}
-      <div
-        style={{
-          backgroundColor: "var(--retro-secondary)",
-          color: "var(--retro-primary)",
-          borderColor: "var(--retro-primary)",
-        }}
-        className="absolute top-8 left-8 text-sm z-10 px-4 py-2 border-4 font-black shadow-lg"
-      >
-        <p className="uppercase tracking-widest">↓ SCROLL ↓</p>
-      </div>
+      <style>{`
+        @media (max-width: 767px) {
+          section {
+            background-size: 15px 15px !important;
+          }
+        }
+      `}</style>
     </section>
   )
 }
+
+export default ExistingTeamMembersSection
