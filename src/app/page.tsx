@@ -8,6 +8,7 @@ import SponsorsComponent from "@/components/sponsor";
 import Footer from "@/components/Footer";
 import PresidentIntro from "@/components/President";
 import TeamComponent from "@/components/Team";
+import DomainsSection from "@/components/Domains";
 
 export default function Home() {
   return (
@@ -17,6 +18,10 @@ export default function Home() {
 
       <div id="story">
         <StoryComponent />
+      </div>
+
+      <div id="domains">
+        <DomainsSection />
       </div>
 
       <div id="events">
