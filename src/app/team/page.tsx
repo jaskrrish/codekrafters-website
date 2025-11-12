@@ -702,130 +702,255 @@ const ExistingTeamMembersSection: React.FC = () => {
     }
   }, [activeDomain])
 
+  // Modal state for selected member
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null)
+  // Selected domain (id) to show members of that domain in a new mid orbit
+  const [selectedDomain, setSelectedDomain] = useState<string | null>(null)
+  const [isMobileView, setIsMobileView] = useState<boolean>(false)
+
+  useEffect(() => {
+    const onResize = () => setIsMobileView(window.innerWidth < 768)
+    onResize()
+    window.addEventListener("resize", onResize)
+    return () => window.removeEventListener("resize", onResize)
+  }, [])
+
+  // Compute radii based on container size / viewport
+  const baseOuterRadius = isMobileView ? 110 : 220
+  const innerRadius = isMobileView ? 62 : 120
+  // when a domain is selected, expand the outer orbit a bit
+  const outerRadius = selectedDomain ? baseOuterRadius + (isMobileView ? 20 : 40) : baseOuterRadius
+  // mid radius between inner and outer for domain-specific members
+  const midRadius = Math.round((innerRadius + outerRadius) / 2)
+
   return (
     <>
       <Navbar />
       <section
         ref={sectionRef}
-        // Reduced top padding so the title sits closer under the Navbar
-        className="w-full pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-10 sm:pb-12 md:pb-16 lg:pb-24 relative overflow-hidden"
+        className="w-full pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-10 sm:pb-12 md:pb-16 lg:pb-24 relative overflow-hidden flex items-center justify-center"
         style={{
           backgroundColor: "#F2EFDC",
-        backgroundImage:
-          "linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px)",
-        backgroundSize: "20px 20px",
-      }}
-    >
-      <div className="w-full flex px-4 relative">
-        {/* Timeline Sidebar */}
-        <div className="hidden md:block md:w-1/2 lg:w-2/5">
-          <div
-            ref={timelineRef}
-            // start the timeline lower so the top items are visible (not cut off)
-            className="timeline-container fixed top-[94%] -translate-y-1/2 pl-8 lg:pl-20 xl:pl-24 z-10 w-1/2 lg:w-2/5 transition-transform duration-300"
-            style={{ ['--timeline-scale' as any]: '1' }}
+          backgroundImage:
+            "linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px)",
+          backgroundSize: "20px 20px",
+        }}
+      >
+        <div className="w-full flex flex-col items-center px-4">
+          <h2
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center text-transparent bg-clip-text mb-6"
+            style={{ backgroundImage: 'linear-gradient(90deg, #F2A516 0%, #000 50%, #1f2937 100%)' }}
           >
-            <div className="flex flex-col gap-6 lg:gap-8">
-              {DOMAINS.map((domain) => {
-                const isActive = activeDomain === domain.id
-                return (
-                  <div
-  key={domain.id}
-  onClick={() => {
-    const el = document.getElementById(`domain-${domain.id}`)
-    if (el) {
-      window.scrollTo({
-        top: el.offsetTop - window.innerHeight * 0.3,
-        behavior: "smooth"
-      })
-    }
-  }}
-  className="cursor-pointer transition-all duration-500 ease-out ... timeline-item"
->
+            Our Team
+          </h2>
 
-                    <div className="flex items-center gap-4 lg:gap-6">
-                      <div
-                        className={`rounded-full transition-all duration-500 ease-out ${
-                          // Reduced heights: smaller on both active and inactive states
-                          isActive ? "w-2 h-12 lg:h-16 bg-gray-900 shadow-lg" : "w-1.5 h-8 lg:h-10 bg-gray-800"
-                        } timeline-bar`}
-                      />
-                      <span
-                        className={`transition-all duration-500 ease-out leading-tight ${
-                              isActive
-                                ? "text-2xl lg:text-3xl xl:text-4xl font-black tracking-tight"
-                                : "text-lg lg:text-xl xl:text-2xl font-semibold text-gray-700"
-                        }`}
-                            style={{
-                              color: isActive ? "#F2A516" : undefined,
-                              textShadow: isActive ? "0 2px 8px rgba(0,0,0,0.06)" : "none"
-                            }}
-                      >
-                        {domain.label}
-                      </span>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
+          <p className="text-center text-gray-700 mb-8 text-sm sm:text-base mx-auto max-w-lg">
+            <span style={{ color: '#F2A516' }} className="font-semibold">Meet</span> the talented individuals driving innovation and excellence across our organization.
+          </p>
 
-        {/* Content column */}
-        <div className="w-full md:w-1/2 lg:w-3/5 flex justify-end">
-          <div className="w-full max-w-3xl">
-            {/* Title (centered, placed closer to navbar) */}
-            <h2
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-center text-transparent bg-clip-text mb-3 md:mb-4"
-              style={{ backgroundImage: 'linear-gradient(90deg, #F2A516 0%, #000 50%, #1f2937 100%)' }}
+          {/* Orbit container */}
+          <div className="relative w-[min(820px,90vw)] h-[min(820px,90vw)] flex items-center justify-center">
+            {/* Inner orbit - Domains */}
+            <div
+              className="absolute inset-0 m-auto rounded-full pointer-events-none"
+              style={{ width: innerRadius * 2 + 40, height: innerRadius * 2 + 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-              Our Team
-            </h2>
+              <div
+                className="orbit orbit-inner"
+                style={{ width: innerRadius * 2, height: innerRadius * 2 }}
+              >
+                {DOMAINS.map((domain, i) => {
+                  const angle = (360 / DOMAINS.length) * i
+                  // inlineTransform ensures domain pills are centered correctly before animation
+                  const inlineTransform = `rotate(${angle}deg) translate(${innerRadius}px) rotate(${-angle}deg)`
+                  return (
+                    <div
+                      key={domain.id}
+                      title={domain.label}
+                      role="button"
+                      tabIndex={0}
+                      className="domain-item absolute flex items-center justify-center rounded-full bg-white/80 shadow-sm text-xs font-semibold text-gray-800 px-3 py-2 select-none cursor-pointer hover:scale-105 transition-transform"
+                      style={{
+                        // CSS variables for per-item orbit animation
+                        ['--start-angle' as any]: `${angle}deg`,
+                        ['--radius' as any]: `${innerRadius}px`,
+                        ['--duration' as any]: '24s',
+                        transform: inlineTransform,
+                      }}
+                      onClick={() => {
+                        // select domain (show mid orbit) and scroll into view
+                        setSelectedDomain(domain.id)
+                        const el = document.getElementById(`domain-${domain.id}`)
+                        if (el) {
+                          el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                        }
+                      }}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setSelectedDomain(domain.id) } }}
+                    >
+                      {domain.label}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
 
-            <p className="text-center text-gray-700 mb-5 sm:mb-6 md:mb-8 lg:mb-12 text-sm sm:text-base mx-auto max-w-lg">
-              <span style={{ color: '#F2A516' }} className="font-semibold">Meet</span> the talented individuals driving innovation and excellence across our organization.
-            </p>
+            {/* Center logo */}
+            <div className="relative z-30 flex items-center justify-center">
+              <button
+                onClick={() => { setSelectedDomain(null); setSelectedMember(null) }}
+                aria-label="Reset orbits"
+                className="p-0 rounded-full focus:outline-none"
+              >
+                <div className="p-4 sm:p-6 shadow-xl rounded-full bg-white">
+                  <img src="/logo.png" alt="CodeKrafters Logo" className="w-28 h-28 sm:w-36 sm:h-36 object-contain" />
+                </div>
+              </button>
+            </div>
+ 
+            {/* Outer orbit - Members */}
+            <div className="absolute inset-0 m-auto rounded-full pointer-events-none" style={{ width: outerRadius * 2 + 80, height: outerRadius * 2 + 80 }}>
+              <div className="orbit orbit-outer" style={{ width: outerRadius * 2, height: outerRadius * 2 }}>
+                {TEAM_MEMBERS.map((member, idx) => {
+                  const angle = (360 / TEAM_MEMBERS.length) * idx
+                  const inlineTransform = `rotate(${angle}deg) translate(${outerRadius}px) rotate(${-angle}deg)`
+                  return (
+                    <button
+                      key={member.id}
+                      onClick={() => setSelectedMember(member)}
+                      aria-label={member.name}
+                      className="member-item absolute rounded-full overflow-hidden bg-white shadow-md focus:outline-none"
+                      style={{
+                        // CSS variables used by the per-item orbit animation
+                        ['--start-angle' as any]: `${angle}deg`,
+                        ['--radius' as any]: `${outerRadius}px`,
+                        ['--duration' as any]: '36s',
+                        transform: inlineTransform,
+                      }}
+                    >
+                      <img
+                        src={member.imagePath || '/placeholder.svg'}
+                        alt={member.name}
+                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    </button>
+                  )
+                })}
+              </div>
 
-            {/* Members */}
-            <div className="space-y-20">
-              {TEAM_MEMBERS.map((member, index) => (
-                <div className="flex justify-end" key={member.id}>
-                  <div className="w-full max-w-2xl">
-                    <TeamMemberCard member={member} isLeft={index % 2 === 0} index={index} />
+              {/* Mid orbit showing members for selected domain */}
+              {selectedDomain && (
+                <div className="absolute inset-0 m-auto rounded-full pointer-events-none" style={{ width: midRadius * 2 + 40, height: midRadius * 2 + 40 }}>
+                  <div className="orbit orbit-mid" style={{ width: midRadius * 2, height: midRadius * 2 }}>
+                    {TEAM_MEMBERS.filter(m => m.domain === selectedDomain).map((member, i) => {
+                      const angle = (360 / Math.max(1, TEAM_MEMBERS.filter(m => m.domain === selectedDomain).length)) * i
+                      const inlineTransform = `rotate(${angle}deg) translate(${midRadius}px) rotate(${-angle}deg)`
+                      return (
+                        <button
+                          key={`mid-${member.id}`}
+                          onClick={() => setSelectedMember(member)}
+                          aria-label={member.name}
+                          className="member-item absolute rounded-full overflow-hidden bg-white shadow-md focus:outline-none"
+                          style={{
+                            ['--start-angle' as any]: `${angle}deg`,
+                            ['--radius' as any]: `${midRadius}px`,
+                            ['--duration' as any]: '20s',
+                            transform: inlineTransform,
+                          }}
+                        >
+                          <img src={member.imagePath || '/placeholder.svg'} alt={member.name} className="w-14 h-14 sm:w-16 sm:h-16 object-cover" />
+                        </button>
+                      )
+                    })}
                   </div>
                 </div>
-              ))}
+              )}
             </div>
+
           </div>
+
+          {/* Modal */}
+          {selectedMember && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <div className="absolute inset-0 bg-black/50" onClick={() => setSelectedMember(null)} />
+              <div className="relative bg-white rounded-lg shadow-2xl max-w-md w-full z-10 p-6">
+                <div className="flex items-start gap-4">
+                  <img src={selectedMember.imagePath} alt={selectedMember.name} className="w-20 h-20 rounded-full object-cover" />
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold">{selectedMember.name}</h3>
+                    <p className="text-sm text-gray-600">{selectedMember.role}</p>
+                    <p className="mt-3 text-sm text-gray-700">{selectedMember.description}</p>
+                    <div className="mt-4 flex gap-3">
+                      {selectedMember.social.instagram && (
+                        <a href={selectedMember.social.instagram} target="_blank" rel="noreferrer" className="text-sm text-gray-700 underline">Instagram</a>
+                      )}
+                      {selectedMember.social.github && (
+                        <a href={selectedMember.social.github} target="_blank" rel="noreferrer" className="text-sm text-gray-700 underline">GitHub</a>
+                      )}
+                      {selectedMember.social.linkedin && (
+                        <a href={selectedMember.social.linkedin} target="_blank" rel="noreferrer" className="text-sm text-gray-700 underline">LinkedIn</a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <button onClick={() => setSelectedMember(null)} className="absolute top-3 right-3 text-gray-500 hover:text-gray-800">✕</button>
+              </div>
+            </div>
+          )}
+
         </div>
-      </div>
 
-      <style>{`
-        /* Responsive background grid tweak */
-        @media (max-width: 767px) {
-          section {
-            background-size: 15px 15px !important;
+        <style>{`
+          /* Responsive tweak */
+          @media (max-width: 767px) { section { background-size: 15px 15px !important; } }
+
+          .orbit { position: relative; border-radius: 9999px; display: block; }
+
+          /* Per-item orbit animations: each item orbits around center while counter-rotating to stay upright */
+          .orbit { position: relative; }
+
+          .member-item, .domain-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: center center;
+            pointer-events: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
           }
-        }
 
-        /* Timeline scaling while footer intersects. Uses --timeline-scale set on .timeline-container */
-        .timeline-container .timeline-item {
-          transform-origin: left center;
-          transform: scale(var(--timeline-scale, 1));
-          transition: transform 220ms ease, opacity 220ms ease;
-          opacity: 1;
-        }
+          /* Outer members orbit clockwise */
+          @keyframes orbitCW {
+            from { transform: rotate(var(--start-angle)) translateX(var(--radius)) rotate(calc(-1 * var(--start-angle))); }
+            to { transform: rotate(calc(var(--start-angle) + 360deg)) translateX(var(--radius)) rotate(calc(-1 * var(--start-angle) - 360deg)); }
+          }
 
-        .timeline-container .timeline-bar {
-          transition: height 220ms ease, width 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
-        }
+          /* Inner domains orbit counter-clockwise */
+          @keyframes orbitCCW {
+            from { transform: rotate(var(--start-angle)) translateX(var(--radius)) rotate(calc(-1 * var(--start-angle))); }
+            to { transform: rotate(calc(var(--start-angle) - 360deg)) translateX(var(--radius)) rotate(calc(-1 * var(--start-angle) + 360deg)); }
+          }
 
-        /* When scale is small, slightly reduce gap between items visually */
-        .timeline-container .timeline-item + .timeline-item {
-          margin-top: 0.25rem;
-        }
-      `}</style>
-    </section>
+          .member-item {
+            width: 64px;
+            height: 64px;
+            animation: orbitCW var(--duration, 36s) linear infinite;
+          }
+
+          .member-item img { border-radius: 9999px; transition: transform 220ms ease, box-shadow 220ms ease; }
+          .member-item:hover img { transform: scale(1.12); box-shadow: 0 12px 30px rgba(0,0,0,0.18); }
+
+          .domain-item {
+            animation: orbitCCW var(--duration, 24s) linear infinite;
+          }
+
+          /* ensure inner domain pills are clickable */
+          .orbit-inner > .domain-item { pointer-events: auto; }
+
+        `}</style>
+
+      </section>
       <Footer />
     </>
   )
