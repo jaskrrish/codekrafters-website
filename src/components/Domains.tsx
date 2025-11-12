@@ -20,17 +20,14 @@ const DOMAINS = [
 export default function DomainsSection() {
   const [selectedDomain, setSelectedDomain] = useState<any | null>(null);
 
-  // 🧩 Modal open handler
   const handleOpen = (domain: any) => {
     setSelectedDomain(domain);
   };
 
-  // 🧩 Modal close handler
   const handleClose = () => {
     setSelectedDomain(null);
   };
 
-  // 🧠 Helper: fetch members by domain id
   const getCoreMembers = (domainId: string) => {
     return TEAM_MEMBERS.filter((m) => m.domain === domainId);
   };
@@ -40,7 +37,6 @@ export default function DomainsSection() {
       id="domains"
       className="relative min-h-screen bg-[#FFEFB4] flex flex-col items-center justify-center overflow-hidden py-20"
     >
-      {/* Title */}
       <motion.h2
         initial={{ opacity: 0, y: -30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -54,7 +50,6 @@ export default function DomainsSection() {
         </span>
       </motion.h2>
 
-      {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 max-w-7xl px-8">
         {DOMAINS.map((domain, index) => (
           <motion.button
@@ -83,7 +78,6 @@ export default function DomainsSection() {
         ))}
       </div>
 
-      {/* 🟡 Modal Popup */}
       <AnimatePresence>
         {selectedDomain && (
           <motion.div
@@ -124,7 +118,6 @@ export default function DomainsSection() {
 
               <div className="border-t-2 border-dashed border-[#0D0D0D]/50 my-6"></div>
 
-              {/* Core Team */}
               <h4 className="text-2xl font-extrabold text-[#0D0D0D] mb-4 text-center">
                 Core Team
               </h4>
@@ -164,7 +157,6 @@ export default function DomainsSection() {
         )}
       </AnimatePresence>
 
-      {/* Paper texture overlay */}
       <style jsx>{`
         section::before {
           content: "";
