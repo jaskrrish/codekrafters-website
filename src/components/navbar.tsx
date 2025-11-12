@@ -25,7 +25,6 @@ export function Navbar() {
     { label: "JOIN US", href: "/join", id: "join" },
   ];
 
-  // Detect active route
   useEffect(() => {
     const current = navLinks.find((link) => link.href === pathname);
     if (current) setActiveLink(current.id);
@@ -47,12 +46,13 @@ export function Navbar() {
       {/* Desktop Navbar */}
       <div className="hidden md:block">
         <div className="max-w-7xl mx-auto flex justify-center">
-          <div className="flex flex-col items-center">
-            {/* 🔸 Logo Area - hover trigger limited to logo */}
+          <div
+            className="flex flex-col items-center"
+            onMouseEnter={() => setIsExpanded(true)}
+            onMouseLeave={() => setIsExpanded(false)}
+          >
+            {/* Logo */}
             <div
-              className="flex items-center justify-center cursor-pointer"
-              onMouseEnter={() => setIsExpanded(true)}
-              onMouseLeave={() => setIsExpanded(false)}
               style={{
                 backgroundColor: "#0D0D0D",
                 width: isExpanded ? "60px" : "200px",
@@ -61,21 +61,20 @@ export function Navbar() {
                 transition: "all 900ms cubic-bezier(0.16,1,0.3,1)",
                 border: "1px solid rgba(242,242,242,0.15)",
                 borderRadius: isExpanded ? "12px" : "24px",
-                pointerEvents: "auto",
               }}
+              className="flex items-center justify-center"
             >
-              <Link href="/" className="flex items-center justify-center">
+              <Link href="/">
                 <Image
                   src="/ck_logo.svg"
                   alt="CK Logo"
                   width={40}
                   height={32}
-                  className="object-contain select-none"
+                  className="object-contain"
                 />
               </Link>
             </div>
 
-            {/* Navigation links (only visible when expanded) */}
             <div
               className="mt-2"
               style={{
@@ -95,7 +94,7 @@ export function Navbar() {
                     <button
                       key={link.id}
                       onClick={() => handleLabelClick(link)}
-                      className="relative px-4 py-2 text-sm font-medium tracking-wider text-[#F2F2F2] hover:text-[#F2A516] transition-all duration-300 nav-link-button"
+                      className="relative px-4 py-2 text-sm font-medium tracking-wider text-[#F2F2F2] hover:text-[#F2A516] transition-all duration-300"
                     >
                       {link.label}
                       <div
@@ -122,7 +121,6 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Navbar */}
       <div
         className="md:hidden flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4"
         style={{ backgroundColor: "#0D0D0D" }}
@@ -192,14 +190,14 @@ export function Navbar() {
           pointer-events: none;
         }
 
-        /* All nav elements use pointer cursor */
+        /* Make all navbar elements show index-finger cursor */
         .nav-link-button,
         button,
         a {
           cursor: pointer;
         }
 
-        /* Smooth hover feedback */
+        /* Optional: Add a subtle scale on hover for better feel */
         button:hover {
           transform: scale(1.05);
           transition: transform 0.2s ease-in-out;

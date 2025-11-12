@@ -10,8 +10,9 @@ export default function TeamComponent() {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const startTimeRef = useRef<number>(Date.now());
 
-  // 🟡 Enable horizontal scroll with wheel / trackpad
+  // 🟡 Horizontal scroll with wheel
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -26,48 +27,59 @@ export default function TeamComponent() {
     return () => container.removeEventListener("wheel", handleWheel);
   }, []);
 
-  // 🟡 Track which domain is in view
+  // 🟡 Track active domain & reset timer on manual scroll
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
+    let scrollTimeout: NodeJS.Timeout;
+
     const handleScroll = () => {
       const index = Math.round(container.scrollLeft / container.clientWidth);
       setActiveIndex(index);
+      // reset timer when user scrolls
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        startTimeRef.current = Date.now();
+        setProgress(0);
+      }, 200);
     };
+
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 🟡 Auto-slide domains every 5 seconds + progress animation
+  // 🟡 Auto-slide + progress animation
   useEffect(() => {
     const container = scrollContainerRef.current;
-    let startTime = Date.now();
+    if (!container) return;
 
-    const animateProgress = () => {
-      const elapsed = (Date.now() - startTime) / 5000;
-      setProgress(Math.min(elapsed * 100, 100));
-      if (elapsed >= 1) {
-        setActiveIndex((prev) => {
-          const nextIndex = (prev + 1) % DOMAINS.length;
-          if (container) {
-            container.scrollTo({
-              left: container.clientWidth * nextIndex,
-              behavior: "smooth",
-            });
-          }
-          startTime = Date.now(); // reset timer
-          setProgress(0);
-          return nextIndex;
+    let rafId: number;
+    const duration = 5000;
+
+    const animate = () => {
+      const elapsed = Date.now() - startTimeRef.current;
+      const ratio = Math.min(elapsed / duration, 1);
+      setProgress(ratio * 100);
+
+      if (ratio >= 1) {
+        const nextIndex = (activeIndex + 1) % DOMAINS.length;
+        container.scrollTo({
+          left: container.clientWidth * nextIndex,
+          behavior: "smooth",
         });
+        setActiveIndex(nextIndex);
+        startTimeRef.current = Date.now();
+        setProgress(0);
       }
-      requestAnimationFrame(animateProgress);
+      rafId = requestAnimationFrame(animate);
     };
-    const animationFrame = requestAnimationFrame(animateProgress);
-    return () => cancelAnimationFrame(animationFrame);
-  }, []);
 
-  // 🟡 Manual scroll via timeline click
+    rafId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafId);
+  }, [activeIndex]);
+
+  // 🟡 Manual click scroll + timer reset
   const scrollToDomain = (index: number) => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -76,7 +88,8 @@ export default function TeamComponent() {
       behavior: "smooth",
     });
     setActiveIndex(index);
-    setProgress(0); // reset progress bar
+    setProgress(0);
+    startTimeRef.current = Date.now();
   };
 
   return (
@@ -84,31 +97,29 @@ export default function TeamComponent() {
       id="team"
       className="relative w-full h-screen bg-[#FFEFB4] overflow-hidden flex flex-col justify-between"
     >
-      {/* ⏱ Progress Timer Bar (Top Left) */}
+      {/* Timer Bar */}
       <div className="absolute top-6 left-6 w-[120px] h-2 bg-[#0D0D0D]/20 rounded-full overflow-hidden">
         <motion.div
           key={activeIndex}
-          initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ ease: "linear", duration: 0.1 }}
           className="h-full bg-[#F2A516]"
         />
       </div>
 
-<div className="absolute top-6 right-10 text-right">
-  <h1 className="text-5xl md:text-6xl font-extrabold text-[#0D0D0D] uppercase tracking-tight">
-    Our{" "}
-    <span className="text-[#F2A516] underline decoration-[#0D0D0D] decoration-4 underline-offset-4">
-      Team
-    </span>
-  </h1>
-  <p className="text-[#333333] mt-2 text-sm font-medium">
-    The people behind CodeKrafters’ magic 
-  </p>
-</div>
+      <div className="absolute top-6 right-10 text-right">
+        <h1 className="text-5xl md:text-6xl font-extrabold text-[#0D0D0D] uppercase tracking-tight">
+          Our{" "}
+          <span className="text-[#F2A516] underline decoration-[#0D0D0D] decoration-4 underline-offset-4">
+            Team
+          </span>
+        </h1>
+        <p className="text-[#333333] mt-2 text-sm font-medium">
+          The people behind CodeKrafters’ magic
+        </p>
+      </div>
 
-
-      {/* Horizontal Scroll Container */}
+      {/* Horizontal Scroll */}
       <div
         ref={scrollContainerRef}
         className="flex flex-row w-full h-[75vh] overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide px-10 py-12"
@@ -123,7 +134,6 @@ export default function TeamComponent() {
               id={domain.id}
               className="flex-shrink-0 w-screen snap-center flex flex-col items-center justify-start"
             >
-              {/* Domain Header */}
               <div className="mb-10 mt-15">
                 <h2 className="text-3xl md:text-4xl font-extrabold text-[#0D0D0D] uppercase tracking-wide text-center">
                   {domain.label}
@@ -131,7 +141,6 @@ export default function TeamComponent() {
                 <div className="h-[3px] w-16 bg-[#0D0D0D] mx-auto rounded-full mt-2"></div>
               </div>
 
-              {/* Members Row */}
               <div className="flex flex-wrap justify-center gap-8 max-w-6xl mx-auto">
                 {members.map((member, index) => (
                   <motion.div
@@ -146,7 +155,6 @@ export default function TeamComponent() {
                     viewport={{ once: true }}
                     className="bg-[#FFF7D6] border-[3px] border-[#0D0D0D] rounded-2xl shadow-[6px_6px_0_#0D0D0D] hover:shadow-[10px_10px_0_#0D0D0D] hover:-translate-y-1 transition-all duration-300 p-6 w-[250px] flex flex-col items-center text-center"
                   >
-                    {/* Image */}
                     <div className="w-36 h-36 overflow-hidden rounded-full border-2 border-[#0D0D0D] mb-3 bg-[#FFF0BB]">
                       <Image
                         src={member.imagePath}
@@ -156,8 +164,6 @@ export default function TeamComponent() {
                         className="object-cover object-top w-full h-full"
                       />
                     </div>
-
-                    {/* Name & Role */}
                     <h3 className="text-lg font-bold text-[#0D0D0D]">
                       {member.name}
                     </h3>
@@ -167,8 +173,6 @@ export default function TeamComponent() {
                     <p className="text-xs text-[#333333] mb-4 leading-snug">
                       {member.description}
                     </p>
-
-                    {/* Socials */}
                     <div className="flex items-center justify-center gap-3">
                       {member.social.instagram && (
                         <a
@@ -209,7 +213,7 @@ export default function TeamComponent() {
         })}
       </div>
 
-      {/* Timeline Bar */}
+      {/* Timeline */}
       <div className="w-full py-6 bg-[#0D0D0D] flex items-center justify-center gap-4">
         {DOMAINS.map((domain, index) => (
           <button
