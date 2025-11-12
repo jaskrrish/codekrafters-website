@@ -2,13 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 
 export function Navbar() {
   const router = useRouter();
-  const pathname = usePathname();  // ✅ detect current route
+  const pathname = usePathname();
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
@@ -25,72 +25,30 @@ export function Navbar() {
     { label: "JOIN US", href: "/join", id: "join" },
   ];
 
-  /** ✅ Sync active state with URL changes */
+  // ✅ Detect active route
   useEffect(() => {
     const current = navLinks.find((link) => link.href === pathname);
     if (current) setActiveLink(current.id);
   }, [pathname]);
 
+  // ✅ Cleanup timer
   useEffect(() => {
-    return () => {
-      if (animTimerRef.current) {
-        window.clearTimeout(animTimerRef.current);
-      }
-    };
+    return () => animTimerRef.current && clearTimeout(animTimerRef.current);
   }, []);
 
-  /** ✅ Smooth scroll only when href contains # */
-  const smoothScrollTo = (target: HTMLElement | null, duration = 1400) => {
-    if (!target) return;
-
-    const start = window.pageYOffset;
-    const end = target.getBoundingClientRect().top + start;
-    const distance = end - start;
-
-    let startTime: number | null = null;
-
-    const ease = (t: number) =>
-      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-
-      window.scrollTo(0, start + distance * ease(progress));
-
-      if (elapsed < duration) {
-        requestAnimationFrame(animate);
-      }
-    };
-
-    requestAnimationFrame(animate);
-  };
-
-  /** ✅ Main click handler */
+  // ✅ Handle clicks
   const handleLabelClick = (link: { id: string; href: string }) => {
     setActiveLink(link.id);
     setAnimatingId(link.id);
-
-    const isHash = link.href.startsWith("#");
-
-    if (isHash) {
-      const targetId = link.href.replace("#", "");
-      const targetEl = document.getElementById(targetId);
-      smoothScrollTo(targetEl);
-    } else {
-      router.push(link.href);
-    }
-
-    if (animTimerRef.current) window.clearTimeout(animTimerRef.current);
-    animTimerRef.current = window.setTimeout(() => setAnimatingId(null), 1400);
+    router.push(link.href);
+    animTimerRef.current = setTimeout(() => setAnimatingId(null), 1200);
   };
 
   return (
     <nav className="fixed top-0 w-full z-50 pt-6">
-      {/* Desktop Navigation */}
+      {/* Desktop Navbar */}
       <div className="hidden md:block">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+        <div className="max-w-7xl mx-auto flex justify-center">
           <div
             className="flex flex-col items-center"
             onMouseEnter={() => setIsExpanded(true)}
@@ -98,18 +56,18 @@ export function Navbar() {
           >
             {/* Logo */}
             <div
-              className="flex items-center justify-center"
               style={{
                 backgroundColor: "#0D0D0D",
                 width: isExpanded ? "60px" : "200px",
                 height: isExpanded ? "48px" : "60px",
                 overflow: "hidden",
-                transition: "all 900ms cubic-bezier(0.16, 1, 0.3, 1)",
+                transition: "all 900ms cubic-bezier(0.16,1,0.3,1)",
                 border: "1px solid rgba(242,242,242,0.15)",
                 borderRadius: isExpanded ? "12px" : "24px",
               }}
+              className="flex items-center justify-center"
             >
-              <Link href="/" className="flex items-center justify-center">
+              <Link href="/">
                 <Image
                   src="/ck_logo.svg"
                   alt="CK Logo"
@@ -120,87 +78,44 @@ export function Navbar() {
               </Link>
             </div>
 
-            {/* Desktop Menu */}
+            {/* Menu */}
             <div
-              className="mt-2 overflow-hidden"
+              className="mt-2"
               style={{
-                backgroundColor: "#0D0D0D",
                 opacity: isExpanded ? 1 : 0,
                 pointerEvents: isExpanded ? "auto" : "none",
                 transform: isExpanded
                   ? "translateY(0) scale(1)"
                   : "translateY(-15px) scale(0.92)",
-                transformOrigin: "top center",
                 transition:
-                  "opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1)",
-                maxHeight: isExpanded ? "200px" : "0px",
-                border: "1px solid rgba(242,242,242,0.15)",
-                borderRadius: "24px",
+                  "opacity 900ms cubic-bezier(0.16,1,0.3,1), transform 900ms cubic-bezier(0.16,1,0.3,1)",
               }}
             >
-              <div
-                className="inline-flex nav-pill flex-row items-center gap-2 shadow-md transition-all duration-700"
-                style={{
-                  backgroundColor: "#0D0D0D",
-                  padding: "12px 16px",
-                }}
-              >
-                {navLinks.map((link, index) => {
+              <div className="flex gap-2 bg-[#0D0D0D] p-3 rounded-2xl border border-[#2a2a2a]">
+                {navLinks.map((link) => {
                   const isActive = activeLink === link.id;
-                  const isAnimating = animatingId === link.id;
-
                   return (
                     <button
                       key={link.id}
                       onClick={() => handleLabelClick(link)}
-                      className={`nav-link-button transition-all duration-200 transform flex items-center justify-center ${
-                        isAnimating ? "money-roll" : ""
-                      } ${isActive ? "active" : ""}`}
-                      style={{
-                        minWidth: "120px",
-                        height: "40px",
-                        padding: "0 16px",
-                        backgroundColor: isActive ? "#F2A516" : "transparent",
-                        color: isActive ? "#0D0D0D" : "#F2F2F2",
-                        border: isActive
-                          ? "none"
-                          : "1px solid rgba(242,242,242,0.08)",
-                        transitionDelay: `${index * 50}ms`,
-                        borderRadius: "6px",
-                        position: "relative",
-                      }}
+                      className="relative px-4 py-2 text-sm font-medium tracking-wider text-[#F2F2F2] hover:text-[#F2A516] transition-all duration-300"
                     >
+                      {link.label}
                       <div
-                        className="dot-indicator"
+                        className="underline-indicator"
                         style={{
                           position: "absolute",
-                          top: "12px",
-                          width: "6px",
-                          height: "6px",
-                          borderRadius: "50%",
-                          backgroundColor: isActive ? "#0D0D0D" : "#F2F2F2",
-                          transition: "all 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+                          bottom: "4px",
+                          left: "50%",
+                          width: isActive ? "70%" : "0%",
+                          height: "2px",
+                          backgroundColor: "#F2A516",
+                          borderRadius: "2px",
+                          transform: "translateX(-50%)",
+                          transition:
+                            "width 400ms cubic-bezier(0.16,1,0.3,1)",
                         }}
                       ></div>
-
-                      <span
-                        className="text-sm font-medium tracking-wider label label-bottom"
-                        style={{
-                          transition: "all 400ms cubic-bezier(0.16, 1, 0.3, 1)",
-                        }}
-                      >
-                        {link.label}
-                      </span>
-
-                      <span
-                        className="text-sm font-medium tracking-wider label label-top"
-                        style={{
-                          position: "absolute",
-                          transition: "all 400ms cubic-bezier(0.16, 1, 0.3, 1)",
-                        }}
-                      >
-                        {link.label}
-                      </span>
                     </button>
                   );
                 })}
@@ -210,7 +125,7 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* ✅ Mobile Navigation */}
+      {/* Mobile Navbar */}
       <div
         className="md:hidden flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4"
         style={{ backgroundColor: "#0D0D0D" }}
@@ -275,28 +190,24 @@ export function Navbar() {
         </div>
       )}
 
-      {/* ✅ Animations preserved */}
+      {/* ✅ Global Styles */}
       <style jsx>{`
-        .nav-pill button {
-          background: transparent;
-          color: #f2f2f2;
-          border: 0;
-          cursor: pointer;
-          transform-style: preserve-3d;
+        .underline-indicator {
+          pointer-events: none;
         }
-          .dot-indicator {
-  opacity: 1;
-  transform: translateY(-6px);
-}
-.nav-link-button:hover .dot-indicator {
-  transform: translateY(12px);
-}
-.nav-link-button.active .dot-indicator {
-  transform: translateY(-6px);
-}
-.nav-link-button.active:hover .dot-indicator {
-  transform: translateY(12px);
-}
+
+        /* Make all navbar elements show index-finger cursor */
+        .nav-link-button,
+        button,
+        a {
+          cursor: pointer;
+        }
+
+        /* Optional: Add a subtle scale on hover for better feel */
+        button:hover {
+          transform: scale(1.05);
+          transition: transform 0.2s ease-in-out;
+        }
       `}</style>
     </nav>
   );
