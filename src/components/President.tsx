@@ -8,7 +8,7 @@ export default function PresidentIntroRetro() {
   return (
     <section
       id="president"
-      className="w-full min-h-screen flex items-center justify-center bg-[#FFEFB4] py-24 px-6"
+      className="w-full min-h-screen flex items-center justify-center bg-[#FFEFB4] px-6"
     >
       <div className="max-w-6xl w-full flex flex-col md:flex-row items-center justify-between gap-12">
         <motion.div

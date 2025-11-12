@@ -155,8 +155,25 @@ function StoryComponent() {
   }, []);
 
   useLayoutEffect(() => {
+    // gsap.registerEffect({
+    //   name: "zoom",
+    //   effect: (targets: any, config: any) => {
+    //     const vars = { transformOrigin: "0px 0px", ...config },
+    //       { scale, origin } = config,
+    //       clamp = gsap.utils.clamp(-100 * (scale - 1), 0);
+    //     delete vars.origin;
+    //     vars.xPercent = clamp((0.5 - origin[0] * scale) * 100);
+    //     vars.yPercent = clamp((0.5 - origin[1] * scale) * 100);
+    //     vars.overwrite = "auto";
+    //     return gsap.to(targets, vars);
+    //   },
+    //   extendTimeline: true,
+    //   defaults: { origin: [0.5, 0.5], scale: 2 },
+    // });
     const ctx = gsap.context(() => {
+      // Use ScrollTrigger.matchMedia for responsive animations
       ScrollTrigger.matchMedia({
+        // Desktop animations
         "(min-width: 768px)": () => {
           gsap
             .timeline({
@@ -360,10 +377,61 @@ function StoryComponent() {
         />
       </div>
 
+      {/* <div
+        className="min-h-screen max-w-full bg-gray-100 bg-[url(/oat-bg-png.png)] bg-no-repeat bg-cover flex items-end justify-center z-10 overflow-y-hidden"
+        id="another-div"
+        onClick={() => {
+          lenis?.scrollTo("#smth", {
+            duration: 1.5,
+          });
+        }}
+        ref={anotherDivRef}
+      >
+        <div
+          className="flex items-end justify-center z-20 bg-[url(/oat-bg-png.png)] bg-no-repeat bg-cover w-full h-full overflow-hidden"
+          id="panick"
+        >
+          <div className="flex items-center justify-center">
+            <img
+              src="/comment-1-png.png"
+              alt=""
+              className="absolute w-1/4 h-1/4 opacity-0 left-60 bottom-40"
+              id="comment-1"
+              ref={commentOneRef}
+            />{" "}
+            <img
+              src="/comment-2-png.png"
+              alt=""
+              className="absolute w-1/4 h-1/4 opacity-0 left-80 bottom-50"
+              id="comment-2"
+              ref={commentTwoRef}
+            />
+            <img
+              src="/comment-3-png.png"
+              alt=""
+              className="absolute w-1/4 h-1/4 opacity-0 left-100 bottom-50"
+              id="comment-3"
+              ref={commentThreeRef}
+            />
+          </div>
+          <img
+            src="/panicked-man-png.png"
+            alt="Panicked Goi"
+            className="relative z-10 bottom-[-22.5vh] right-[5vw]"
+          />
+        </div>
+        <img
+          src="/shocked-man-bg-png.png"
+          className="h-full w-full absolute z-0 overflow-y-hidden"
+          ref={sideLookingRef}
+        />
+      </div> */}
+
       <div
         className="min-h-screen max-w-full bg-gray-100 flex items-center justify-center z-10 overflow-y-hidden overflow-x-hidden perspective-[500px]"
         ref={walkingRef}
       >
+        {/* Desktop walking images */}
         <img
           src="/story/oat-walking-bg-png.png"
           alt="Goi walking"

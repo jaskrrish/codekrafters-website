@@ -123,7 +123,7 @@ export default function EventSection() {
   ];
 
   return (
-    <div className="w-full py-10" style={{ backgroundColor: "#F2F0D8" }}>
+    <div className="w-full  bg-[#FFEFB4]" >
       {/* Row 1 - Left Scroll */}
       <EventRow
         images={launchpadImages}

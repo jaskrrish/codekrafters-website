@@ -7,26 +7,35 @@ import EventSection from "@/components/Events";
 import SponsorsComponent from "@/components/sponsor";
 import Footer from "@/components/Footer";
 import PresidentIntro from "@/components/President";
+import TeamComponent from "@/components/Team";
 
 export default function Home() {
-
   return (
     <main className="min-h-screen bg-background" style={{ scrollSnapType: "y mandatory" }}>
       <Navbar />
       <Hero />
+
       <div id="story">
         <StoryComponent />
       </div>
+
       <div id="events">
         <EventSection />
       </div>
+
       <div id="president">
-        <PresidentIntro/>
+        <PresidentIntro />
       </div>
+
+      <div id="team">
+        <TeamComponent />
+      </div>
+
       <div id="sponsors">
         <SponsorsComponent />
       </div>
-      <div id="contact">
+
+      <div id="footer">
         <Footer />
       </div>
     </main>
