@@ -10,7 +10,7 @@ import { TEAM_MEMBERS } from "@/data/team-data";
 const DOMAINS = [
   { id: "content", name: "Content", icon: PenTool, desc: "Crafting engaging stories and visuals that define CodeKrafters’ voice." },
   { id: "development", name: "Development", icon: Code, desc: "Building robust products, websites, and tools that power our ecosystem." },
-  { id: "cybersec", name: "Cyber Security", icon: Shield, desc: "Defending systems, spreading awareness, and teaching ethical hacking." },
+  { id: "cyber", name: "Cyber Security", icon: Shield, desc: "Defending systems, spreading awareness, and teaching ethical hacking." },
   { id: "cp", name: "Competitive Programming", icon: Laptop, desc: "Sharpening logic and algorithms for hackathons and coding contests." },
   { id: "web3", name: "Web3", icon: Globe, desc: "Exploring decentralized apps, blockchain tech, and on-chain innovation." },
   { id: "creatives", name: "Creatives", icon: Palette, desc: "Designing visuals, posters, and brand experiences that pop." },
