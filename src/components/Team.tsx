@@ -103,7 +103,7 @@ export default function TeamComponent() {
     </span>
   </h1>
   <p className="text-[#333333] mt-2 text-sm font-medium">
-    The people behind CodeKrafters’ magic ⚡
+    The people behind CodeKrafters’ magic 
   </p>
 </div>
 
