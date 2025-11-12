@@ -9,7 +9,6 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="relative overflow-hidden bg-[#0b0b0b] text-white border-t border-[#F2B200]/10">
-      {/* Ambient Glow */}
       <div className="absolute inset-0 -z-10 opacity-30">
         <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-[#F2B200]/10 blur-[120px] rounded-full"></div>
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-[#F2B200]/5 blur-[100px] rounded-full"></div>
@@ -17,9 +16,6 @@ const Footer: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-6 py-5">
 
-        {/* ========================= */}
-        {/* BRAND CENTERPIECE */}
-        {/* ========================= */}
         <div className="flex flex-col items-center text-center gap-4 mb-14 relative">
           <div className="flex items-center gap-3 group hover:scale-[1.04] transition-transform duration-500">
             <Image
@@ -43,11 +39,7 @@ const Footer: React.FC = () => {
           </p>
         </div>
 
-        {/* ========================= */}
-        {/* GRID LINKS */}
-        {/* ========================= */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14 text-sm">
-          {/* Explore */}
           <div className="flex flex-col gap-3">
             <h4 className="font-semibold text-[#F2B200] uppercase tracking-wide text-xs">
               Explore
@@ -57,7 +49,6 @@ const Footer: React.FC = () => {
             <Link href="/team" className="text-gray-400 hover:text-[#F2B200] transition-colors">Team</Link>
           </div>
 
-          {/* Community */}
           <div className="flex flex-col gap-3">
             <h4 className="font-semibold text-[#F2B200] uppercase tracking-wide text-xs">
               Community
@@ -77,8 +68,6 @@ const Footer: React.FC = () => {
               LinkedIn
             </a>
           </div>
-
-          {/* Resources */}
           <div className="flex flex-col gap-3">
             <h4 className="font-semibold text-[#F2B200] uppercase tracking-wide text-xs">
               Resources
@@ -89,7 +78,6 @@ const Footer: React.FC = () => {
             </Link>
           </div>
 
-          {/* Join */}
           <div className="flex flex-col gap-3">
             <h4 className="font-semibold text-[#F2B200] uppercase tracking-wide text-xs">
               Be a part of the future
@@ -103,19 +91,14 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Divider */}
         <div className="border-t border-[#F2B200]/10"></div>
 
-        {/* ========================= */}
-        {/* BOTTOM BAR */}
-        {/* ========================= */}
         <div className="flex flex-col md:flex-row items-center justify-between text-sm text-gray-500">
           <p className="text-center md:text-left">
             © {year} <span className="text-[#F2B200] font-semibold">CodeKrafters</span>. All rights reserved.
           </p>
 
           <div className="flex gap-5 mt-3 md:mt-0">
-            {/* Instagram */}
             <a
               href="https://www.instagram.com/codekrafterssrm.rmp"
               target="_blank"
@@ -127,7 +110,6 @@ const Footer: React.FC = () => {
               </svg>
             </a>
 
-            {/* LinkedIn */}
             <a
               href="https://www.linkedin.com/company/codechef-srmrmp"
               target="_blank"

@@ -90,12 +90,10 @@ const SponsorsComponent: React.FC = () => {
     []
   );
 
-  // Split companies into 3 columns (4 companies each)
   const column1 = companies.slice(0, 4);
   const column2 = companies.slice(4, 8);
   const column3 = companies.slice(8, 12);
 
-  // For mobile - combine all companies
   const allCompanies = [...companies];
 
   const handleImageError = (
@@ -142,14 +140,12 @@ const SponsorsComponent: React.FC = () => {
         />
       </div>
 
-      {/* Company name overlay on hover */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-8 pointer-events-none">
         <span className="text-white text-2xl font-bold tracking-wider transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 drop-shadow-lg">
           {company.name}
         </span>
       </div>
 
-      {/* Colorful glow effect on hover */}
       <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F2B200]/30 via-[#FFDA4D]/20 to-[#F2B200]/30 blur-xl"></div>
       </div>
@@ -161,7 +157,6 @@ const SponsorsComponent: React.FC = () => {
       className="min-h-screen flex flex-col items-center justify-center relative py-20"
       style={{ backgroundColor: "#FFEFB3" }}
     >
-      {/* Header Section */}
       <div className="text-center mb-16 px-4 z-10">
         <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tight">
           <span className="text-[#0b1220]">LOVED BY</span>{" "}
@@ -172,16 +167,13 @@ const SponsorsComponent: React.FC = () => {
         </p>
       </div>
 
-      {/* Three Column Infinite Scroll */}
       <div className="w-full overflow-hidden relative">
         <div className="flex gap-3 px-6 max-w-[1100px] mx-auto">
-          {/* Column 1 - Scroll Down */}
           <div
             className="flex-1 overflow-hidden relative"
             style={{ height: "700px" }}
           >
             <div className="scroll-column-down">
-              {/* Duplicate content for seamless loop */}
               {[...column1, ...column1, ...column1].map((company, idx) => (
                 <div key={`col1-${company.id}-${idx}`}>
                   {renderLogoCard(company)}
@@ -190,13 +182,11 @@ const SponsorsComponent: React.FC = () => {
             </div>
           </div>
 
-          {/* Column 2 - Scroll Up (opposite direction) */}
           <div
             className="flex-1 overflow-hidden relative"
             style={{ height: "700px" }}
           >
             <div className="scroll-column-up">
-              {/* Duplicate content for seamless loop */}
               {[...column2, ...column2, ...column2].map((company, idx) => (
                 <div key={`col2-${company.id}-${idx}`}>
                   {renderLogoCard(company)}
@@ -205,13 +195,11 @@ const SponsorsComponent: React.FC = () => {
             </div>
           </div>
 
-          {/* Column 3 - Scroll Down */}
           <div
             className="flex-1 overflow-hidden relative"
             style={{ height: "700px" }}
           >
             <div className="scroll-column-down">
-              {/* Duplicate content for seamless loop */}
               {[...column3, ...column3, ...column3].map((company, idx) => (
                 <div key={`col3-${company.id}-${idx}`}>
                   {renderLogoCard(company)}
@@ -221,9 +209,8 @@ const SponsorsComponent: React.FC = () => {
           </div>
         </div>
 
-        {/* Gradient overlays for smooth fade */}
-        <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#FFEFB3] to-transparent pointer-events-none z-10"></div>
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#FFEFB3] to-transparent pointer-events-none z-10"></div>
+        <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#FFEFB4] to-transparent pointer-events-none z-10"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#FFEFB4] to-transparent pointer-events-none z-10"></div>
       </div>
 
       <style jsx>{`

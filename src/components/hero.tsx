@@ -25,7 +25,6 @@ const Hero: React.FC = () => {
       </span>
     ));
 
-  // carousel images (start from group4 -> group1)
   const images = [
     "/group/group4.jpg",
     "/group/group3.jpg",
@@ -47,7 +46,6 @@ const Hero: React.FC = () => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current as any);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const goto = (n: number) => {
@@ -229,7 +227,6 @@ const Hero: React.FC = () => {
               marginTop: "clamp(20px, 2vh, 40px)",
             }}
           >
-            {/* stacked background slides */}
             {images.map((src, i) => (
               <div
                 key={src}
@@ -238,7 +235,6 @@ const Hero: React.FC = () => {
                   backgroundImage: `url('${src}')`,
                   opacity: index === i ? 1 : 0,
                   transitionTimingFunction: "ease-in-out",
-                  // keep rounded corners during transitions and reduce aliasing
                   borderRadius: "inherit",
                   willChange: "opacity",
                   backfaceVisibility: "hidden",
@@ -248,7 +244,6 @@ const Hero: React.FC = () => {
               />
             ))}
 
-            {/* left / right controls */}
             <button
               onClick={() => prev()}
               aria-label="Previous"
@@ -274,7 +269,6 @@ const Hero: React.FC = () => {
         </div>
       </div>
 
-      {/* BOTTOM BAND — CODEKRAFTERS STATIC */}
       <div
         className="w-full bg-black"
         style={{
@@ -299,7 +293,6 @@ const Hero: React.FC = () => {
               SRM RAMAPURAM
             </p>
 
-            {/* STATIC — NO ANIMATION */}
             <h1
               style={{
                 color: "#F9B000",

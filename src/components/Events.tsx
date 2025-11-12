@@ -3,11 +3,9 @@
 import React from "react";
 import { Russo_One, Montserrat } from "next/font/google";
 
-// Fonts
 const russoOne = Russo_One({ subsets: ["latin"], weight: "400" });
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["800", "900"] });
 
-// Card Component
 function Card({ src, label }: { src: string; label: string }) {
   return (
     <div className="relative group mx-4 flex-shrink-0">
@@ -29,7 +27,6 @@ function Card({ src, label }: { src: string; label: string }) {
   );
 }
 
-// ✅ ✅ FIXED SEAMLESS ROW
 function EventRow({
   images,
   folder,
@@ -41,7 +38,6 @@ function EventRow({
   label: string;
   reverse?: boolean;
 }) {
-  // ✅ ONLY DOUBLE (seamless loop)
   const doubled = [...images, ...images];
 
   return (
@@ -55,7 +51,7 @@ function EventRow({
       <style jsx>{`
         .scroll-row {
           display: flex;
-          width: max-content;      /* ✅ prevents snapping */
+          width: max-content;     
           animation: scrollX 25s linear infinite;
         }
 
@@ -66,8 +62,6 @@ function EventRow({
         .scroll-row:hover {
           animation-play-state: paused;
         }
-
-        /* ✅ Seamless loop — scroll exactly one set width */
         @keyframes scrollX {
           0% {
             transform: translateX(0);
@@ -81,7 +75,6 @@ function EventRow({
   );
 }
 
-// MAIN COMPONENT
 export default function EventSection() {
   const launchpadImages = [
     "launchpad-001.jpg",

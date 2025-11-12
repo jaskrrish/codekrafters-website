@@ -25,18 +25,15 @@ export function Navbar() {
     { label: "JOIN US", href: "/join", id: "join" },
   ];
 
-  // ✅ Detect active route
   useEffect(() => {
     const current = navLinks.find((link) => link.href === pathname);
     if (current) setActiveLink(current.id);
   }, [pathname]);
 
-  // ✅ Cleanup timer
   useEffect(() => {
     return () => animTimerRef.current && clearTimeout(animTimerRef.current);
   }, []);
 
-  // ✅ Handle clicks
   const handleLabelClick = (link: { id: string; href: string }) => {
     setActiveLink(link.id);
     setAnimatingId(link.id);
@@ -78,7 +75,6 @@ export function Navbar() {
               </Link>
             </div>
 
-            {/* Menu */}
             <div
               className="mt-2"
               style={{
@@ -125,7 +121,6 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Navbar */}
       <div
         className="md:hidden flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4"
         style={{ backgroundColor: "#0D0D0D" }}
@@ -190,7 +185,6 @@ export function Navbar() {
         </div>
       )}
 
-      {/* ✅ Global Styles */}
       <style jsx>{`
         .underline-indicator {
           pointer-events: none;

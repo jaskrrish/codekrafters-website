@@ -6,21 +6,22 @@ import StoryComponent from "@/components/Story";
 import EventSection from "@/components/Events";
 import SponsorsComponent from "@/components/sponsor";
 import Footer from "@/components/Footer";
+import PresidentIntro from "@/components/President";
 
 export default function Home() {
 
   return (
     <main className="min-h-screen bg-background" style={{ scrollSnapType: "y mandatory" }}>
       <Navbar />
-
       <Hero />
-
-      {/* REST OF PAGE */}
       <div id="story">
         <StoryComponent />
       </div>
       <div id="events">
         <EventSection />
+      </div>
+      <div id="president">
+        <PresidentIntro/>
       </div>
       <div id="sponsors">
         <SponsorsComponent />
