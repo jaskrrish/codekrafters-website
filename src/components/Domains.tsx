@@ -6,7 +6,6 @@ import { X, Laptop, PenTool, Shield, Code, Globe, Palette, Users, Wrench } from 
 import Image from "next/image";
 import { TEAM_MEMBERS } from "@/data/team-data";
 
-// 🟡 Define all domains
 const DOMAINS = [
   { id: "content", name: "Content", icon: PenTool, desc: "Crafting engaging stories and visuals that define CodeKrafters’ voice." },
   { id: "development", name: "Development", icon: Code, desc: "Building robust products, websites, and tools that power our ecosystem." },
