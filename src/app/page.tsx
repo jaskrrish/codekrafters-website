@@ -89,7 +89,6 @@ export default function Home() {
               duration: gsap.utils.random(1, 1.25),
               ease: "back.out(3)",
               delay: charIndex * 0.04 + lineIndex * 0.15,
-              repeat: -1,
               repeatDelay: gsap.utils.random(0.7, 1.2),
               yoyo: true
             }
@@ -300,15 +299,6 @@ export default function Home() {
                 CODEKRAFTERS
               </h1>
             </div>
-          </div>
-
-          <div className="px-[4vw] pt-[6.5rem] pb-[2.5rem] text-white max-w-[1200px]">
-            <h2 className="font-bold text-[clamp(1rem,2vw,1.25rem)] m-0">
-              (Text area — replace this with your copy)
-            </h2>
-            <p className="opacity-90 mt-2 leading-relaxed">
-              This region remains the same as your original design.
-            </p>
           </div>
         </div>
       </section>
