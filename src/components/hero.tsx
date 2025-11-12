@@ -11,6 +11,7 @@ const Hero: React.FC = () => {
   const imageRef = useRef<HTMLDivElement | null>(null);
   const arrowRef = useRef<HTMLDivElement | null>(null);
   const leftRailRef = useRef<HTMLDivElement | null>(null);
+  const codekraftersRef = useRef<HTMLHeadingElement | null>(null); // 🟡 new ref for the text
 
   const taglineLines = useMemo(() => ["IT'S", "MORE THAN", "A CLUB"], []);
 
@@ -55,6 +56,7 @@ const Hero: React.FC = () => {
   const next = () => goto(index + 1);
   const prev = () => goto(index - 1);
 
+  // 🟡 Image breathing + hover tilt
   useEffect(() => {
     const img = imageRef.current;
     if (!img) return;
@@ -86,6 +88,7 @@ const Hero: React.FC = () => {
     };
   }, []);
 
+  // 🟡 Tagline animations
   useEffect(() => {
     if (!leftRailRef.current) return;
 
@@ -133,9 +136,10 @@ const Hero: React.FC = () => {
     return () => ctx.revert();
   }, []);
 
+  // 🟡 Background rotation with scroll
   useEffect(() => {
-    const yellowLayer = document.querySelector('.bg-layer-yellow');
-    const blackLayer = document.querySelector('.bg-layer-black');
+    const yellowLayer = document.querySelector(".bg-layer-yellow");
+    const blackLayer = document.querySelector(".bg-layer-black");
 
     if (!yellowLayer || !blackLayer) return;
 
@@ -161,6 +165,50 @@ const Hero: React.FC = () => {
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
+
+  // 🟡 CODEKRAFTERS hover animation
+  useEffect(() => {
+    const heading = codekraftersRef.current;
+    if (!heading) return;
+
+    const chars = heading.querySelectorAll(".char");
+
+    const hoverEnter = () => {
+      gsap.to(chars, {
+        y: -15,
+        rotation: gsap.utils.random(-10, 10, 1, true),
+        color: "#FFFFFF",
+        stagger: {
+          each: 0.05,
+          from: "center",
+        },
+        ease: "back.out(2)",
+        duration: 0.4,
+      });
+    };
+
+    const hoverLeave = () => {
+      gsap.to(chars, {
+        y: 0,
+        rotation: 0,
+        color: "#F9B000",
+        stagger: {
+          each: 0.03,
+          from: "edges",
+        },
+        ease: "back.in(1.5)",
+        duration: 0.5,
+      });
+    };
+
+    heading.addEventListener("mouseenter", hoverEnter);
+    heading.addEventListener("mouseleave", hoverLeave);
+
+    return () => {
+      heading.removeEventListener("mouseenter", hoverEnter);
+      heading.removeEventListener("mouseleave", hoverLeave);
     };
   }, []);
 
@@ -269,47 +317,49 @@ const Hero: React.FC = () => {
         </div>
       </div>
 
-      <div
-        className="w-full bg-black"
-        style={{
-          height: "30vh",
-          zIndex: 10,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-        }}
-      >
-        <div className="w-full flex justify-end pt-[0.9rem]">
-          <div className="w-full text-right pr-[1vw]">
-            <p
-              style={{
-                color: "rgba(255,255,255,0.85)",
-                fontSize: "clamp(20px, 1vw, 20px)",
-                letterSpacing: "0.16em",
-                marginBottom: 1,
-                fontWeight: 600,
-              }}
-            >
-              SRM RAMAPURAM
-            </p>
+      <div className="w-full bg-black h-[30vh] flex flex-col justify-end items-end z-10 pr-[3vw] pb-[2vh]">
+        <div className="text-right">
+          <p
+            className="mb-2"
+            style={{
+              color: "rgba(255,255,255,0.85)",
+              fontSize: "clamp(18px, 1vw, 20px)",
+              letterSpacing: "0.16em",
+              fontWeight: 600,
+              textAlign: "right",
+            }}
+          >
+            SRMIST RAMAPURAM
+          </p>
 
-            <h1
-              style={{
-                color: "#F9B000",
-                fontWeight: 900,
-                fontSize: "clamp(3.5rem, 10vw, 8.5rem)",
-                lineHeight: 0.88,
-                margin: 0,
-                textAlign: "right",
-                transform: "translateY(8%)",
-                letterSpacing: "-0.02em",
-              }}
-            >
-              CODEKRAFTERS
-            </h1>
-          </div>
+          <h1
+            ref={codekraftersRef}
+            className="font-black leading-none cursor-pointer select-none"
+            style={{
+              color: "#F9B000",
+              fontSize: "clamp(3.5rem, 10vw, 8.5rem)",
+              letterSpacing: "-0.02em",
+              display: "inline-block",
+              textAlign: "right",
+            }}
+          >
+            {"CODEKRAFTERS".split("").map((char, i) => (
+              <span
+                key={i}
+                className="char inline-block"
+                style={{
+                  display: "inline-block",
+                  willChange: "transform, color",
+                  transformOrigin: "center",
+                }}
+              >
+                {char}
+              </span>
+            ))}
+          </h1>
         </div>
       </div>
+
     </section>
   );
 };
