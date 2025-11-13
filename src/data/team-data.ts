@@ -276,7 +276,7 @@ export const TEAM_MEMBERS = [
   },
   {
     id: 21,
-    name: "Kavya Reddy Ch",
+    name: "Kavya Reddy",
     role: "PR & Management Head",
     description: "Manages organizational relationships and growth.",
     imagePath: "/images/Kavya.png",
