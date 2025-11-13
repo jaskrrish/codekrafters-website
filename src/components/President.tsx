@@ -49,7 +49,7 @@ export default function PresidentIntroRetro() {
 
           <div className="bg-[#0D0D0D] text-[#FFEFB4] inline-block px-4 py-2 rounded-md shadow-[4px_4px_0_#F2A516]">
             <h3 className="text-xl font-semibold tracking-wider">
-              Jas Krish Singh — Club President
+              JAS KRRISH SINGH
             </h3>
           </div>
 
