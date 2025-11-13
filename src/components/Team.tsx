@@ -109,7 +109,7 @@ export default function TeamComponent() {
   return (
     <section
       id="team"
-      className="relative w-full  bg-[#FFEFB4] overflow-hidden flex flex-col justify-between"
+      className="relative w-full h-screen  bg-[#FFEFB4] overflow-hidden flex flex-col justify-between"
     >
       {/* ----------------------------------------
           Progress Timer Bar
@@ -141,7 +141,7 @@ export default function TeamComponent() {
       ---------------------------------------- */}
       <div
         ref={scrollContainerRef}
-        className="flex flex-row w-full h-[75vh] overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide px-10 mt-10 -mb-5"
+        className="flex flex-row w-full h-[75vh] overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide px-10"
       >
         {DOMAINS.map((domain) => {
           const members = TEAM_MEMBERS.filter((m) => m.domain === domain.id);
@@ -153,7 +153,7 @@ export default function TeamComponent() {
               className="flex-shrink-0 w-screen snap-center flex flex-col items-center justify-start"
             >
               {/* Domain Title */}
-              <div className="mb-10 mt-15">
+              <div className="mb-25 mt-20">
                 <h2 className="text-3xl md:text-4xl font-extrabold text-[#0D0D0D] uppercase tracking-wide text-center">
                   {domain.label}
                 </h2>
@@ -255,27 +255,32 @@ export default function TeamComponent() {
       </div>
 
       {/* ----------------------------------------
-          Bottom Timeline Navigation
+          Bottom Floating Timeline Navigation (Retro)
       ---------------------------------------- */}
-      <div className="w-full py-6  bg-[#0D0D0D] flex items-center justify-center gap-4">
-        {DOMAINS.map((domain, index) => (
-          <button
-            key={domain.id}
-            onClick={() => scrollToDomain(index)}
-            className={`flex items-center gap-2 font-semibold text-sm uppercase transition-all ${
-              activeIndex === index
-                ? "text-[#F2A516]"
-                : "text-[#FFEFB4] hover:text-[#F2A516]"
-            }`}
-          >
-            <span
-              className={`w-3 h-3 rounded-full border border-[#FFEFB4] transition-all ${
-                activeIndex === index ? "bg-[#F2A516]" : "bg-transparent"
+      <div className="w-full py-8 flex items-center justify-center">
+        <div className="relative bg-[#0D0D0D] border-[3px] border-[#F2A516] rounded-full shadow-[8px_8px_0_#0D0D0D] px-8 py-4 flex items-center justify-center gap-6">
+
+          {DOMAINS.map((domain, index) => (
+            <button
+              key={domain.id}
+              onClick={() => scrollToDomain(index)}
+              className={`relative flex items-center gap-2 font-bold text-sm uppercase transition-all px-4 py-2 rounded-full ${
+                activeIndex === index
+                  ? "text-[#0D0D0D] bg-[#F2A516] shadow-[3px_3px_0_#FFEFB4]"
+                  : "text-[#FFEFB4] hover:text-[#F2A516] hover:bg-[#0D0D0D]/50"
               }`}
-            ></span>
-            {domain.label}
-          </button>
-        ))}
+            >
+              <span
+                className={`w-2 h-2 rounded-full transition-all ${
+                  activeIndex === index 
+                    ? "bg-[#0D0D0D] animate-pulse" 
+                    : "bg-[#F2A516]"
+                }`}
+              ></span>
+              {domain.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* ----------------------------------------
