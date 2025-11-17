@@ -12,8 +12,6 @@ export function Navbar() {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
-  const [animatingId, setAnimatingId] = useState<string | null>(null);
-  const animTimerRef = useRef<any>(null);
 
   const navLinks = [
     { label: "HOME", href: "/", id: "home" },
@@ -25,107 +23,112 @@ export function Navbar() {
     { label: "JOIN US", href: "/join", id: "join" },
   ];
 
+  /* Detect Active Route */
   useEffect(() => {
-    const current = navLinks.find((link) => link.href === pathname);
+    const current = navLinks.find((l) => l.href === pathname);
     if (current) setActiveLink(current.id);
   }, [pathname]);
 
-  useEffect(() => {
-    return () => animTimerRef.current && clearTimeout(animTimerRef.current);
-  }, []);
-
   const handleLabelClick = (link: { id: string; href: string }) => {
     setActiveLink(link.id);
-    setAnimatingId(link.id);
     router.push(link.href);
-    animTimerRef.current = setTimeout(() => setAnimatingId(null), 1200);
   };
 
   return (
-    <nav className="fixed top-0 w-full z-50 pt-6">
-      {/* Desktop Navbar */}
-      <div className="hidden md:block">
-        <div className="max-w-7xl mx-auto flex justify-center">
-          <div
-            className="flex flex-col items-center"
-            onMouseEnter={() => setIsExpanded(true)}
-            onMouseLeave={() => setIsExpanded(false)}
-          >
-            {/* Logo */}
-            <div
-              style={{
-                backgroundColor: "#0D0D0D",
-                width: isExpanded ? "60px" : "200px",
-                height: isExpanded ? "48px" : "60px",
-                overflow: "hidden",
-                transition: "all 900ms cubic-bezier(0.16,1,0.3,1)",
-                border: "1px solid rgba(242,242,242,0.15)",
-                borderRadius: isExpanded ? "12px" : "24px",
-              }}
-              className="flex items-center justify-center"
-            >
-              <Link href="/">
-                <Image
-                  src="/ck_logo.svg"
-                  alt="CK Logo"
-                  width={40}
-                  height={32}
-                  className="object-contain"
-                />
-              </Link>
-            </div>
+    <nav
+  className="
+    fixed top-0 left-0 w-full z-50
 
-            <div
-              className="mt-2"
-              style={{
-                opacity: isExpanded ? 1 : 0,
-                pointerEvents: isExpanded ? "auto" : "none",
-                transform: isExpanded
-                  ? "translateY(0) scale(1)"
-                  : "translateY(-15px) scale(0.92)",
-                transition:
-                  "opacity 900ms cubic-bezier(0.16,1,0.3,1), transform 900ms cubic-bezier(0.16,1,0.3,1)",
-              }}
-            >
-              <div className="flex gap-2 bg-[#0D0D0D] p-3 rounded-2xl border border-[#2a2a2a]">
-                {navLinks.map((link) => {
-                  const isActive = activeLink === link.id;
-                  return (
-                    <button
-                      key={link.id}
-                      onClick={() => handleLabelClick(link)}
-                      className="relative px-4 py-2 text-sm font-medium tracking-wider text-[#F2F2F2] hover:text-[#F2A516] transition-all duration-300"
-                    >
-                      {link.label}
-                      <div
-                        className="underline-indicator"
-                        style={{
-                          position: "absolute",
-                          bottom: "4px",
-                          left: "50%",
-                          width: isActive ? "70%" : "0%",
-                          height: "2px",
-                          backgroundColor: "#F2A516",
-                          borderRadius: "2px",
-                          transform: "translateX(-50%)",
-                          transition:
-                            "width 400ms cubic-bezier(0.16,1,0.3,1)",
-                        }}
-                      ></div>
-                    </button>
-                  );
-                })}
-              </div>
+    bg-[#0D0D0D]        /* Mobile solid background */
+    md:bg-transparent   /* Desktop fully transparent */
+
+    md:backdrop-blur-0
+
+    md:pt-6 
+    pt-safe
+  "
+>
+
+
+      {/* ---------------- DESKTOP NAV ---------------- */}
+      <div className="hidden md:flex justify-center w-full">
+        <div
+          className="flex flex-col items-center"
+          onMouseEnter={() => setIsExpanded(true)}
+          onMouseLeave={() => setIsExpanded(false)}
+        >
+          {/* LOGO */}
+          <div
+            className="flex items-center justify-center transition-all"
+            style={{
+              backgroundColor: "#0D0D0D",
+              width: isExpanded ? "60px" : "200px",
+              height: isExpanded ? "48px" : "60px",
+              borderRadius: isExpanded ? "12px" : "24px",
+              border: "1px solid rgba(242,242,242,0.15)",
+              overflow: "hidden",
+              transition: "all 900ms cubic-bezier(0.16,1,0.3,1)",
+            }}
+          >
+            <Link href="/">
+              <Image
+                src="/ck_logo.svg"
+                alt="CK Logo"
+                width={40}
+                height={32}
+                className="object-contain"
+              />
+            </Link>
+          </div>
+
+          {/* EXPANDED MENU */}
+          <div
+            className="mt-2"
+            style={{
+              opacity: isExpanded ? 1 : 0,
+              pointerEvents: isExpanded ? "auto" : "none",
+              transform: isExpanded
+                ? "translateY(0) scale(1)"
+                : "translateY(-15px) scale(0.92)",
+              transition:
+                "opacity 900ms cubic-bezier(0.16,1,0.3,1), transform 900ms cubic-bezier(0.16,1,0.3,1)",
+            }}
+          >
+            <div className="flex gap-2 bg-[#0D0D0D] p-3 rounded-2xl border border-[#2a2a2a]">
+              {navLinks.map((link) => {
+                const isActive = activeLink === link.id;
+
+                return (
+                  <button
+                    key={link.id}
+                    onClick={() => handleLabelClick(link)}
+                    className="relative px-4 py-2 text-sm font-medium tracking-wider text-[#F2F2F2] hover:text-[#F2A516] transition-all"
+                  >
+                    {link.label}
+
+                    {/* Active underline */}
+                    <div
+                      className="absolute bottom-1 left-1/2 transform -translate-x-1/2 rounded-full transition-all"
+                      style={{
+                        width: isActive ? "70%" : "0%",
+                        height: "2px",
+                        backgroundColor: "#F2A516",
+                      }}
+                    />
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
       </div>
 
+      {/* ---------------- MOBILE HEADER ---------------- */}
       <div
-        className="md:hidden flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4"
+        className="md:hidden flex justify-between items-center px-4 py-4 sm:px-6"
         style={{ backgroundColor: "#0D0D0D" }}
       >
-        <Link href="/" className="flex items-center">
+        <Link href="/">
           <Image
             src="/ck_logo.svg"
             alt="CK Logo"
@@ -137,8 +140,8 @@ export function Navbar() {
 
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="p-2 rounded-lg transition-colors"
-          aria-label="Toggle menu"
+          aria-label="Menu"
+          className="p-2 rounded-lg"
           style={{
             backgroundColor: isExpanded
               ? "rgba(242,242,242,0.1)"
@@ -146,63 +149,50 @@ export function Navbar() {
           }}
         >
           {isExpanded ? (
-            <X className="w-5 h-5" style={{ color: "#F2F2F2" }} />
+            <X className="w-6 h-6 text-white" />
           ) : (
-            <Menu className="w-5 h-5" style={{ color: "#F2F2F2" }} />
+            <Menu className="w-6 h-6 text-white" />
           )}
         </button>
       </div>
 
-      {isExpanded && (
-        <div
-          className="md:hidden py-4 space-y-2 px-4 sm:px-6 lg:px-8"
-          style={{
-            backgroundColor: "#0D0D0D",
-            borderTop: "1px solid rgba(242,242,242,0.15)",
-          }}
-        >
-          {navLinks.map((link) => (
-            <button
-              key={link.id}
-              onClick={() => {
-                handleLabelClick(link);
-                setIsExpanded(false);
-              }}
-              className="block w-full text-left px-4 py-3 text-sm font-medium tracking-wider rounded-lg transition-all duration-300"
-              style={{
-                color: activeLink === link.id ? "#0D0D0D" : "#F2F2F2",
-                backgroundColor:
-                  activeLink === link.id ? "#F2A516" : "transparent",
-                border:
-                  activeLink === link.id
+      {/* ---------------- MOBILE DROPDOWN ---------------- */}
+      <div
+        className={`
+          md:hidden overflow-hidden transition-all duration-500 
+          ${isExpanded ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"}
+        `}
+        style={{
+          backgroundColor: "#0D0D0D",
+          borderTop: "1px solid rgba(242,242,242,0.15)",
+        }}
+      >
+        <div className="flex flex-col space-y-2 px-4 py-4 sm:px-6">
+          {navLinks.map((link) => {
+            const isActive = activeLink === link.id;
+
+            return (
+              <button
+                key={link.id}
+                onClick={() => {
+                  handleLabelClick(link);
+                  setIsExpanded(false);
+                }}
+                className="w-full text-left px-4 py-3 text-sm font-semibold tracking-wide rounded-lg transition-all"
+                style={{
+                  color: isActive ? "#0D0D0D" : "#F2F2F2",
+                  backgroundColor: isActive ? "#F2A516" : "transparent",
+                  border: isActive
                     ? "none"
                     : "1px solid rgba(242,242,242,0.08)",
-              }}
-            >
-              {link.label}
-            </button>
-          ))}
+                }}
+              >
+                {link.label}
+              </button>
+            );
+          })}
         </div>
-      )}
-
-      <style jsx>{`
-        .underline-indicator {
-          pointer-events: none;
-        }
-
-        /* Make all navbar elements show index-finger cursor */
-        .nav-link-button,
-        button,
-        a {
-          cursor: pointer;
-        }
-
-        /* Optional: Add a subtle scale on hover for better feel */
-        button:hover {
-          transform: scale(1.05);
-          transition: transform 0.2s ease-in-out;
-        }
-      `}</style>
+      </div>
     </nav>
   );
 }
