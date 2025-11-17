@@ -16,7 +16,7 @@ export default function Home() {
       <Navbar />
       <Hero />
 
-      <div id="story">
+      <div id="story" className="hidden md:block">
         <StoryComponent />
       </div>
 

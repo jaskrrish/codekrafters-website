@@ -213,155 +213,186 @@ const Hero: React.FC = () => {
   }, []);
 
   return (
-    <section
-      id="home"
-      className="w-full relative overflow-hidden"
-      style={{
-        scrollSnapAlign: "start",
-        scrollSnapStop: "always",
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      {/* background planes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-18%] left-[-10%] w-[140%] h-[58%] bg-[#F9B000] rotate-[5deg] opacity-[0.18]" />
-        <div className="absolute top-[32%] left-[-10%] w-[150%] h-[50%] bg-[#111111] rotate-[-6deg] opacity-[0.5]" />
-      </div>
+  <section
+    id="home"
+    className="w-full relative overflow-hidden"
+    style={{
+      scrollSnapAlign: "start",
+      scrollSnapStop: "always",
+      height: "100vh",
+      display: "flex",
+      flexDirection: "column",
+    }}
+  >
+    {/* background planes */}
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute top-[-18%] left-[-10%] w-[140%] h-[58%] bg-[#F9B000] rotate-[5deg] opacity-[0.18]" />
+      <div className="absolute top-[32%] left-[-10%] w-[150%] h-[50%] bg-[#111111] rotate-[-6deg] opacity-[0.5]" />
+    </div>
 
-      {/* HERO TOP */}
-      <div className="relative w-full flex flex-1 px-[3vw] pt-[2.5vh] gap-6">
-        {/* LEFT TAGLINE */}
-        <div ref={leftRailRef} className="flex flex-col justify-center ml-10 select-none" style={{ width: "40%" }}>
-          <div className="max-w-[700px]">
-            {taglineLines.map((line, i) => (
-              <div
-                key={line}
-                className="slot-line font-extrabold leading-[0.86]"
-                style={{
-                  fontSize: "clamp(2.4rem, 5vw, 5.4rem)",
-                  color: i % 2 === 0 ? "#F9B000" : "#FFFFFF",
-                  marginBottom: i === taglineLines.length - 1 ? 0 : "-0.08em",
-                }}
-              >
-                {splitToSpans(line)}
-              </div>
-            ))}
-          </div>
+    {/* ========================== */}
+    {/*     HERO TOP SECTION       */}
+    {/* ========================== */}
 
-          <div ref={arrowRef} className="mt-6 flex items-center gap-3 opacity-70">
-            <div className="relative w-8 h-8">
-              <Image src="/logo.png" alt="scroll" fill className="object-contain" />
+    <div className="relative w-full flex flex-col md:flex-row flex-1 px-[4vw] pt-[3vh] gap-8 md:gap-6">
+
+      {/* LEFT TAGLINE */}
+      <div
+        ref={leftRailRef}
+        className="
+          select-none
+          flex flex-col justify-center 
+          md:ml-10 
+          w-full md:w-[40%]
+          text-center md:text-left
+        "
+      >
+        <div className="max-w-[700px] mx-auto md:mx-0">
+          {taglineLines.map((line, i) => (
+            <div
+              key={line}
+              className="slot-line font-extrabold leading-[0.86]"
+              style={{
+                fontSize: "clamp(1.8rem, 10vw, 5.4rem)",
+                color: i % 2 === 0 ? "#F9B000" : "#FFFFFF",
+                marginBottom: i === taglineLines.length - 1 ? 0 : "-0.08em",
+              }}
+            >
+              {splitToSpans(line)}
             </div>
-            <p className="text-white/70 uppercase tracking-[0.22em] text-sm">Scroll Down</p>
-          </div>
+          ))}
         </div>
 
-        {/* RIGHT IMAGE */}
-        <div className="relative flex items-center justify-end" style={{ width: "70%" }}>
-          <div
-            ref={imageRef}
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "ArrowLeft") prev();
-              else if (e.key === "ArrowRight") next();
-            }}
-            className="relative rounded-3xl overflow-hidden shadow-[0_0_40px_#0008]"
-            style={{
-              width: "clamp(400px, 70%, 700px)",
-              height: "70%",
-              marginRight: "clamp(20px, 3vw, 60px)",
-              marginTop: "clamp(20px, 2vh, 40px)",
-            }}
-          >
-            {images.map((src, i) => (
-              <div
-                key={src}
-                className={`absolute inset-0 bg-center bg-cover transition-opacity duration-[900ms] rounded-3xl`}
-                style={{
-                  backgroundImage: `url('${src}')`,
-                  opacity: index === i ? 1 : 0,
-                  transitionTimingFunction: "ease-in-out",
-                  borderRadius: "inherit",
-                  willChange: "opacity",
-                  backfaceVisibility: "hidden",
-                  transform: "translateZ(0)",
-                }}
-                aria-hidden={index !== i}
-              />
-            ))}
-
-            <button
-              onClick={() => prev()}
-              aria-label="Previous"
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 flex items-center justify-center text-white"
-              style={{ backdropFilter: "blur(4px)" }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            <button
-              onClick={() => next()}
-              aria-label="Next"
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 flex items-center justify-center text-white"
-              style={{ backdropFilter: "blur(4px)" }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+        {/* Scroll arrow (hidden on mobile) */}
+        <div
+          ref={arrowRef}
+          className="mt-6 hidden md:flex items-center gap-3 opacity-70"
+        >
+          <div className="relative w-8 h-8">
+            <Image src="/logo.png" alt="scroll" fill className="object-contain" />
           </div>
-        </div>
-      </div>
-
-      <div className="w-full bg-black h-[30vh] flex flex-col justify-end items-end z-10 pr-[3vw] pb-[2vh]">
-        <div className="text-right">
-          <p
-            className="mb-2"
-            style={{
-              color: "rgba(255,255,255,0.85)",
-              fontSize: "clamp(18px, 1vw, 20px)",
-              letterSpacing: "0.16em",
-              fontWeight: 600,
-              textAlign: "right",
-            }}
-          >
-            SRMIST RAMAPURAM
+          <p className="text-white/70 uppercase tracking-[0.22em] text-sm">
+            Scroll Down
           </p>
-
-          <h1
-            ref={codekraftersRef}
-            className="font-black leading-none cursor-pointer select-none"
-            style={{
-              color: "#F9B000",
-              fontSize: "clamp(3.5rem, 10vw, 8.5rem)",
-              letterSpacing: "-0.02em",
-              display: "inline-block",
-              textAlign: "right",
-            }}
-          >
-            {"CODEKRAFTERS".split("").map((char, i) => (
-              <span
-                key={i}
-                className="char inline-block"
-                style={{
-                  display: "inline-block",
-                  willChange: "transform, color",
-                  transformOrigin: "center",
-                }}
-              >
-                {char}
-              </span>
-            ))}
-          </h1>
         </div>
       </div>
 
-    </section>
-  );
+      {/* ========================== */}
+      {/*         RIGHT IMAGE        */}
+      {/* ========================== */}
+
+      <div className="relative flex items-center justify-center md:justify-end w-full md:w-[70%]">
+        <div
+          ref={imageRef}
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowLeft") prev();
+            else if (e.key === "ArrowRight") next();
+          }}
+          className="
+            relative rounded-3xl overflow-hidden 
+            shadow-[0_0_40px_#0008]
+            w-[85%] md:w-[clamp(400px,70%,700px)]
+            h-[45vh] md:h-[70%]
+          "
+          style={{
+            marginRight: "clamp(0px, 3vw, 60px)",
+            marginTop: "clamp(10px, 2vh, 40px)",
+          }}
+        >
+          {images.map((src, i) => (
+            <div
+              key={src}
+              className="absolute inset-0 bg-center bg-cover transition-opacity duration-[900ms] rounded-3xl"
+              style={{
+                backgroundImage: `url('${src}')`,
+                opacity: index === i ? 1 : 0,
+                transitionTimingFunction: "ease-in-out",
+                borderRadius: "inherit",
+                willChange: "opacity",
+                backfaceVisibility: "hidden",
+                transform: "translateZ(0)",
+              }}
+            />
+          ))}
+
+          {/* Hide navigation arrows on mobile */}
+          <button
+            onClick={() => prev()}
+            aria-label="Previous"
+            className="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 items-center justify-center text-white"
+          >
+            <svg viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <button
+            onClick={() => next()}
+            aria-label="Next"
+            className="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 items-center justify-center text-white"
+          >
+            <svg viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {/* ========================== */}
+    {/*  BOTTOM CODEKRAFTERS TEXT  */}
+    {/* ========================== */}
+
+    <div className="
+      w-full bg-black 
+      h-[22vh] md:h-[30vh] 
+      flex flex-col justify-end items-center md:items-end
+      px-[4vw] pb-[2vh]
+      text-center md:text-right
+    ">
+      <div>
+        <p
+          className="mb-1 md:mb-2"
+          style={{
+            color: "rgba(255,255,255,0.85)",
+            fontSize: "clamp(14px, 3vw, 20px)",
+            letterSpacing: "0.16em",
+            fontWeight: 600,
+          }}
+        >
+          SRMIST RAMAPURAM
+        </p>
+
+        <h1
+          ref={codekraftersRef}
+          className="font-black leading-none cursor-pointer select-none"
+          style={{
+            color: "#F9B000",
+            fontSize: "clamp(2.8rem, 12vw, 8.5rem)",
+            letterSpacing: "-0.02em",
+            display: "inline-block",
+          }}
+        >
+          {"CODEKRAFTERS".split("").map((char, i) => (
+            <span
+              key={i}
+              className="char inline-block"
+              style={{
+                display: "inline-block",
+                willChange: "transform, color",
+                transformOrigin: "center",
+              }}
+            >
+              {char}
+            </span>
+          ))}
+        </h1>
+      </div>
+    </div>
+  </section>
+);
+
 };
 
 export default Hero;
