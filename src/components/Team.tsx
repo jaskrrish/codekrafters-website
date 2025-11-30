@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Instagram, Github, Linkedin } from "lucide-react";
+import { Instagram, Github, Linkedin } from 'lucide-react';
 import { useRef, useEffect, useState } from "react";
 import { TEAM_MEMBERS, DOMAINS } from "@/data/team-data";
 
@@ -109,12 +109,10 @@ export default function TeamComponent() {
   return (
     <section
       id="team"
-      className="relative w-full h-screen  bg-[#FFEFB4] overflow-hidden flex flex-col justify-between"
+      className="relative w-full min-h-screen bg-[#FFEFB4] overflow-hidden flex flex-col justify-between"
     >
-      {/* ----------------------------------------
-          Progress Timer Bar
-      ---------------------------------------- */}
-      <div className="absolute top-6 left-6 w-[140px] h-2 bg-[#0D0D0D]/20 rounded-full overflow-hidden">
+      {/* <CHANGE> Progress timer bar with responsive positioning and sizing */}
+      <div className="absolute top-3 sm:top-6 left-3 sm:left-6 w-24 sm:w-32 md:w-40 h-1.5 sm:h-2 bg-[#0D0D0D]/20 rounded-full overflow-hidden">
         <motion.div
           key={activeIndex}
           animate={{ width: `${progress}%` }}
@@ -123,25 +121,23 @@ export default function TeamComponent() {
         />
       </div>
 
-      {/* Title */}
-      <div className="absolute top-6 right-10 text-right">
-        <h1 className="text-5xl md:text-6xl font-extrabold text-[#0D0D0D] uppercase tracking-tight">
+      {/* <CHANGE> Title section with responsive text sizes and positioning */}
+      <div className="absolute top-3 sm:top-6 right-3 sm:right-10 text-right z-20">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#0D0D0D] uppercase tracking-tight">
           Our{" "}
-          <span className="text-[#F2A516] underline decoration-[#0D0D0D] decoration-4 underline-offset-4">
+          <span className="text-[#F2A516] underline decoration-[#0D0D0D] decoration-2 sm:decoration-3 md:decoration-4 underline-offset-2 sm:underline-offset-4">
             Team
           </span>
         </h1>
-        <p className="text-[#333333] mt-2 text-sm font-medium">
-          The people behind CodeKrafters’ magic 
+        <p className="text-[#333333] mt-1 sm:mt-2 text-xs sm:text-sm font-medium">
+          The people behind CodeKrafters' magic 
         </p>
       </div>
 
-      {/* ----------------------------------------
-          Horizontal Scroll Panels
-      ---------------------------------------- */}
+      {/* <CHANGE> Horizontal scroll panels with responsive padding and height */}
       <div
         ref={scrollContainerRef}
-        className="flex flex-row w-full h-[75vh] overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide px-10"
+        className="flex flex-row w-full flex-1 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide px-2 sm:px-4 md:px-10 pt-16 sm:pt-20 md:pt-24 pb-4 sm:pb-6 md:pb-8"
       >
         {DOMAINS.map((domain) => {
           const members = TEAM_MEMBERS.filter((m) => m.domain === domain.id);
@@ -152,16 +148,16 @@ export default function TeamComponent() {
               key={domain.id}
               className="flex-shrink-0 w-screen snap-center flex flex-col items-center justify-start"
             >
-              {/* Domain Title */}
-              <div className="mb-25 mt-20">
-                <h2 className="text-3xl md:text-4xl font-extrabold text-[#0D0D0D] uppercase tracking-wide text-center">
+              {/* <CHANGE> Domain title with responsive text sizes and spacing */}
+              <div className="mb-6 sm:mb-12 md:mb-16 mt-8 sm:mt-12 md:mt-16">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#0D0D0D] uppercase tracking-wide text-center">
                   {domain.label}
                 </h2>
-                <div className="h-[3px] w-16 bg-[#0D0D0D] mx-auto rounded-full mt-2"></div>
+                <div className="h-1 sm:h-[2px] md:h-[3px] w-8 sm:w-12 md:w-16 bg-[#0D0D0D] mx-auto rounded-full mt-1.5 sm:mt-2"></div>
               </div>
 
-              {/* MEMBERS */}
-              <div className="flex flex-wrap justify-center gap-10 max-w-6xl mx-auto">
+              {/* <CHANGE> Members grid with responsive gap and scaling */}
+              <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 max-w-6xl mx-auto px-2 sm:px-4">
                 {members.map((member, index) => (
                   <motion.div
                     key={member.id}
@@ -175,25 +171,26 @@ export default function TeamComponent() {
                     viewport={{ once: true }}
                     className="group"
                   >
-                    {/* CARD */}
+                    {/* <CHANGE> Card with fixed height and text truncation to prevent box expansion */}
                     <div
                       className={`
                         ck-card relative bg-gradient-to-br bg-[#f9f7e5]
-                        border-[3px] border-[#0D0D0D] rounded-3xl
-                        shadow-[6px_6px_0_#0D0D0D]
-                        group-hover:shadow-[10px_10px_0_#0D0D0D]
-                        transition-all duration-300 p-6
-                        flex flex-col items-center text-center 
+                        border-2 sm:border-3 border-[#0D0D0D] rounded-2xl sm:rounded-3xl
+                        shadow-[3px_3px_0_#0D0D0D] sm:shadow-[6px_6px_0_#0D0D0D]
+                        group-hover:shadow-[5px_5px_0_#0D0D0D] sm:group-hover:shadow-[10px_10px_0_#0D0D0D]
+                        transition-all duration-300 p-3 sm:p-4 md:p-6
+                        flex flex-col items-center text-center w-40 sm:w-48 md:w-52 lg:w-56
+                        h-80 sm:h-96 md:h-[400px] flex-shrink-0
                       `}
                       style={{ transformStyle: "preserve-3d" }}
                     >
-                      {/* Floating circle behind image */}
-                      <div className="absolute -top-5 w-20 h-20 bg-[#F2A516]/30 rounded-full blur-xl opacity-70 group-hover:scale-110 transition-transform" />
+                      {/* <CHANGE> Floating circle with responsive sizing */}
+                      <div className="absolute -top-3 sm:-top-5 w-12 sm:w-16 md:w-20 h-12 sm:h-16 md:h-20 bg-[#F2A516]/30 rounded-full blur-lg sm:blur-xl opacity-70 group-hover:scale-110 transition-transform" />
 
-                      {/* IMAGE */}
-                      <div className="w-36 h-36 overflow-hidden rounded-full border-2 border-[#0D0D0D] mb-3 bg-[#FFF2C6] shadow-inner">
+                      {/* <CHANGE> Image container with responsive sizing and flex-shrink-0 */}
+                      <div className="w-24 sm:w-28 md:w-32 lg:w-36 h-24 sm:h-28 md:h-32 lg:h-36 overflow-hidden rounded-full border-2 border-[#0D0D0D] mb-2 sm:mb-3 bg-[#FFF2C6] shadow-inner flex-shrink-0">
                         <Image
-                          src={member.imagePath}
+                          src={member.imagePath || "/placeholder.svg"}
                           alt={member.name}
                           width={130}
                           height={130}
@@ -201,24 +198,25 @@ export default function TeamComponent() {
                         />
                       </div>
 
-                      {/* NAME + ROLE */}
-                      <h3 className="text-xl font-extrabold text-[#0D0D0D] group-hover:scale-105 transition-transform">
+                      {/* <CHANGE> Name with responsive text size and line clamping */}
+                      <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-extrabold text-[#0D0D0D] group-hover:scale-105 transition-transform line-clamp-2">
                         {member.name}
                       </h3>
 
-                      <p className="text-[#F2A516] font-bold text-xs uppercase mb-2 tracking-wide">
+                      {/* <CHANGE> Role with responsive text size and line clamping */}
+                      <p className="text-[#F2A516] font-bold text-[10px] sm:text-xs md:text-sm uppercase mb-1.5 sm:mb-2 tracking-wide line-clamp-1">
                         {member.role}
                       </p>
 
-                      {/* SOCIALS */}
-                      <div className="flex items-center justify-center gap-3 mt-3">
+                      {/* <CHANGE> Social links with responsive icon sizing and spacing */}
+                      <div className="flex items-center justify-center gap-2 sm:gap-3 mt-2 sm:mt-3">
                         {member.social.instagram && (
                           <a
                             href={member.social.instagram}
                             target="_blank"
                             className="social-btn"
                           >
-                            <Instagram className="w-4 h-4" />
+                            <Instagram className="w-3 h-3 sm:w-4 sm:h-4" />
                           </a>
                         )}
 
@@ -228,7 +226,7 @@ export default function TeamComponent() {
                             target="_blank"
                             className="social-btn"
                           >
-                            <Github className="w-4 h-4" />
+                            <Github className="w-3 h-3 sm:w-4 sm:h-4" />
                           </a>
                         )}
 
@@ -238,14 +236,14 @@ export default function TeamComponent() {
                             target="_blank"
                             className="social-btn"
                           >
-                            <Linkedin className="w-4 h-4" />
+                            <Linkedin className="w-3 h-3 sm:w-4 sm:h-4" />
                           </a>
                         )}
                       </div>
                     </div>
 
-                    {/* EXTRUDED SHADOW HOLE */}
-                    <div className="w-40 h-5 mx-auto mt-3 bg-black/20 blur-xl rounded-full scale-90 group-hover:scale-110 transition-all" />
+                    {/* <CHANGE> Shadow hole with responsive scaling */}
+                    <div className="w-28 sm:w-32 md:w-40 h-3 sm:h-4 md:h-5 mx-auto mt-2 sm:mt-3 bg-black/20 blur-lg sm:blur-xl rounded-full scale-75 sm:scale-90 group-hover:scale-100 sm:group-hover:scale-110 transition-all" />
                   </motion.div>
                 ))}
               </div>
@@ -254,24 +252,22 @@ export default function TeamComponent() {
         })}
       </div>
 
-      {/* ----------------------------------------
-          Bottom Floating Timeline Navigation (Retro)
-      ---------------------------------------- */}
-      <div className="w-full py-8 flex items-center justify-center">
-        <div className="relative bg-[#0D0D0D] border-[3px] border-[#F2A516] rounded-full shadow-[8px_8px_0_#0D0D0D] px-8 py-4 flex items-center justify-center gap-6">
+      {/* <CHANGE> Bottom navigation with responsive padding, text sizes, and button layout */}
+      <div className="w-full py-4 sm:py-6 md:py-8 flex items-center justify-center overflow-x-auto px-2 sm:px-4">
+        <div className="relative bg-[#0D0D0D] border-2 sm:border-3 border-[#F2A516] rounded-full shadow-[4px_4px_0_#0D0D0D] sm:shadow-[8px_8px_0_#0D0D0D] px-3 sm:px-6 md:px-8 py-2 sm:py-4 flex items-center justify-center gap-2 sm:gap-4 md:gap-6 flex-wrap">
 
           {DOMAINS.map((domain, index) => (
             <button
               key={domain.id}
               onClick={() => scrollToDomain(index)}
-              className={`relative flex items-center gap-2 font-bold text-sm uppercase transition-all px-4 py-2 rounded-full ${
+              className={`relative flex items-center gap-1.5 sm:gap-2 font-bold text-[10px] sm:text-xs md:text-sm uppercase transition-all px-2 sm:px-4 py-1.5 sm:py-2 rounded-full whitespace-nowrap ${
                 activeIndex === index
-                  ? "text-[#0D0D0D] bg-[#F2A516] shadow-[3px_3px_0_#FFEFB4]"
+                  ? "text-[#0D0D0D] bg-[#F2A516] shadow-[2px_2px_0_#FFEFB4] sm:shadow-[3px_3px_0_#FFEFB4]"
                   : "text-[#FFEFB4] hover:text-[#F2A516] hover:bg-[#0D0D0D]/50"
               }`}
             >
               <span
-                className={`w-2 h-2 rounded-full transition-all ${
+                className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all ${
                   activeIndex === index 
                     ? "bg-[#0D0D0D] animate-pulse" 
                     : "bg-[#F2A516]"
@@ -297,17 +293,29 @@ export default function TeamComponent() {
         }
 
         .social-btn {
-          padding: 8px;
+          padding: 6px;
           background: #0d0d0d;
           color: #ffefb4;
           border-radius: 50%;
-          box-shadow: 3px 3px 0 #f2a516;
+          box-shadow: 2px 2px 0 #f2a516;
           transition: 0.25s ease;
         }
 
         .social-btn:hover {
-          transform: translateY(-3px);
-          box-shadow: 5px 5px 0 #f2a516;
+          transform: translateY(-2px);
+          box-shadow: 3px 3px 0 #f2a516;
+        }
+
+        @media (min-width: 768px) {
+          .social-btn {
+            padding: 8px;
+            box-shadow: 3px 3px 0 #f2a516;
+          }
+
+          .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 5px 5px 0 #f2a516;
+          }
         }
 
         .scrollbar-hide::-webkit-scrollbar {

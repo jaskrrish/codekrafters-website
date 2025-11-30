@@ -33,27 +33,27 @@ export default function KraftersLinkPage() {
       />
 
       {/* Center content */}
-      <div className="flex items-center justify-center min-h-screen px-6">
-        <div className="w-full max-w-xl p-10">
+      <div className="flex items-center justify-center min-h-screen px-4 sm:px-6">
+        <div className="w-full max-w-xl p-6 sm:p-10">
 
-          <div className="backdrop-blur-xl bg-white/40 border border-white/30 rounded-3xl shadow-2xl p-10 text-center">
+          <div className="backdrop-blur-xl bg-white/40 border border-white/30 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-10 text-center">
 
-            <h1 className="text-4xl font-extrabold mb-3 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-2 sm:mb-3 tracking-tight">
               <span className="text-[#0b1220]">Krafters</span>
               <span className="text-[#F2B200]">Link</span>
             </h1>
 
-            <p className="text-lg text-[#0b1220] opacity-80 max-w-md mx-auto mb-8">
+            <p className="text-base sm:text-lg text-[#0b1220] opacity-80 max-w-md mx-auto mb-6 sm:mb-8">
               The directory of our brilliant minds is still loading.  
               Fresh profiles are being polished behind the scenes.
             </p>
 
-            <div className="inline-block bg-[#0b1220] text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-lg">
+            <div className="inline-block bg-[#0b1220] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-base sm:text-lg font-semibold shadow-lg">
               Profiles Coming Soon
             </div>
 
-            <p className="mt-6 text-[#0b1220] text-sm opacity-70">
-              Soon you’ll be able to explore every Krafter’s journey.
+            <p className="mt-4 sm:mt-6 text-[#0b1220] text-xs sm:text-sm opacity-70">
+              Soon you'll be able to explore every Krafter's journey.
             </p>
 
           </div>

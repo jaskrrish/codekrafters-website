@@ -1,8 +1,6 @@
-"use client";
-
-import React from "react";
-import { Navbar } from "@/components/navbar";
-import Footer from "@/components/Footer";
+"use client"
+import { Navbar } from "@/components/navbar"
+import Footer from "@/components/Footer"
 
 export default function EventsPage() {
   return (
@@ -33,31 +31,28 @@ export default function EventsPage() {
       ></div>
 
       {/* ✅ Center Content */}
-      <div className="flex items-center justify-center min-h-screen px-6">
-        <div className="w-full max-w-xl p-10">
-
+      <div className="flex items-center justify-center min-h-screen px-4 sm:px-6">
+        <div className="w-full max-w-xl p-6 sm:p-10">
           {/* ✅ Frosted Glass Container */}
-          <div className="backdrop-blur-xl bg-white/40 border border-white/30 rounded-3xl shadow-2xl p-10 text-center">
-
+          <div className="backdrop-blur-xl bg-white/40 border border-white/30 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-10 text-center">
             {/* ✅ Title */}
-            <h1 className="text-4xl font-extrabold mb-3 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 tracking-tight">
               <span className="text-[#0b1220]">Events at </span>
               <span className="text-[#0b1220]">Code</span>
               <span className="text-[#F2B200]">Krafters</span>
             </h1>
 
-            <p className="text-lg text-[#0b1220] opacity-80 max-w-md mx-auto mb-8">
-              Our event calendar is currently in the kitchen.  
-              The chefs are mixing ideas, prepping stages,  
-              and seasoning the perfect experiences for you.
+            <p className="text-base sm:text-lg text-[#0b1220] opacity-80 max-w-md mx-auto mb-6 sm:mb-8">
+              Our event calendar is currently in the kitchen. The chefs are mixing ideas, prepping stages, and seasoning
+              the perfect experiences for you.
             </p>
 
             {/* ✅ Status Badge */}
-            <div className="inline-block bg-[#0b1220] text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-lg">
+            <div className="inline-block bg-[#0b1220] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-base sm:text-lg font-semibold shadow-lg">
               Something Awesome is Cooking
             </div>
 
-            <p className="mt-6 text-[#0b1220] text-sm opacity-70">
+            <p className="mt-4 sm:mt-6 text-[#0b1220] text-xs sm:text-sm opacity-70">
               Stay tuned — fresh events will be served soon.
             </p>
           </div>
@@ -66,5 +61,5 @@ export default function EventsPage() {
 
       <Footer />
     </div>
-  );
+  )
 }

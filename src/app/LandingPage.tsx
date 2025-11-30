@@ -1,12 +1,8 @@
 "use client"
 
-
-
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-
-
 
 export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,7 +11,6 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
   useEffect(() => {
     setIsVisible(true);
   }, []);
-
 
   function handleEnter() {
     setIsExiting(true);
@@ -26,9 +21,9 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
 
   return (
     <main
-      className={`w-full h-screen bg-black flex flex-col items-center justify-center overflow-hidden`}
+      className={`w-full h-screen bg-black flex flex-col items-center justify-center overflow-hidden px-4 sm:px-6`}
     >
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-6">
         <AnimatePresence>
           {!isExiting && (
             <motion.button
@@ -42,16 +37,26 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
               disabled={isExiting}
             >
               <motion.div
-                className="mb-8"
+                className="mb-4 sm:mb-6 md:mb-8"
                 initial={{ rotateY: 0 }}
                 animate={{ rotateY: 0 }}
                 exit={{ rotateY: 180 }}
                 transition={{ duration: 0.9, ease: "easeInOut" }}
                 style={{ willChange: "transform" }}
               >
-                <Image src="/logo.png" alt="CodeKrafters" width={160} height={160} />
+                {/* <CHANGE> Made image responsive - scales from 100px on mobile to 160px on desktop */}
+                <Image 
+                  src="/logo.png" 
+                  alt="CodeKrafters" 
+                  width={160} 
+                  height={160}
+                  className="w-24 sm:w-32 md:w-40 h-24 sm:h-32 md:h-40"
+                />
               </motion.div>
-              <span className="text-2xl text-yellow-400 font-bold animate-heartbeat">Press to enter</span>
+              {/* <CHANGE> Made text responsive - scales from text-xl on mobile to text-2xl on larger screens */}
+              <span className="text-xl sm:text-2xl md:text-3xl text-yellow-400 font-bold animate-heartbeat text-center">
+                Press to enter
+              </span>
             </motion.button>
           )}
         </AnimatePresence>

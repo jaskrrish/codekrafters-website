@@ -1,25 +1,25 @@
 'use client';
 
 import React from "react";
-import { Russo_One, Montserrat } from "next/font/google";
+import { Russo_One, Montserrat } from 'next/font/google';
 
 const russoOne = Russo_One({ subsets: ["latin"], weight: "400" });
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["800", "900"] });
 
 function Card({ src, label }: { src: string; label: string }) {
   return (
-    <div className="relative group mx-4 flex-shrink-0">
+    <div className="relative group mx-2 sm:mx-3 md:mx-4 flex-shrink-0">
       <img
-        src={src}
+        src={src || "/placeholder.svg"}
         alt={label}
         loading="lazy"
-        className="h-40 md:h-48 lg:h-56 w-full rounded-xl transition-transform duration-300 group-hover:scale-95"
+        className="h-24 sm:h-32 md:h-40 lg:h-48 xl:h-56 w-auto rounded-lg sm:rounded-xl transition-transform duration-300 group-hover:scale-95"
       />
 
-      <div className="absolute inset-0 bg-black/60 rounded-xl opacity-0 
+      <div className="absolute inset-0 bg-black/60 rounded-lg sm:rounded-xl opacity-0 
         group-hover:opacity-100 transition-opacity duration-300 
         flex items-center justify-center pointer-events-none">
-        <span className="text-white text-xl font-semibold">
+        <span className="text-white text-xs sm:text-sm md:text-lg lg:text-xl font-semibold text-center px-2">
           {label}
         </span>
       </div>
@@ -41,7 +41,7 @@ function EventRow({
   const doubled = [...images, ...images];
 
   return (
-    <section className="w-full overflow-hidden py-6">
+    <section className="w-full overflow-hidden py-4 sm:py-6 md:py-8">
       <div className={`scroll-row ${reverse ? "reverse" : ""}`}>
         {doubled.map((img, i) => (
           <Card key={`${folder}-${i}`} src={`/${folder}/${img}`} label={label} />
@@ -123,7 +123,7 @@ export default function EventSection() {
   ];
 
   return (
-    <div className="w-full  bg-[#FFEFB4]" >
+    <div className="w-full bg-[#FFEFB4] overflow-x-hidden">
       {/* Row 1 - Left Scroll */}
       <EventRow
         images={launchpadImages}
@@ -140,16 +140,12 @@ export default function EventSection() {
       />
 
       {/* Title */}
-      <div className="text-center py-16">
-        <h2
-          className={`${russoOne.className} text-5xl md:text-6xl font-black tracking-tight`}
-        >
+      <div className="text-center py-8 sm:py-12 md:py-16 px-4">
+        <h2 className={`${russoOne.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight`}>
           <span className="text-[#0b1220]">CODE</span>
           <span className="text-[#F2B200]">KRAFTERS </span>
         </h2>
-         <h2
-          className={`${russoOne.className} text-5xl md:text-6xl font-black tracking-tight`}
-        >
+        <h2 className={`${russoOne.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight`}>
           <span className="text-[#0b1220]">EVENTS</span>
         </h2>
       </div>

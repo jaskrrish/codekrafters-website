@@ -3,8 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { useRouter, usePathname } from 'next/navigation';
+import { Menu, X } from 'lucide-react';
 
 export function Navbar() {
   const router = useRouter();
@@ -36,21 +36,16 @@ export function Navbar() {
 
   return (
     <nav
-  className="
-    fixed top-0 left-0 w-full z-50
-
-    bg-[#0D0D0D]        /* Mobile solid background */
-    md:bg-transparent   /* Desktop fully transparent */
-
-    md:backdrop-blur-0
-
-    md:pt-6 
-    pt-safe
-  "
->
-
-
-      {/* ---------------- DESKTOP NAV ---------------- */}
+      className="
+        fixed top-0 left-0 w-full z-50
+        bg-[#0D0D0D]
+        md:bg-transparent
+        md:backdrop-blur-0
+        md:pt-6 
+        pt-safe
+      "
+    >
+      {/* <CHANGE> Desktop nav with responsive hover states and sizing */}
       <div className="hidden md:flex justify-center w-full">
         <div
           className="flex flex-col items-center"
@@ -102,7 +97,7 @@ export function Navbar() {
                   <button
                     key={link.id}
                     onClick={() => handleLabelClick(link)}
-                    className="relative px-4 py-2 text-sm font-medium tracking-wider text-[#F2F2F2] hover:text-[#F2A516] transition-all"
+                    className="relative px-4 py-2 text-xs sm:text-sm md:text-sm font-medium tracking-wider text-[#F2F2F2] hover:text-[#F2A516] transition-all"
                   >
                     {link.label}
 
@@ -123,25 +118,25 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* ---------------- MOBILE HEADER ---------------- */}
+      {/* <CHANGE> Mobile header with responsive padding and sizing */}
       <div
-        className="md:hidden flex justify-between items-center px-4 py-4 sm:px-6"
+        className="md:hidden flex justify-between items-center px-3 sm:px-4 md:px-6 py-3 sm:py-4"
         style={{ backgroundColor: "#0D0D0D" }}
       >
         <Link href="/">
           <Image
             src="/ck_logo.svg"
             alt="CK Logo"
-            width={40}
-            height={32}
-            className="object-contain"
+            width={32}
+            height={28}
+            className="w-8 h-7 sm:w-10 sm:h-8 object-contain"
           />
         </Link>
 
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           aria-label="Menu"
-          className="p-2 rounded-lg"
+          className="p-1.5 sm:p-2 rounded-lg transition-colors"
           style={{
             backgroundColor: isExpanded
               ? "rgba(242,242,242,0.1)"
@@ -149,14 +144,14 @@ export function Navbar() {
           }}
         >
           {isExpanded ? (
-            <X className="w-6 h-6 text-white" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           ) : (
-            <Menu className="w-6 h-6 text-white" />
+            <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           )}
         </button>
       </div>
 
-      {/* ---------------- MOBILE DROPDOWN ---------------- */}
+      {/* <CHANGE> Mobile dropdown with responsive spacing and text sizes */}
       <div
         className={`
           md:hidden overflow-hidden transition-all duration-500 
@@ -167,7 +162,7 @@ export function Navbar() {
           borderTop: "1px solid rgba(242,242,242,0.15)",
         }}
       >
-        <div className="flex flex-col space-y-2 px-4 py-4 sm:px-6">
+        <div className="flex flex-col space-y-1.5 sm:space-y-2 px-3 sm:px-4 md:px-6 py-3 sm:py-4">
           {navLinks.map((link) => {
             const isActive = activeLink === link.id;
 
@@ -178,13 +173,16 @@ export function Navbar() {
                   handleLabelClick(link);
                   setIsExpanded(false);
                 }}
-                className="w-full text-left px-4 py-3 text-sm font-semibold tracking-wide rounded-lg transition-all"
+                className="w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold tracking-wide rounded-lg transition-all active:scale-95"
                 style={{
                   color: isActive ? "#0D0D0D" : "#F2F2F2",
                   backgroundColor: isActive ? "#F2A516" : "transparent",
                   border: isActive
                     ? "none"
                     : "1px solid rgba(242,242,242,0.08)",
+                  minHeight: "44px",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
                 {link.label}
