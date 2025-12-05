@@ -149,7 +149,7 @@ export default function TeamComponent() {
               className="flex-shrink-0 w-screen snap-center flex flex-col items-center justify-start"
             >
               {/* <CHANGE> Domain title with responsive text sizes and spacing */}
-              <div className="mb-6 sm:mb-12 md:mb-16 mt-8 sm:mt-12 md:mt-16">
+              <div className="mb-6 sm:mb-12 md:mb-16 mt-6 sm:mt-10 md:mt-14">
                 <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#0D0D0D] uppercase tracking-wide text-center">
                   {domain.label}
                 </h2>
@@ -180,7 +180,7 @@ export default function TeamComponent() {
                         group-hover:shadow-[5px_5px_0_#0D0D0D] sm:group-hover:shadow-[10px_10px_0_#0D0D0D]
                         transition-all duration-300 p-3 sm:p-4 md:p-6
                         flex flex-col items-center text-center w-40 sm:w-48 md:w-52 lg:w-56
-                        h-80 sm:h-96 md:h-[400px] flex-shrink-0
+                        h-60 sm:h-70 md:h-100 flex-shrink-0
                       `}
                       style={{ transformStyle: "preserve-3d" }}
                     >
