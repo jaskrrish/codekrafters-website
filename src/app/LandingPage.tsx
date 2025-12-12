@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -15,62 +15,81 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
   function handleEnter() {
     setIsExiting(true);
     setTimeout(() => {
-      if (onEnter) onEnter();
-    }, 900); // match animation duration
+      onEnter?.();
+    }, 900);
   }
 
   return (
-    <main
-      className={`w-full h-screen bg-black flex flex-col items-center justify-center overflow-hidden px-4 sm:px-6`}
-    >
-      <div className="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-6">
-        <AnimatePresence>
-          {!isExiting && (
-            <motion.button
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.1 }}
+    <main className="w-full h-screen bg-black flex items-center justify-center overflow-hidden">
+      <AnimatePresence>
+        {!isExiting && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.9, ease: "easeInOut" }}
+            onClick={handleEnter}
+            className="flex flex-col items-center justify-center focus:outline-none"
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+            }}
+            disabled={isExiting}
+          >
+            {/* LOGO */}
+            <motion.div
+              className="mb-8"
+              initial={{ scale: 1, opacity: 1 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{
+                scale: 4.5,
+                opacity: 0,
+                filter: "blur(6px)",
+              }}
               transition={{ duration: 0.9, ease: "easeInOut" }}
-              className="flex flex-col items-center justify-center focus:outline-none"
-              style={{ background: "none", border: "none", cursor: "pointer", perspective: 1000 }}
-              onClick={handleEnter}
-              disabled={isExiting}
+              style={{ willChange: "transform, opacity, filter" }}
             >
-              <motion.div
-                className="mb-4 sm:mb-6 md:mb-8"
-                initial={{ rotateY: 0 }}
-                animate={{ rotateY: 0 }}
-                exit={{ rotateY: 180 }}
-                transition={{ duration: 0.9, ease: "easeInOut" }}
-                style={{ willChange: "transform" }}
-              >
-                {/* <CHANGE> Made image responsive - scales from 100px on mobile to 160px on desktop */}
-                <Image 
-                  src="/logo.png" 
-                  alt="CodeKrafters" 
-                  width={160} 
-                  height={160}
-                  className="w-24 sm:w-32 md:w-40 h-24 sm:h-32 md:h-40"
-                />
-              </motion.div>
-              {/* <CHANGE> Made text responsive - scales from text-xl on mobile to text-2xl on larger screens */}
-              <span className="text-xl sm:text-2xl md:text-3xl text-yellow-400 font-bold animate-heartbeat text-center">
-                Press to enter
-              </span>
-            </motion.button>
-          )}
-        </AnimatePresence>
-      </div>
+              <Image
+                src="/logo.png"
+                alt="CodeKrafters"
+                width={160}
+                height={160}
+                priority
+              />
+            </motion.div>
+            <span className="text-2xl text-yellow-400 font-bold animate-heartbeat">
+              Press to Enter
+            </span>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
       <style jsx>{`
         @keyframes heartbeat {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          10% { opacity: 0.7; transform: scale(0.95); }
-          20% { opacity: 1; transform: scale(1.05); }
-          30% { opacity: 0.7; transform: scale(0.95); }
-          40% { opacity: 1; transform: scale(1); }
+          0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          10% {
+            opacity: 0.7;
+            transform: scale(0.95);
+          }
+          20% {
+            opacity: 1;
+            transform: scale(1.05);
+          }
+          30% {
+            opacity: 0.7;
+            transform: scale(0.95);
+          }
+          40% {
+            opacity: 1;
+            transform: scale(1);
+          }
         }
         .animate-heartbeat {
-          animation: heartbeat 1.2s infinite;
+          animation: heartbeat 1s infinite;
         }
       `}</style>
     </main>

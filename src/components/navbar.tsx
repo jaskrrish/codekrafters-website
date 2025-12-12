@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter, usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { useRouter, usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 
 export function Navbar() {
   const router = useRouter();
@@ -12,6 +12,7 @@ export function Navbar() {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
 
   const navLinks = [
     { label: "HOME", href: "/", id: "home" },
@@ -41,16 +42,19 @@ export function Navbar() {
         bg-[#0D0D0D]
         md:bg-transparent
         md:backdrop-blur-0
-        md:pt-6 
+        md:pt-6
         pt-safe
       "
     >
-      {/* <CHANGE> Desktop nav with responsive hover states and sizing */}
+      {/* DESKTOP NAV */}
       <div className="hidden md:flex justify-center w-full">
         <div
           className="flex flex-col items-center"
           onMouseEnter={() => setIsExpanded(true)}
-          onMouseLeave={() => setIsExpanded(false)}
+          onMouseLeave={() => {
+            setIsExpanded(false);
+            setHoveredLink(null);
+          }}
         >
           {/* LOGO */}
           <div
@@ -92,20 +96,23 @@ export function Navbar() {
             <div className="flex gap-2 bg-[#0D0D0D] p-3 rounded-2xl border border-[#2a2a2a]">
               {navLinks.map((link) => {
                 const isActive = activeLink === link.id;
+                const isHovered = hoveredLink === link.id;
 
                 return (
                   <button
                     key={link.id}
                     onClick={() => handleLabelClick(link)}
-                    className="relative px-4 py-2 text-xs sm:text-sm md:text-sm font-medium tracking-wider text-[#F2F2F2] hover:text-[#F2A516] transition-all"
+                    onMouseEnter={() => setHoveredLink(link.id)}
+                    onMouseLeave={() => setHoveredLink(null)}
+                    className="relative px-4 py-2 text-xs sm:text-sm font-medium tracking-wider text-[#F2F2F2] hover:text-[#F2A516] transition-all"
                   >
                     {link.label}
 
-                    {/* Active underline */}
+                    {/* ACTIVE + HOVER UNDERLINE */}
                     <div
-                      className="absolute bottom-1 left-1/2 transform -translate-x-1/2 rounded-full transition-all"
+                      className="absolute bottom-1 left-1/2 -translate-x-1/2 rounded-full transition-all duration-300"
                       style={{
-                        width: isActive ? "70%" : "0%",
+                        width: isActive || isHovered ? "70%" : "0%",
                         height: "2px",
                         backgroundColor: "#F2A516",
                       }}
@@ -118,9 +125,9 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* <CHANGE> Mobile header with responsive padding and sizing */}
+      {/* MOBILE HEADER */}
       <div
-        className="md:hidden flex justify-between items-center px-3 sm:px-4 md:px-6 py-3 sm:py-4"
+        className="md:hidden flex justify-between items-center px-3 sm:px-4 py-3 sm:py-4"
         style={{ backgroundColor: "#0D0D0D" }}
       >
         <Link href="/">
@@ -136,7 +143,7 @@ export function Navbar() {
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           aria-label="Menu"
-          className="p-1.5 sm:p-2 rounded-lg transition-colors"
+          className="p-2 rounded-lg transition-colors"
           style={{
             backgroundColor: isExpanded
               ? "rgba(242,242,242,0.1)"
@@ -144,25 +151,24 @@ export function Navbar() {
           }}
         >
           {isExpanded ? (
-            <X className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            <X className="w-6 h-6 text-white" />
           ) : (
-            <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            <Menu className="w-6 h-6 text-white" />
           )}
         </button>
       </div>
 
-      {/* <CHANGE> Mobile dropdown with responsive spacing and text sizes */}
+      {/* MOBILE MENU */}
       <div
-        className={`
-          md:hidden overflow-hidden transition-all duration-500 
-          ${isExpanded ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"}
-        `}
+        className={`md:hidden overflow-hidden transition-all duration-500 ${
+          isExpanded ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
+        }`}
         style={{
           backgroundColor: "#0D0D0D",
           borderTop: "1px solid rgba(242,242,242,0.15)",
         }}
       >
-        <div className="flex flex-col space-y-1.5 sm:space-y-2 px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+        <div className="flex flex-col space-y-2 px-4 py-4">
           {navLinks.map((link) => {
             const isActive = activeLink === link.id;
 
@@ -173,7 +179,7 @@ export function Navbar() {
                   handleLabelClick(link);
                   setIsExpanded(false);
                 }}
-                className="w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold tracking-wide rounded-lg transition-all active:scale-95"
+                className="w-full text-left px-4 py-3 text-sm font-semibold tracking-wide rounded-lg transition-all active:scale-95"
                 style={{
                   color: isActive ? "#0D0D0D" : "#F2F2F2",
                   backgroundColor: isActive ? "#F2A516" : "transparent",
@@ -181,8 +187,6 @@ export function Navbar() {
                     ? "none"
                     : "1px solid rgba(242,242,242,0.08)",
                   minHeight: "44px",
-                  display: "flex",
-                  alignItems: "center",
                 }}
               >
                 {link.label}
