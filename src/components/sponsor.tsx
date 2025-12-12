@@ -81,7 +81,7 @@ const SponsorsComponent: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center relative py-20"
+      className=" flex flex-col items-center justify-center relative py-20"
       style={{ backgroundColor: "#FFEFB3" }}
     >
       <div className="text-center mb-16 px-4 z-10">

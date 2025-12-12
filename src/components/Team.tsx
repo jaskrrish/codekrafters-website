@@ -109,7 +109,7 @@ export default function TeamComponent() {
   return (
     <section
       id="team"
-      className="relative w-full min-h-screen bg-[#FFEFB4] overflow-hidden flex flex-col justify-between"
+      className="relative w-full bg-[#FFEFB4] overflow-hidden flex flex-col justify-between"
     >
       {/* <CHANGE> Progress timer bar with responsive positioning and sizing */}
       <div className="absolute top-3 sm:top-6 left-3 sm:left-6 w-24 sm:w-32 md:w-40 h-1.5 sm:h-2 bg-[#0D0D0D]/20 rounded-full overflow-hidden">
@@ -149,7 +149,7 @@ export default function TeamComponent() {
               className="flex-shrink-0 w-screen snap-center flex flex-col items-center justify-start"
             >
               {/* <CHANGE> Domain title with responsive text sizes and spacing */}
-              <div className="mb-6 sm:mb-12 md:mb-16 mt-6 sm:mt-10 md:mt-14">
+              <div className="mb-6 sm:mb-16 md:mb-16 mt-6 sm:mt-10 md:mt-1">
                 <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#0D0D0D] uppercase tracking-wide text-center">
                   {domain.label}
                 </h2>
@@ -180,7 +180,7 @@ export default function TeamComponent() {
                         group-hover:shadow-[5px_5px_0_#0D0D0D] sm:group-hover:shadow-[10px_10px_0_#0D0D0D]
                         transition-all duration-300 p-3 sm:p-4 md:p-6
                         flex flex-col items-center text-center w-40 sm:w-48 md:w-52 lg:w-56
-                        h-60 sm:h-70 md:h-100 flex-shrink-0
+                        h-60 sm:h-70 md:h-85 flex-shrink-0
                       `}
                       style={{ transformStyle: "preserve-3d" }}
                     >
@@ -253,7 +253,7 @@ export default function TeamComponent() {
       </div>
 
       {/* <CHANGE> Bottom navigation with responsive padding, text sizes, and button layout */}
-      <div className="w-full py-4 sm:py-6 md:py-8 flex items-center justify-center overflow-x-auto px-2 sm:px-4">
+      <div className="w-full py-4 sm:py-6 md:py-8  items-center justify-center overflow-x-auto hidden md:block px-2 sm:px-4">
         <div className="relative bg-[#0D0D0D] border-2 sm:border-3 border-[#F2A516] rounded-full shadow-[4px_4px_0_#0D0D0D] sm:shadow-[8px_8px_0_#0D0D0D] px-3 sm:px-6 md:px-8 py-2 sm:py-4 flex items-center justify-center gap-2 sm:gap-4 md:gap-6 flex-wrap">
 
           {DOMAINS.map((domain, index) => (
