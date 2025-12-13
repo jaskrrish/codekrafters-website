@@ -227,7 +227,7 @@ const Hero: React.FC = () => {
         <div className="bg-layer-black absolute top-[32%] left-[-10%] w-[150%] h-[50%] bg-[#111111] rotate-[-6deg] opacity-[0.4] sm:opacity-[0.45] md:opacity-[0.5]" />
       </div>
 
-      <div className="relative w-full flex flex-col lg:flex-row flex-1 px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 pt-12 sm:pt-14 md:pt-16 lg:pt-20 pb-0 sm:pb-3 md:pb-4 lg:pb-6 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+      <div className="relative w-full flex flex-col lg:flex-row flex-1 px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 pt-20 sm:pt-14 md:pt-16 lg:pt-20 pb-0 sm:pb-3 md:pb-4 lg:pb-6 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
         <div
           ref={leftRailRef}
           className="
@@ -362,10 +362,10 @@ const Hero: React.FC = () => {
         w-full bg-black 
         flex flex-col justify-center items-center lg:items-end
         px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12
-        py-0 sm:py-3 md:py-4 lg:py-5 xl:py-6
+        py-2 sm:py-3 md:py-4 lg:py-5 xl:py-6
         text-center lg:text-right
         flex-shrink-0
-        min-h-[80px] sm:min-h-[120px] md:min-h-[140px] lg:min-h-[160px]
+        min-h-[60px] sm:min-h-[120px] md:min-h-[140px] lg:min-h-[160px]
       "
       >
         <div className="w-full flex flex-col items-center lg:items-end gap-1 sm:gap-1.5">
