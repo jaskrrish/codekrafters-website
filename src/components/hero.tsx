@@ -13,8 +13,17 @@ const Hero: React.FC = () => {
   const arrowRef = useRef<HTMLDivElement | null>(null)
   const leftRailRef = useRef<HTMLDivElement | null>(null)
   const codekraftersRef = useRef<HTMLHeadingElement | null>(null)
+  const milestonesRef = useRef<HTMLDivElement | null>(null)
 
   const taglineLines = useMemo(() => ["IT'S", "MORE THAN", "A CLUB"], [])
+
+  const milestones = [
+    { value: 8, suffix: "", label: "DOMAINS" },
+    { value: 150, suffix: "+", label: "MEMBERS" },
+    { value: 10, suffix: "+", label: "EVENTS" },
+  ]
+
+  const [counters, setCounters] = useState(milestones.map(() => 0))
 
   const splitToSpans = (text: string) =>
     text.split("").map((ch, idx) => (
@@ -132,6 +141,54 @@ const Hero: React.FC = () => {
     return () => ctx.revert()
   }, [])
 
+  // Milestones animation with working counter
+  useEffect(() => {
+    if (!milestonesRef.current) return
+
+    const ctx = gsap.context(() => {
+      const items = gsap.utils.toArray<HTMLDivElement>(".milestone-item")
+
+      items.forEach((item, index) => {
+        gsap.fromTo(
+          item,
+          {
+            opacity: 0,
+            y: 40,
+            scale: 0.9,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            delay: 0.6 + index * 0.2,
+            ease: "back.out(1.5)",
+          }
+        )
+      })
+
+      // Counter animation using React state
+      milestones.forEach((milestone, idx) => {
+        const obj = { val: 0 }
+        gsap.to(obj, {
+          val: milestone.value,
+          duration: 2,
+          delay: 0.8 + idx * 0.2,
+          ease: "power2.out",
+          onUpdate: function () {
+            setCounters((prev) => {
+              const newCounters = [...prev]
+              newCounters[idx] = Math.round(obj.val)
+              return newCounters
+            })
+          },
+        })
+      })
+    }, milestonesRef)
+
+    return () => ctx.revert()
+  }, [])
+
   // Background rotation with scroll
   useEffect(() => {
     const yellowLayer = document.querySelector(".bg-layer-yellow")
@@ -236,7 +293,7 @@ const Hero: React.FC = () => {
             w-full lg:w-[45%] xl:w-[40%]
             text-center lg:text-left
             order-1 lg:order-1
-            py-4 sm:py-6 md:py-8
+            pt-8 pb-4 sm:py-6 md:py-8 lg:pb-8
           "
         >
           <div className="w-full max-w-[95%] sm:max-w-[500px] md:max-w-[550px] lg:max-w-[600px]">
@@ -255,8 +312,48 @@ const Hero: React.FC = () => {
             ))}
           </div>
 
-          <div ref={arrowRef} className="mt-4 sm:mt-6 md:mt-8 hidden lg:flex items-center gap-2 sm:gap-3 opacity-70">
-            <div className="relative w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7">
+          {/* Milestones - Desktop only */}
+          <div
+            ref={milestonesRef}
+            className="hidden lg:flex mt-8 md:mt-10 w-full max-w-[95%] sm:max-w-[500px] md:max-w-[550px] lg:max-w-[600px]"
+          >
+            <div className="grid grid-cols-3 gap-4 md:gap-6 w-full">
+              {milestones.map((milestone, idx) => (
+                <div
+                  key={idx}
+                  className="milestone-item relative group cursor-default"
+                >
+                  <div className="relative flex flex-col items-center text-center p-4 md:p-5">
+                    <div className="relative">
+                      <span 
+                        className="font-black leading-none block" 
+                        style={{ 
+                          fontSize: "clamp(2.5rem, 5vw, 4rem)",
+                          color: "#F9B000",
+                        }}
+                      >
+                        {counters[idx]}{milestone.suffix}
+                      </span>
+                      
+                      
+                    </div>
+                    
+                    <span 
+                      className="font-bold text-white/70 tracking-[0.2em] leading-tight mt-4" 
+                      style={{ 
+                        fontSize: "clamp(0.65rem, 1.5vw, 0.9rem)",
+                      }}
+                    >
+                      {milestone.label}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div ref={arrowRef} className=" hidden lg:flex items-center gap-2 sm:gap-3 opacity-70">
+            <div className="relative w-5 h-7 sm:w-6 sm:h-6 md:w-7 md:h-10">
               <Image src="/logo.png" alt="scroll" fill className="object-contain" />
             </div>
             <p className="text-white/70 uppercase tracking-[0.22em] text-[10px] sm:text-xs md:text-sm">Scroll Down</p>
@@ -266,10 +363,11 @@ const Hero: React.FC = () => {
         <div
           className="
           relative 
-          flex items-center justify-center lg:justify-end 
+          flex flex-col items-center lg:items-end justify-center lg:justify-end 
           w-full lg:w-[55%] xl:w-[60%]
           order-2 lg:order-2
-          py-4 sm:py-6 md:py-8
+          pt-10 pb-4 sm:py-6 md:py-8 lg:pb-8
+          gap-6 
         "
         >
           <div
@@ -354,7 +452,51 @@ const Hero: React.FC = () => {
               ))}
             </div>
           </div>
+
+          {/* Milestones - Mobile only (below image, inside right column) */}
+          <div className="lg:hidden w-full max-w-[650px]">
+            <div className="grid grid-cols-3 gap-3 sm:gap-4">
+              {milestones.map((milestone, idx) => (
+                <div
+                  key={`mobile-${idx}`}
+                  className="milestone-item relative"
+                >
+                  <div className="relative flex flex-col items-center text-center mt-10 p-3 sm:p-4">
+                    <div className="relative">
+                      <span 
+                        className="font-black leading-none block" 
+                        style={{ 
+                          fontSize: "clamp(1.8rem, 8vw, 2.5rem)",
+                          color: "#F9B000",
+                        }}
+                      >
+                        {counters[idx]}{milestone.suffix}
+                      </span>
+                      
+                      <div 
+                        className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-0.5 bg-[#F9B000]"
+                        style={{
+                          width: "40%",
+                          boxShadow: "0 0 8px rgba(249, 176, 0, 0.6)",
+                        }}
+                      />
+                    </div>
+                    
+                    <span 
+                      className="font-bold text-white/70 tracking-[0.15em] leading-tight mt-3" 
+                      style={{ 
+                        fontSize: "clamp(0.6rem, 3vw, 0.75rem)",
+                      }}
+                    >
+                      {milestone.label}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
+        
       </div>
 
       <div
@@ -362,10 +504,11 @@ const Hero: React.FC = () => {
         w-full bg-black 
         flex flex-col justify-center items-center lg:items-end
         px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12
-        py-2 sm:py-3 md:py-4 lg:py-5 xl:py-6
         text-center lg:text-right
         flex-shrink-0
-        min-h-[60px] sm:min-h-[120px] md:min-h-[140px] lg:min-h-[160px]
+        pt-1 pb-3 sm:py-3 md:py-4 lg:py-5 xl:py-6
+        min-h-[80px] sm:min-h-[120px] md:min-h-[140px] lg:min-h-[160px]
+
       "
       >
         <div className="w-full flex flex-col items-center lg:items-end gap-1 sm:gap-1.5">
@@ -373,7 +516,7 @@ const Hero: React.FC = () => {
             className="leading-tight"
             style={{
               color: "rgba(255,255,255,0.85)",
-              fontSize: "clamp(10px, 1.8vw, 16px)",
+              fontSize: "clamp(12px, 3.2vw, 16px)",
               letterSpacing: "clamp(0.1em, 0.3vw, 0.14em)",
               fontWeight: 600,
             }}
