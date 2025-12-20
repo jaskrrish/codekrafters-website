@@ -1,12 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import {
-  Menu,
-  X,
   Home,
   Calendar,
   Users,
@@ -50,14 +47,27 @@ export function Navbar() {
       <div className="flex justify-center w-full pt-4">
         <div
           className="flex flex-col items-center"
-          onMouseEnter={() => window.innerWidth >= 768 && setIsExpanded(true)}
+          onMouseEnter={() => {
+  if (window.innerWidth >= 768) {
+    setIsExpanded(true);
+  }
+}}
+
           onMouseLeave={() => {
-            window.innerWidth >= 768 && setIsExpanded(false);
-            setHoveredLink(null);
-          }}
+  if (window.innerWidth >= 768) {
+    setIsExpanded(false);
+  }
+  setHoveredLink(null);
+}}
+
         >
           <button
-            onClick={() => window.innerWidth < 768 && setIsExpanded((p) => !p)}
+            onClick={() => {
+  if (window.innerWidth < 768) {
+    setIsExpanded((p) => !p);
+  }
+}}
+
             className="flex items-center justify-center"
             style={{
               backgroundColor: "#0D0D0D",
