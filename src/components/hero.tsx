@@ -36,12 +36,18 @@ const Hero: React.FC = () => {
       </span>
     ))
 
-  const images = ["/group/group4.jpg", "/group/group3.jpg", "/group/group2.jpg", "/group/group1.jpg"]
+  const images = [
+    "/group/group4.jpg",
+    "/group/group3.jpg",
+    "/group/group2.jpg",
+    "/group/group1.jpg",
+  ]
+
   const [index, setIndex] = useState(0)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const startInterval = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current as any)
+    if (intervalRef.current) clearInterval(intervalRef.current)
     intervalRef.current = setInterval(() => {
       setIndex((i) => (i + 1) % images.length)
     }, 4000)
@@ -50,7 +56,7 @@ const Hero: React.FC = () => {
   useEffect(() => {
     startInterval()
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current as any)
+      if (intervalRef.current) clearInterval(intervalRef.current)
     }
   }, [])
 
@@ -61,7 +67,7 @@ const Hero: React.FC = () => {
   const next = () => goto(index + 1)
   const prev = () => goto(index - 1)
 
-  // Image breathing + hover tilt
+  /* IMAGE breathing + hover tilt */
   useEffect(() => {
     const img = imageRef.current
     if (!img) return
@@ -82,7 +88,9 @@ const Hero: React.FC = () => {
         duration: 0.3,
         ease: "power2.out",
       })
-    const leave = () => gsap.to(img, { scale: 1, rotate: 0, duration: 0.4 })
+
+    const leave = () =>
+      gsap.to(img, { scale: 1, rotate: 0, duration: 0.4 })
 
     img.addEventListener("mouseenter", enter)
     img.addEventListener("mouseleave", leave)
@@ -93,7 +101,7 @@ const Hero: React.FC = () => {
     }
   }, [])
 
-  // Tagline animations
+  /* TAGLINE slot animation */
   useEffect(() => {
     if (!leftRailRef.current) return
 
@@ -123,12 +131,6 @@ const Hero: React.FC = () => {
       if (arrowRef.current) {
         gsap.to(arrowRef.current, {
           y: 10,
-          duration: 0.9,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        })
-        gsap.to(arrowRef.current, {
           opacity: 0.35,
           duration: 0.9,
           repeat: -1,
@@ -141,33 +143,11 @@ const Hero: React.FC = () => {
     return () => ctx.revert()
   }, [])
 
-  // Milestones animation with working counter
+  /* MILESTONE counters */
   useEffect(() => {
     if (!milestonesRef.current) return
 
     const ctx = gsap.context(() => {
-      const items = gsap.utils.toArray<HTMLDivElement>(".milestone-item")
-
-      items.forEach((item, index) => {
-        gsap.fromTo(
-          item,
-          {
-            opacity: 0,
-            y: 40,
-            scale: 0.9,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.8,
-            delay: 0.6 + index * 0.2,
-            ease: "back.out(1.5)",
-          }
-        )
-      })
-
-      // Counter animation using React state
       milestones.forEach((milestone, idx) => {
         const obj = { val: 0 }
         gsap.to(obj, {
@@ -175,11 +155,11 @@ const Hero: React.FC = () => {
           duration: 2,
           delay: 0.8 + idx * 0.2,
           ease: "power2.out",
-          onUpdate: function () {
+          onUpdate: () => {
             setCounters((prev) => {
-              const newCounters = [...prev]
-              newCounters[idx] = Math.round(obj.val)
-              return newCounters
+              const next = [...prev]
+              next[idx] = Math.round(obj.val)
+              return next
             })
           },
         })
@@ -189,14 +169,14 @@ const Hero: React.FC = () => {
     return () => ctx.revert()
   }, [])
 
-  // Background rotation with scroll
+  /* BACKGROUND rotation on scroll */
   useEffect(() => {
-    const yellowLayer = document.querySelector(".bg-layer-yellow")
-    const blackLayer = document.querySelector(".bg-layer-black")
+    const yellow = document.querySelector(".bg-layer-yellow")
+    const black = document.querySelector(".bg-layer-black")
 
-    if (!yellowLayer || !blackLayer) return
+    if (!yellow || !black) return
 
-    gsap.to(yellowLayer, {
+    gsap.to(yellow, {
       rotation: -8,
       scrollTrigger: {
         trigger: "#home",
@@ -206,7 +186,7 @@ const Hero: React.FC = () => {
       },
     })
 
-    gsap.to(blackLayer, {
+    gsap.to(black, {
       rotation: 8,
       scrollTrigger: {
         trigger: "#home",
@@ -215,53 +195,41 @@ const Hero: React.FC = () => {
         scrub: 1,
       },
     })
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-    }
   }, [])
 
-  // CODEKRAFTERS hover animation
+  /* CODEKRAFTERS hover */
   useEffect(() => {
     const heading = codekraftersRef.current
     if (!heading) return
 
     const chars = heading.querySelectorAll(".char")
 
-    const hoverEnter = () => {
+    const enter = () =>
       gsap.to(chars, {
         y: -15,
         rotation: gsap.utils.random(-10, 10, 1, true),
         color: "#FFFFFF",
-        stagger: {
-          each: 0.05,
-          from: "center",
-        },
+        stagger: { each: 0.05, from: "center" },
         ease: "back.out(2)",
         duration: 0.4,
       })
-    }
 
-    const hoverLeave = () => {
+    const leave = () =>
       gsap.to(chars, {
         y: 0,
         rotation: 0,
         color: "#F9B000",
-        stagger: {
-          each: 0.03,
-          from: "edges",
-        },
+        stagger: { each: 0.03, from: "edges" },
         ease: "back.in(1.5)",
         duration: 0.5,
       })
-    }
 
-    heading.addEventListener("mouseenter", hoverEnter)
-    heading.addEventListener("mouseleave", hoverLeave)
+    heading.addEventListener("mouseenter", enter)
+    heading.addEventListener("mouseleave", leave)
 
     return () => {
-      heading.removeEventListener("mouseenter", hoverEnter)
-      heading.removeEventListener("mouseleave", hoverLeave)
+      heading.removeEventListener("mouseenter", enter)
+      heading.removeEventListener("mouseleave", leave)
     }
   }, [])
 
@@ -272,39 +240,32 @@ const Hero: React.FC = () => {
       style={{
         scrollSnapAlign: "start",
         scrollSnapStop: "always",
-        minHeight: "100vh",
-        height: "100vh",
+        minHeight: "100vh", // ✅ REAL FIX (no content clipping)
         display: "flex",
         flexDirection: "column",
       }}
     >
-      {/* Background planes with responsive opacity and sizing */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="bg-layer-yellow absolute top-[-18%] left-[-10%] w-[140%] h-[58%] bg-[#F9B000] rotate-[5deg] opacity-[0.12] sm:opacity-[0.15] md:opacity-[0.18]" />
-        <div className="bg-layer-black absolute top-[32%] left-[-10%] w-[150%] h-[50%] bg-[#111111] rotate-[-6deg] opacity-[0.4] sm:opacity-[0.45] md:opacity-[0.5]" />
+      {/* BACKGROUND */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="bg-layer-yellow absolute top-[-18%] left-[-10%] w-[140%] h-[58%] bg-[#F9B000] rotate-[5deg] opacity-[0.15]" />
+        <div className="bg-layer-black absolute top-[32%] left-[-10%] w-[150%] h-[50%] bg-[#111111] rotate-[-6deg] opacity-[0.45]" />
       </div>
 
-      <div className="relative w-full flex flex-col lg:flex-row flex-1 px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 pt-20 sm:pt-14 md:pt-16 lg:pt-20 pb-0 sm:pb-3 md:pb-4 lg:pb-6 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+      {/* MAIN */}
+      <div className="relative flex flex-col lg:flex-row flex-1 px-6 pt-20 gap-8">
+        {/* LEFT */}
         <div
           ref={leftRailRef}
-          className="
-            select-none
-            flex flex-col justify-center items-center lg:items-start
-            w-full lg:w-[45%] xl:w-[40%]
-            text-center lg:text-left
-            order-1 lg:order-1
-            pt-8 pb-4 sm:py-6 md:py-8 lg:pb-8
-          "
+          className="flex flex-col justify-start md:justify-center items-center lg:items-start w-full lg:w-[45%] text-center lg:text-left"
         >
-          <div className="w-full max-w-[95%] sm:max-w-[500px] md:max-w-[550px] lg:max-w-[600px]">
+          <div className="max-w-[600px]">
             {taglineLines.map((line, i) => (
               <div
                 key={line}
                 className="slot-line font-extrabold leading-[0.86]"
                 style={{
-                  fontSize: "clamp(2rem, 7vw, 4.5rem)",
+                  fontSize: "clamp(2rem, 6vw, 4.5rem)",
                   color: i % 2 === 0 ? "#F9B000" : "#FFFFFF",
-                  marginBottom: i === taglineLines.length - 1 ? 0 : "-0.08em",
                 }}
               >
                 {splitToSpans(line)}
@@ -312,244 +273,82 @@ const Hero: React.FC = () => {
             ))}
           </div>
 
-          {/* Milestones - Desktop only */}
           <div
             ref={milestonesRef}
-            className="hidden lg:flex mt-8 md:mt-10 w-full max-w-[95%] sm:max-w-[500px] md:max-w-[550px] lg:max-w-[600px]"
+            className="hidden lg:grid grid-cols-3 gap-6 mt-10 max-w-[600px]"
           >
-            <div className="grid grid-cols-3 gap-4 md:gap-6 w-full">
-              {milestones.map((milestone, idx) => (
-                <div
-                  key={idx}
-                  className="milestone-item relative group cursor-default"
-                >
-                  <div className="relative flex flex-col items-center text-center p-4 md:p-5">
-                    <div className="relative">
-                      <span 
-                        className="font-black leading-none block" 
-                        style={{ 
-                          fontSize: "clamp(2.5rem, 5vw, 4rem)",
-                          color: "#F9B000",
-                        }}
-                      >
-                        {counters[idx]}{milestone.suffix}
-                      </span>
-                      
-                      
-                    </div>
-                    
-                    <span 
-                      className="font-bold text-white/70 tracking-[0.2em] leading-tight mt-4" 
-                      style={{ 
-                        fontSize: "clamp(0.65rem, 1.5vw, 0.9rem)",
-                      }}
-                    >
-                      {milestone.label}
-                    </span>
-                  </div>
+            {milestones.map((m, i) => (
+              <div key={i} className="text-center">
+                <div className="text-[#F9B000] font-black text-6xl">
+                  {counters[i]}
+                  {m.suffix}
                 </div>
-              ))}
-            </div>
+                <div className="text-white/70 tracking-widest text-s mt-2">
+                  {m.label}
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div ref={arrowRef} className=" hidden lg:flex items-center gap-2 sm:gap-3 opacity-70 ">
-            <div className="relative w-5 h-7 sm:w-6 sm:h-6 md:w-7 md:h-10 ">
-              <Image src="/logo.png" alt="scroll" fill className="object-contain" />
-            </div>
-            <p className="text-white/70 uppercase tracking-[0.22em] text-[10px] sm:text-xs md:text-sm">Scroll Down</p>
+          <div ref={arrowRef} className="hidden lg:flex items-center gap-2 mt-8">
+            <Image src="/logo.png" alt="scroll" width={28} height={28} />
+            <span className="text-white/70 tracking-widest text-xs">
+              SCROLL DOWN
+            </span>
           </div>
         </div>
 
-        <div
-          className="
-          relative 
-          flex flex-col items-center lg:items-end justify-center lg:justify-end 
-          w-full lg:w-[55%] xl:w-[60%]
-          order-2 lg:order-2
-          pt-10 pb-4 sm:py-6 md:py-8 lg:pb-8
-          gap-6 
-        "
-        >
+        {/* RIGHT */}
+        <div className="flex flex-col justify-start md:justify-center items-center lg:ml-10 w-full lg:w-[55%]">
           <div
             ref={imageRef}
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "ArrowLeft") prev()
-              else if (e.key === "ArrowRight") next()
-            }}
-            className="
-              relative rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden 
-              shadow-[0_0_20px_#0006] sm:shadow-[0_0_30px_#0008] md:shadow-[0_0_40px_#000a]
-              w-[92%] sm:w-[85%] md:w-[80%] lg:w-[85%] xl:w-[75%]
-              max-w-[650px] 
-            "
-            style={{
-              height: "clamp(240px, 40vh, 450px)",
-              maxHeight: "48vh",
-            }}
+            className="relative rounded-3xl overflow-hidden shadow-[0_0_40px_#000a] w-[75%] sm:w-[70%] lg:w-[72%] max-w-[560px]"
+            style={{ height: "clamp(260px, 38vh, 440px)" }}
           >
             {images.map((src, i) => (
               <div
                 key={src}
-                className="absolute inset-0 bg-center bg-cover transition-opacity duration-[900ms] rounded-xl sm:rounded-2xl md:rounded-3xl"
+                className="absolute inset-0 bg-cover bg-center transition-opacity duration-700"
                 style={{
                   backgroundImage: `url('${src}')`,
                   opacity: index === i ? 1 : 0,
-                  transitionTimingFunction: "ease-in-out",
-                  borderRadius: "inherit",
-                  willChange: "opacity",
-                  backfaceVisibility: "hidden",
-                  transform: "translateZ(0)",
                 }}
               />
             ))}
 
             <button
-              onClick={() => prev()}
-              aria-label="Previous"
-              className="
-                hidden sm:flex 
-                absolute left-1.5 sm:left-2 md:left-3 top-1/2 -translate-y-1/2 z-20 
-                w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 
-                rounded-full bg-black/40 hover:bg-black/60 
-                items-center justify-center text-white
-                transition-all duration-200
-              "
+              onClick={prev}
+              className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 rounded-full w-9 h-9 flex items-center justify-center text-white"
             >
-              <svg viewBox="0 0 24 24" stroke="currentColor" className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-              </svg>
+              ‹
             </button>
-
             <button
-              onClick={() => next()}
-              aria-label="Next"
-              className="
-                hidden sm:flex 
-                absolute right-1.5 sm:right-2 md:right-3 top-1/2 -translate-y-1/2 z-20 
-                w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 
-                rounded-full bg-black/40 hover:bg-black/60 
-                items-center justify-center text-white
-                transition-all duration-200
-              "
+              onClick={next}
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 rounded-full w-9 h-9 flex items-center justify-center text-white"
             >
-              <svg viewBox="0 0 24 24" stroke="currentColor" className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
+              ›
             </button>
-
-            <div className="flex sm:hidden absolute bottom-2 left-1/2 -translate-x-1/2 gap-1 z-20">
-              {images.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => goto(i)}
-                  aria-label={`Go to image ${i + 1}`}
-                  className={`
-                    w-1.5 h-1.5 rounded-full transition-all duration-300
-                    ${index === i ? "bg-white w-5" : "bg-white/50"}
-                  `}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Milestones - Mobile only (below image, inside right column) */}
-          <div className="lg:hidden w-full max-w-[650px]">
-            <div className="grid grid-cols-3 gap-3 sm:gap-4">
-              {milestones.map((milestone, idx) => (
-                <div
-                  key={`mobile-${idx}`}
-                  className="milestone-item relative"
-                >
-                  <div className="relative flex flex-col items-center text-center mt-10 p-3 sm:p-4">
-                    <div className="relative">
-                      <span 
-                        className="font-black leading-none block" 
-                        style={{ 
-                          fontSize: "clamp(1.8rem, 8vw, 2.5rem)",
-                          color: "#F9B000",
-                        }}
-                      >
-                        {counters[idx]}{milestone.suffix}
-                      </span>
-                      
-                      <div 
-                        className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-0.5 bg-[#F9B000]"
-                        style={{
-                          width: "40%",
-                          boxShadow: "0 0 8px rgba(249, 176, 0, 0.6)",
-                        }}
-                      />
-                    </div>
-                    
-                    <span 
-                      className="font-bold text-white/70 tracking-[0.15em] leading-tight mt-3" 
-                      style={{ 
-                        fontSize: "clamp(0.6rem, 3vw, 0.75rem)",
-                      }}
-                    >
-                      {milestone.label}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
-        
       </div>
 
-      <div
-        className="
-        w-full bg-black 
-        flex flex-col justify-center items-center lg:items-end
-        px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12
-        text-center lg:text-right
-        flex-shrink-0
-        pt-1 pb-3 sm:py-3 md:py-4 lg:py-5 xl:py-6
-        min-h-[80px] sm:min-h-[120px] md:min-h-[140px] lg:min-h-[160px]
+      {/* FOOTER */}
+      <div className="w-full bg-black py-6 px-6 flex flex-col items-center lg:items-end">
+        <p className="text-white/80 tracking-widest text-sm">
+          SRMIST RAMAPURAM
+        </p>
 
-      "
-      >
-        <div className="w-full flex flex-col items-center lg:items-end gap-1 sm:gap-1.5">
-          <p
-            className="leading-tight"
-            style={{
-              color: "rgba(255,255,255,0.85)",
-              fontSize: "clamp(12px, 3.2vw, 16px)",
-              letterSpacing: "clamp(0.1em, 0.3vw, 0.14em)",
-              fontWeight: 600,
-            }}
-          >
-            SRMIST RAMAPURAM
-          </p>
-
-          <h1
-            ref={codekraftersRef}
-            className="font-black leading-[0.9] cursor-pointer select-none"
-            style={{
-              color: "#F9B000",
-              fontSize: "clamp(1.5rem, 7vw, 5.5rem)",
-              letterSpacing: "-0.01em",
-              display: "inline-block",
-              wordBreak: "keep-all",
-            }}
-          >
-            {"CODEKRAFTERS".split("").map((char, i) => (
-              <span
-                key={i}
-                className="char inline-block"
-                style={{
-                  display: "inline-block",
-                  willChange: "transform, color",
-                  transformOrigin: "center",
-                }}
-              >
-                {char}
-              </span>
-            ))}
-          </h1>
-        </div>
+        <h1
+          ref={codekraftersRef}
+          className="font-black text-[#F9B000]"
+          style={{ fontSize: "clamp(2rem, 6vw, 5.5rem)" }}
+        >
+          {"CODEKRAFTERS".split("").map((c, i) => (
+            <span key={i} className="char inline-block">
+              {c}
+            </span>
+          ))}
+        </h1>
       </div>
     </section>
   )
