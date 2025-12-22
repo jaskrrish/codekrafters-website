@@ -111,7 +111,7 @@ export default function TeamComponent() {
       id="team"
       className="relative w-full bg-[#FFEFB4] overflow-hidden flex flex-col justify-between"
     >
-      {/* <CHANGE> Progress timer bar with responsive positioning and sizing */}
+      {/* Progress timer bar with responsive positioning and sizing */}
       <div className="absolute top-3 sm:top-6 left-3 sm:left-6 w-24 sm:w-32 md:w-40 h-1.5 sm:h-2 bg-[#0D0D0D]/20 rounded-full overflow-hidden">
         <motion.div
           key={activeIndex}
@@ -121,7 +121,7 @@ export default function TeamComponent() {
         />
       </div>
 
-      {/* <CHANGE> Title section with responsive text sizes and positioning */}
+      {/* Title section with responsive text sizes and positioning */}
       <div className="absolute top-3 sm:top-6 right-3 sm:right-10 text-right z-20">
         <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#0D0D0D] uppercase tracking-tight">
           Our{" "}
@@ -134,7 +134,7 @@ export default function TeamComponent() {
         </p>
       </div>
 
-      {/* <CHANGE> Horizontal scroll panels with responsive padding and height */}
+      {/* Horizontal scroll panels with responsive padding and height */}
       <div
         ref={scrollContainerRef}
         className="flex flex-row w-full flex-1 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide px-2 sm:px-4 md:px-10 pt-16 sm:pt-20 md:pt-24 pb-4 sm:pb-6 md:pb-8"
@@ -148,7 +148,7 @@ export default function TeamComponent() {
               key={domain.id}
               className="flex-shrink-0 w-screen snap-center flex flex-col items-center justify-start"
             >
-              {/* <CHANGE> Domain title with responsive text sizes and spacing */}
+              {/* Domain title with responsive text sizes and spacing */}
               <div className="mb-6 sm:mb-16 md:mb-16 mt-6 sm:mt-10 md:mt-1">
                 <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#0D0D0D] uppercase tracking-wide text-center">
                   {domain.label}
@@ -156,8 +156,8 @@ export default function TeamComponent() {
                 <div className="h-1 sm:h-[2px] md:h-[3px] w-8 sm:w-12 md:w-16 bg-[#0D0D0D] mx-auto rounded-full mt-1.5 sm:mt-2"></div>
               </div>
 
-              {/* <CHANGE> Members grid with responsive gap and scaling */}
-              <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 max-w-6xl mx-auto px-2 sm:px-4">
+              {/* CHANGED: Members grid - 2 rows on mobile/tablet, flex-wrap on desktop */}
+              <div className="grid grid-cols-2 justify-items-center lg:flex lg:flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 max-w-6xl mx-auto px-2 sm:px-4">
                 {members.map((member, index) => (
                   <motion.div
                     key={member.id}
@@ -169,9 +169,9 @@ export default function TeamComponent() {
                       ease: [0.16, 1, 0.3, 1],
                     }}
                     viewport={{ once: true }}
-                    className="group"
+                    className={`group ${members.length % 2 !== 0 && index === members.length - 1 ? 'col-span-2 lg:col-span-1' : ''}`}
                   >
-                    {/* <CHANGE> Card with fixed height and text truncation to prevent box expansion */}
+                    {/* Card with fixed height and text truncation to prevent box expansion */}
                     <div
                       className={`
                         ck-card relative bg-gradient-to-br bg-[#f9f7e5]
@@ -179,15 +179,15 @@ export default function TeamComponent() {
                         shadow-[3px_3px_0_#0D0D0D] sm:shadow-[6px_6px_0_#0D0D0D]
                         group-hover:shadow-[5px_5px_0_#0D0D0D] sm:group-hover:shadow-[10px_10px_0_#0D0D0D]
                         transition-all duration-300 p-3 sm:p-4 md:p-6
-                        flex flex-col items-center text-center w-40 sm:w-48 md:w-52 lg:w-56
+                        flex flex-col items-center text-center w-full lg:w-52 xl:w-56
                         h-60 sm:h-70 md:h-85 flex-shrink-0
                       `}
                       style={{ transformStyle: "preserve-3d" }}
                     >
-                      {/* <CHANGE> Floating circle with responsive sizing */}
+                      {/* Floating circle with responsive sizing */}
                       <div className="absolute -top-3 sm:-top-5 w-12 sm:w-16 md:w-20 h-12 sm:h-16 md:h-20 bg-[#F2A516]/30 rounded-full blur-lg sm:blur-xl opacity-70 group-hover:scale-110 transition-transform" />
 
-                      {/* <CHANGE> Image container with responsive sizing and flex-shrink-0 */}
+                      {/* Image container with responsive sizing and flex-shrink-0 */}
                       <div className="w-24 sm:w-28 md:w-32 lg:w-36 h-24 sm:h-28 md:h-32 lg:h-36 overflow-hidden rounded-full border-2 border-[#0D0D0D] mb-2 sm:mb-3 bg-[#FFF2C6] shadow-inner flex-shrink-0">
                         <Image
                           src={member.imagePath || "/placeholder.svg"}
@@ -198,17 +198,17 @@ export default function TeamComponent() {
                         />
                       </div>
 
-                      {/* <CHANGE> Name with responsive text size and line clamping */}
+                      {/* Name with responsive text size and line clamping */}
                       <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-extrabold text-[#0D0D0D] group-hover:scale-105 transition-transform line-clamp-2">
                         {member.name}
                       </h3>
 
-                      {/* <CHANGE> Role with responsive text size and line clamping */}
+                      {/* Role with responsive text size and line clamping */}
                       <p className="text-[#F2A516] font-bold text-[10px] sm:text-xs md:text-sm uppercase mb-1.5 sm:mb-2 tracking-wide line-clamp-1">
                         {member.role}
                       </p>
 
-                      {/* <CHANGE> Social links with responsive icon sizing and spacing */}
+                      {/* Social links with responsive icon sizing and spacing */}
                       <div className="flex items-center justify-center gap-2 sm:gap-3 mt-2 sm:mt-3">
                         {member.social.instagram && (
                           <a
@@ -242,7 +242,7 @@ export default function TeamComponent() {
                       </div>
                     </div>
 
-                    {/* <CHANGE> Shadow hole with responsive scaling */}
+                    {/* Shadow hole with responsive scaling */}
                     <div className="w-28 sm:w-32 md:w-40 h-3 sm:h-4 md:h-5 mx-auto mt-2 sm:mt-3 bg-black/20 blur-lg sm:blur-xl rounded-full scale-75 sm:scale-90 group-hover:scale-100 sm:group-hover:scale-110 transition-all" />
                   </motion.div>
                 ))}
@@ -252,7 +252,7 @@ export default function TeamComponent() {
         })}
       </div>
 
-      {/* <CHANGE> Bottom navigation with responsive padding, text sizes, and button layout */}
+      {/* Bottom navigation with responsive padding, text sizes, and button layout */}
       <div className="w-full py-4 sm:py-6 md:py-8  items-center justify-center overflow-x-auto hidden md:block px-2 sm:px-4">
         <div className="relative bg-[#0D0D0D] border-2 sm:border-3 border-[#F2A516] rounded-full shadow-[4px_4px_0_#0D0D0D] sm:shadow-[8px_8px_0_#0D0D0D] px-3 sm:px-6 md:px-8 py-2 sm:py-4 flex items-center justify-center gap-2 sm:gap-4 md:gap-6 flex-wrap">
 
