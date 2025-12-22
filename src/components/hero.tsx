@@ -352,8 +352,8 @@ const Hero: React.FC = () => {
             </div>
           </div>
 
-          <div ref={arrowRef} className=" hidden lg:flex items-center gap-2 sm:gap-3 opacity-70">
-            <div className="relative w-5 h-7 sm:w-6 sm:h-6 md:w-7 md:h-10">
+          <div ref={arrowRef} className=" hidden lg:flex items-center gap-2 sm:gap-3 opacity-70 ">
+            <div className="relative w-5 h-7 sm:w-6 sm:h-6 md:w-7 md:h-10 ">
               <Image src="/logo.png" alt="scroll" fill className="object-contain" />
             </div>
             <p className="text-white/70 uppercase tracking-[0.22em] text-[10px] sm:text-xs md:text-sm">Scroll Down</p>
@@ -381,7 +381,7 @@ const Hero: React.FC = () => {
               relative rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden 
               shadow-[0_0_20px_#0006] sm:shadow-[0_0_30px_#0008] md:shadow-[0_0_40px_#000a]
               w-[92%] sm:w-[85%] md:w-[80%] lg:w-[85%] xl:w-[75%]
-              max-w-[650px]
+              max-w-[650px] 
             "
             style={{
               height: "clamp(240px, 40vh, 450px)",
