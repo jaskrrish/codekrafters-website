@@ -10,11 +10,11 @@ export default function Footer() {
       {/* Top Divider */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#F2A516] to-transparent" />
 
-      <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-10 text-center md:text-left">
+      <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-5 gap-10 text-center lg:text-left">
         {/* Brand */}
-        <div className="col-span-2 sm:col-span-3 lg:col-span-1 flex justify-center md:justify-start">
-          <div className="flex flex-col items-center md:items-start">
-            <div className="flex items-center gap-3 justify-center md:justify-start">
+        <div className="col-span-2 lg:col-span-1 flex justify-center lg:justify-start">
+          <div className="flex flex-col items-center lg:items-start">
+            <div className="flex items-center gap-3 justify-center lg:justify-start">
               <Image
                 src="/logo.png"
                 alt="CodeKrafters Logo"
@@ -28,7 +28,7 @@ export default function Footer() {
               </h2>
             </div>
 
-            <p className="mt-3 text-sm text-[#FFEFB4]/70 text-center leading-relaxed">
+            <p className="mt-3 text-sm text-[#FFEFB4]/70 text-center lg:text-left leading-relaxed">
               <span>A student-driven tech club</span>
               <span className=" text-[#FFEFB4]/80 mt-1">
                 at SRM Ramapuram
@@ -38,7 +38,7 @@ export default function Footer() {
         </div>
 
         {/* Explore */}
-        <div className="flex flex-col items-center md:items-start">
+        <div className="flex flex-col items-center lg:items-start">
           <h3 className="font-bold uppercase tracking-wide text-[#F2A516] text-sm mb-4">
             Explore
           </h3>
@@ -50,7 +50,7 @@ export default function Footer() {
         </div>
 
         {/* Social */}
-        <div className="flex flex-col items-center md:items-start">
+        <div className="flex flex-col items-center lg:items-start">
           <h3 className="font-bold uppercase tracking-wide text-[#F2A516] text-sm mb-4">
             Social
           </h3>
@@ -79,7 +79,7 @@ export default function Footer() {
         </div>
 
         {/* Resources */}
-        <div className="flex flex-col items-center md:items-start">
+        <div className="flex flex-col items-center lg:items-start">
           <h3 className="font-bold uppercase text-[#F2A516] tracking-wide text-sm mb-4">
             Resources
           </h3>
@@ -90,7 +90,7 @@ export default function Footer() {
         </div>
 
         {/* Join */}
-        <div className="flex flex-col items-center md:items-start">
+        <div className="flex flex-col items-center lg:items-start">
           <h3 className="font-bold uppercase text-[#F2A516] tracking-wide text-sm mb-4">
             Be a part of
           </h3>

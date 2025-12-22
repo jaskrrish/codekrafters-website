@@ -240,7 +240,7 @@ const Hero: React.FC = () => {
       style={{
         scrollSnapAlign: "start",
         scrollSnapStop: "always",
-        minHeight: "100vh", // ✅ REAL FIX (no content clipping)
+        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
       }}
@@ -249,10 +249,8 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0 pointer-events-none">
         <div className="bg-layer-yellow absolute top-[-18%] left-[-10%] w-[140%] h-[58%] bg-[#F9B000] rotate-[5deg] opacity-[0.15]" />
         <div className="bg-layer-black absolute top-[32%] left-[-10%] w-[150%] h-[50%] bg-[#111111] rotate-[-6deg] opacity-[0.45]" />
-      </div>
-
-      {/* MAIN */}
-      <div className="relative flex flex-col lg:flex-row flex-1 px-6 pt-20 gap-8">
+      </div>      {/* MAIN */}
+      <div className="relative flex flex-col lg:flex-row flex-1 px-6 pt-35 lg:pt-20 gap-8">
         {/* LEFT */}
         <div
           ref={leftRailRef}
@@ -273,6 +271,7 @@ const Hero: React.FC = () => {
             ))}
           </div>
 
+          {/* MILESTONES - Desktop only */}
           <div
             ref={milestonesRef}
             className="hidden lg:grid grid-cols-3 gap-6 mt-10 max-w-[600px]"
@@ -299,10 +298,10 @@ const Hero: React.FC = () => {
         </div>
 
         {/* RIGHT */}
-        <div className="flex flex-col justify-start md:justify-center items-center lg:ml-10 w-full lg:w-[55%]">
+        <div className="flex flex-col justify-center items-center lg:ml-10 w-full lg:w-[55%]">
           <div
             ref={imageRef}
-            className="relative rounded-3xl overflow-hidden shadow-[0_0_40px_#000a] w-[75%] sm:w-[70%] lg:w-[72%] max-w-[560px]"
+            className="relative rounded-3xl overflow-hidden shadow-[0_0_40px_#000a] w-[90%] sm:w-[85%] lg:w-[72%] max-w-[560px]"
             style={{ height: "clamp(260px, 38vh, 440px)" }}
           >
             {images.map((src, i) => (
@@ -328,6 +327,21 @@ const Hero: React.FC = () => {
             >
               ›
             </button>
+          </div>
+
+          {/* MILESTONES - Mobile/Tablet only (below image) */}
+          <div className="grid grid-cols-3 gap-6 mt-8 lg:hidden w-full max-w-[560px]">
+            {milestones.map((m, i) => (
+              <div key={i} className="text-center">
+                <div className="text-[#F9B000] font-black text-4xl sm:text-5xl">
+                  {counters[i]}
+                  {m.suffix}
+                </div>
+                <div className="text-white/70 tracking-widest text-xs sm:text-sm mt-1">
+                  {m.label}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
