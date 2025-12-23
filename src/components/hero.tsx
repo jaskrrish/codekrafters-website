@@ -18,7 +18,7 @@ const Hero: React.FC = () => {
   const taglineLines = useMemo(() => ["IT'S", "MORE THAN", "A CLUB"], [])
 
   const milestones = [
-    { value: 8, suffix: "", label: "DOMAINS" },
+    { value: 7, suffix: "", label: "DOMAINS" },
     { value: 150, suffix: "+", label: "MEMBERS" },
     { value: 10, suffix: "+", label: "EVENTS" },
   ]
