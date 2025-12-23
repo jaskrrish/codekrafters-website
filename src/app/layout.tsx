@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     siteName: "CodeKrafters SRM RMP",
     images: [
       {
-        url: "https://codekrafters-website.vercel.app/ck-core.jpg",
+        url: "https://codekrafters-website.vercel.app/og.jpg",
         width: 1200,
         height: 630,
         alt: "CodeKrafters SRM RMP",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     title: "CodeKrafters SRM RMP",
     description:
       "IT’S MORE THAN A CLUB — Learn, build, and grow across 7 diverse domains.",
-    images: ["https://codekrafters-website.vercel.app/ck-core.jpg"],
+    images: ["https://codekrafters-website.vercel.app/og.jpg"],
   },
 };
 
