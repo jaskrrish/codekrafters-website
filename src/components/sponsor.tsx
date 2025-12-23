@@ -39,19 +39,21 @@ const SponsorsComponent: React.FC = () => {
     key={company.id}
     className="sponsor-card flex-shrink-0 bg-white/90 rounded-2xl overflow-hidden border-2 border-gray-800/20 group relative"
     style={{
-      width: "clamp(220px, 70vw, 320px)",
-      height: "clamp(160px, 45vw, 240px)",
+      width: "clamp(140px, 42vw, 320px)",   // ⬅ smaller on mobile
+      height: "clamp(100px, 30vw, 240px)",  // ⬅ smaller on mobile
       background: "linear-gradient(135deg, #FFEFB3 0%, #FFDA4D 100%)",
     }}
   >
+
     <div className="relative w-full h-full flex items-center justify-center p-3 sm:p-4">
       <Image
         src={company.imageUrl}
         alt={company.alt}
         fill
-        sizes="(max-width: 768px) 220px, 320px"
-        className="object-contain p-4 sm:p-8 drop-shadow-lg"
+        sizes="(max-width: 640px) 140px, (max-width: 1024px) 220px, 320px"
+        className="object-contain p-2 sm:p-4 md:p-8 drop-shadow-lg"
       />
+
     </div>
 
     {/* Desktop hover overlay */}
@@ -178,10 +180,11 @@ const SponsorsComponent: React.FC = () => {
 
         @media (max-width: 768px) {
           .sponsor-card {
-            width: 220px !important;
-            height: 160px !important;
+            width: 140px !important;
+            height: 100px !important;
           }
         }
+
       `}</style>
     </div>
   );
