@@ -10,9 +10,16 @@ export default function Footer() {
       {/* Top Divider */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#F2A516] to-transparent" />
 
-      <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-5 gap-10 text-center lg:text-left">
-        {/* Brand */}
-        <div className="col-span-2 lg:col-span-1 flex justify-center lg:justify-start">
+      <div
+        className="
+          max-w-7xl mx-auto
+          grid grid-cols-2 lg:grid-cols-12
+          gap-x-12 gap-y-10
+          text-center lg:text-left
+        "
+      >
+        {/* Brand (more space after this) */}
+        <div className="col-span-2 lg:col-span-3 flex justify-center lg:justify-start">
           <div className="flex flex-col items-center lg:items-start">
             <div className="flex items-center gap-3 justify-center lg:justify-start">
               <Image
@@ -22,7 +29,7 @@ export default function Footer() {
                 height={36}
                 className="object-contain"
               />
-              <h2 className="text-2xl font-extrabold tracking-wide">
+              <h2 className="text-2xl font-normal">
                 <span className="text-white">Code</span>
                 <span className="text-[#F2A516]">Krafters</span>
               </h2>
@@ -30,16 +37,16 @@ export default function Footer() {
 
             <p className="mt-3 text-sm text-[#FFEFB4]/70 text-center lg:text-left leading-relaxed">
               <span>A student-driven tech club</span>
-              <span className=" text-[#FFEFB4]/80 mt-1">
-                at SRM Ramapuram
+              <span className="text-[#FFEFB4]/80 mt-1">
+                {" "}at SRM Ramapuram
               </span>
             </p>
           </div>
         </div>
 
         {/* Explore */}
-        <div className="flex flex-col items-center lg:items-start">
-          <h3 className="font-bold uppercase tracking-wide text-[#F2A516] text-sm mb-4">
+        <div className="lg:col-span-2 flex flex-col items-center lg:items-start">
+          <h3 className="text-[#F2A516] text-sm mb-4 font-normal">
             Explore
           </h3>
           <ul className="space-y-2 text-sm text-white">
@@ -50,8 +57,8 @@ export default function Footer() {
         </div>
 
         {/* Social */}
-        <div className="flex flex-col items-center lg:items-start">
-          <h3 className="font-bold uppercase tracking-wide text-[#F2A516] text-sm mb-4">
+        <div className="lg:col-span-2 flex flex-col items-center lg:items-start">
+          <h3 className="text-[#F2A516] text-sm mb-4 font-normal">
             Social
           </h3>
           <ul className="space-y-3 text-sm">
@@ -79,8 +86,8 @@ export default function Footer() {
         </div>
 
         {/* Resources */}
-        <div className="flex flex-col items-center lg:items-start">
-          <h3 className="font-bold uppercase text-[#F2A516] tracking-wide text-sm mb-4">
+        <div className="lg:col-span-2 flex flex-col items-center lg:items-start">
+          <h3 className="text-[#F2A516] text-sm mb-4 font-normal">
             Resources
           </h3>
           <ul className="space-y-2 text-sm text-white">
@@ -90,15 +97,15 @@ export default function Footer() {
         </div>
 
         {/* Join */}
-        <div className="flex flex-col items-center lg:items-start">
-          <h3 className="font-bold uppercase text-[#F2A516] tracking-wide text-sm mb-4">
+        <div className="lg:col-span-3 flex flex-col items-center lg:items-start">
+          <h3 className="text-[#F2A516] text-sm mb-4 font-normal">
             Be a part of
           </h3>
           <Link
             href="/join"
             className="
               inline-block mt-2 px-6 py-3 rounded-xl
-              bg-[#F2A516] text-[#0D0D0D] font-extrabold text-sm
+              bg-[#F2A516] text-[#0D0D0D] font-normal text-sm
               shadow-[3px_3px_0_#000]
               hover:shadow-[5px_5px_0_#000]
               transition-all
