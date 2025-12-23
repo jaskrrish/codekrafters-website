@@ -29,7 +29,7 @@ export const TEAM_MEMBERS = [
     },
   },
   {
-    id: 19,
+    id: 3,
     name: "Noorul Hatim",
     role: "Content Lead",
     description: "Leads content talent development.",
@@ -44,7 +44,7 @@ export const TEAM_MEMBERS = [
 
   // Development Domain
   {
-    id: 3,
+    id: 4,
     name: "Srivatsa",
     role: "Development Head",
     description: "Oversees all development operations and technical strategy.",
@@ -57,7 +57,7 @@ export const TEAM_MEMBERS = [
     },
   },
   {
-    id: 4,
+    id: 5,
     name: "Nithesh",
     role: "Development Head",
     description: "Manages development teams and project delivery.",
@@ -70,7 +70,7 @@ export const TEAM_MEMBERS = [
     },
   },
   {
-    id: 5,
+    id: 6,
     name: "Vikas Pritam",
     role: "Development Lead",
     description: "Drives technical excellence and innovation.",
@@ -83,7 +83,7 @@ export const TEAM_MEMBERS = [
     },
   },
   {
-    id: 6,
+    id: 7,
     name: "Vinoth Anand Gani",
     role: "Development Lead",
     description: "Leads development initiatives and team growth.",
@@ -98,7 +98,7 @@ export const TEAM_MEMBERS = [
 
   // Cyber Security Domain
   {
-    id: 7,
+    id: 8,
     name: "Dhanush Adithyan",
     role: "Cyber Security Head",
     description: "Leads security strategy and threat prevention.",
@@ -111,7 +111,7 @@ export const TEAM_MEMBERS = [
     },
   },
   {
-    id: 8,
+    id: 9,
     name: "Rishit Chanda",
     role: "Cyber Security Head",
     description: "Manages security operations and compliance.",
@@ -124,7 +124,7 @@ export const TEAM_MEMBERS = [
     },
   },
   {
-    id: 9,
+    id: 10,
     name: "Adithya Krishna",
     role: "Cybersecurity Lead",
     description: "Drives security initiatives and team development.",
@@ -139,7 +139,7 @@ export const TEAM_MEMBERS = [
 
   // Competitive Programming Domain
   {
-    id: 10,
+    id: 11,
     name: "Shashi Kumar",
     role: "Competitive Programming Head",
     description: "Oversees competitive programming initiatives.",
@@ -152,7 +152,7 @@ export const TEAM_MEMBERS = [
     },
   },
   {
-    id: 11,
+    id: 12,
     name: "Mrudu Bhashini",
     role: "Competitive Programming Lead",
     description: "Leads training and competition strategy.",
@@ -162,19 +162,6 @@ export const TEAM_MEMBERS = [
       instagram: "https://instagram.com/mrudubhashini",
       github: "https://github.com/mrudubhashini",
       linkedin: "https://linkedin.com/in/mrudubhashini",
-    },
-  },
-  {
-    id: 12,
-    name: "Manasa Dhavala",
-    role: "Competitive Programming Lead",
-    description: "Manages program growth and talent development.",
-    imagePath: "/images/Manasa.png",
-    domain: "cp",
-    social: {
-      instagram: "https://instagram.com/manasadhavala",
-      github: "https://github.com/manasadhavala",
-      linkedin: "https://linkedin.com/in/manasadhavala",
     },
   },
 
@@ -262,7 +249,7 @@ export const TEAM_MEMBERS = [
 
   // PR & Management Domain
   {
-    id: 20,
+    id: 19,
     name: "Banu Pragathi",
     role: "PR & Management Head",
     description: "Oversees PR strategy and management operations.",
@@ -275,7 +262,7 @@ export const TEAM_MEMBERS = [
     },
   },
   {
-    id: 21,
+    id: 20,
     name: "Kavya Reddy",
     role: "PR & Management Head",
     description: "Manages organizational relationships and growth.",
@@ -288,7 +275,7 @@ export const TEAM_MEMBERS = [
     },
   },
   {
-    id: 22,
+    id: 21,
     name: "Siddarth Kilari",
     role: "PR & Management Lead",
     description: "Drives PR initiatives and communications.",
@@ -301,7 +288,7 @@ export const TEAM_MEMBERS = [
     },
   },
   {
-    id: 23,
+    id: 22,
     name: "Satya Lohith",
     role: "PR & Management Lead",
     description: "Leads management strategy and team development.",
@@ -316,7 +303,7 @@ export const TEAM_MEMBERS = [
 
   // Operations Domain
   {
-    id: 24,
+    id: 23,
     name: "Yashvanth MR",
     role: "Operations Head",
     description: "Leads operational efficiency and scaling.",
@@ -329,7 +316,7 @@ export const TEAM_MEMBERS = [
     },
   },
   {
-    id: 25,
+    id: 24,
     name: "Abhinav KA",
     role: "Operations Head",
     description: "Manages operations and process optimization.",
