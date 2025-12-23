@@ -12,7 +12,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/hariprasad",
       github: "https://github.com/hariprasad",
-      linkedin: "https://linkedin.com/in/hariprasad",
+      linkedin: " https://www.linkedin.com/in/hari-prasad-krishnamurthy-04b977244/",
     },
   },
   {
@@ -25,7 +25,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/aaronsamuel",
       github: "https://github.com/aaronsamuel",
-      linkedin: "https://linkedin.com/in/aaronsamuel",
+      linkedin: "https://www.linkedin.com/in/aaronsamuel05/",
     },
   },
   {
@@ -38,7 +38,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/noorulhatim",
       github: "https://github.com/noorulhatim",
-      linkedin: "https://linkedin.com/in/noorulhatim",
+      linkedin: "https://www.linkedin.com/in/noorulhatim/",
     },
   },
 
@@ -53,7 +53,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/srivatsa",
       github: "https://github.com/srivatsa",
-      linkedin: "https://linkedin.com/in/srivatsa",
+      linkedin: "https://www.linkedin.com/in/srivatsa-s-84b258297/",
     },
   },
   {
@@ -66,7 +66,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/nithesh",
       github: "https://github.com/nithesh",
-      linkedin: "https://linkedin.com/in/nithesh",
+      linkedin: "https://www.linkedin.com/in/nithesh-sk/",
     },
   },
   {
@@ -79,7 +79,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/vikaspritam",
       github: "https://github.com/vikaspritam",
-      linkedin: "https://linkedin.com/in/vikaspritam",
+      linkedin: "https://www.linkedin.com/in/vikas-pritam/",
     },
   },
   {
@@ -92,7 +92,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/vinothanandhgani",
       github: "https://github.com/vinothanandhgani",
-      linkedin: "https://linkedin.com/in/vinothanandhgani",
+      linkedin: " https://www.linkedin.com/in/vinoth-anand-gani-304126325",
     },
   },
 
@@ -107,7 +107,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/dhanushadithyan",
       github: "https://github.com/dhanushadithyan",
-      linkedin: "https://linkedin.com/in/dhanushadithyan",
+      linkedin: "https://www.linkedin.com/in/dhanush-adithyan/",
     },
   },
   {
@@ -120,7 +120,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/rishitchanda",
       github: "https://github.com/rishitchanda",
-      linkedin: "https://linkedin.com/in/rishitchanda",
+      linkedin: "https://www.linkedin.com/in/rishitchanda/",
     },
   },
   {
@@ -133,7 +133,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/adithyakrishna",
       github: "https://github.com/adithyakrishna",
-      linkedin: "https://linkedin.com/in/adithyakrishna",
+      linkedin: "https://www.linkedin.com/in/aknairptb",
     },
   },
 
@@ -148,7 +148,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/shashikumar",
       github: "https://github.com/shashikumar",
-      linkedin: "https://linkedin.com/in/shashikumar",
+      linkedin: "https://www.linkedin.com/in/shashikumar-ezhilarasu/",
     },
   },
   {
@@ -161,7 +161,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/mrudubhashini",
       github: "https://github.com/mrudubhashini",
-      linkedin: "https://linkedin.com/in/mrudubhashini",
+      linkedin: " https://www.linkedin.com/in/mrudubhashini-cr-343954277/",
     },
   },
 
@@ -176,7 +176,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/deepanshusinha",
       github: "https://github.com/deepanshusinha",
-      linkedin: "https://linkedin.com/in/deepanshusinha",
+      linkedin: "https://www.linkedin.com/in/deepanshu-sinha-912157299/",
     },
   },
   {
@@ -189,7 +189,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/achyuthpv",
       github: "https://github.com/achyuthpv",
-      linkedin: "https://linkedin.com/in/achyuthpv",
+      linkedin: "https://www.linkedin.com/in/achyuth-pv-78653528a/",
     },
   },
   {
@@ -202,7 +202,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/sanjayganeshk",
       github: "https://github.com/sanjayganeshk",
-      linkedin: "https://linkedin.com/in/sanjayganeshk",
+      linkedin: "https://www.linkedin.com/in/sanjay-ganesh-k-barade-675b38324",
     },
   },
 
@@ -217,7 +217,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/bhavnaj",
       github: "https://github.com/bhavnaj",
-      linkedin: "https://linkedin.com/in/bhavnaj",
+      linkedin: "https://www.linkedin.com/in/bhavna-jayakumar-934057284/",
     },
   },
   {
@@ -230,7 +230,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/akashr",
       github: "https://github.com/akashr",
-      linkedin: "https://linkedin.com/in/akashr",
+      linkedin: "https://www.linkedin.com/in/akash-ravindran",
     },
   },
   {
@@ -243,7 +243,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/sashank",
       github: "https://github.com/sashank",
-      linkedin: "https://linkedin.com/in/sashank",
+      linkedin: "www.linkedin.com/in/sashanklatchireddy",
     },
   },
 
@@ -258,7 +258,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/banupragathi",
       github: "https://github.com/banupragathi",
-      linkedin: "https://linkedin.com/in/banupragathi",
+      linkedin: "https://www.linkedin.com/in/banu-pragathi/",
     },
   },
   {
@@ -271,7 +271,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/kavyareddych",
       github: "https://github.com/kavyareddych",
-      linkedin: "https://linkedin.com/in/kavyareddych",
+      linkedin: "https://www.linkedin.com/in/kavya-reddy-challa",
     },
   },
   {
@@ -284,7 +284,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/siddarthkilari",
       github: "https://github.com/siddarthkilari",
-      linkedin: "https://linkedin.com/in/siddarthkilari",
+      linkedin: "https://www.linkedin.com/in/siddarth-kilari-440697310/",
     },
   },
   {
@@ -297,7 +297,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/satyalohith",
       github: "https://github.com/satyalohith",
-      linkedin: "https://linkedin.com/in/satyalohith",
+      linkedin: " https://www.linkedin.com/in/satyalohith455/",
     },
   },
 
@@ -312,7 +312,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/yashvanthmr",
       github: "https://github.com/yashvanthmr",
-      linkedin: "https://linkedin.com/in/yashvanthmr",
+      linkedin: "https://in.linkedin.com/in/yashvanthmr0145",
     },
   },
   {
@@ -325,7 +325,7 @@ export const TEAM_MEMBERS = [
     social: {
       instagram: "https://instagram.com/abhinavka",
       github: "https://github.com/abhinavka",
-      linkedin: "https://linkedin.com/in/abhinavka",
+      linkedin: "https://www.linkedin.com/in/abhinav-ka-a05ba1376",
     },
   },
 ]
