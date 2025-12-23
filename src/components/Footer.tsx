@@ -6,7 +6,7 @@ import { Instagram, Linkedin } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#0D0D0D] text-[#FFEFB4] pt-16 pb-10 px-6 md:px-12">
+    <footer className="relative bg-[#0D0D0D] text-[#FFEFB4] pt-10 pb-10 px-6 md:px-12">
       {/* Top Divider */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#F2A516] to-transparent" />
 
@@ -110,7 +110,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom */}
-      <div className="mt-14 pt-6 border-t border-[#FFEFB4]/20 text-center text-xs text-[#FFEFB4]/60">
+      <div className="mt-5 pt-6 border-t border-[#FFEFB4]/20 text-center text-xs text-[#FFEFB4]/60">
         © {new Date().getFullYear()}{" "}
         <span className="text-white">Code</span>
         <span className="text-[#F2A516]">Krafters</span>
