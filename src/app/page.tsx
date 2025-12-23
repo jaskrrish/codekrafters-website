@@ -1,33 +1,49 @@
-import TeamMemberComponent from "@/components/teamMember";
-// import HeroPage from "@/components/hero";
-import SponsorsComponent from "@/components/sponsor";
-import StoryComponent from "@/components/Story";
-import Image from "next/image";
-import EventSection from "@/components/Events";
+"use client"
+
+import { Navbar } from "@/components/navbar"
+import Hero from "@/components/hero"
+import StoryComponent from "@/components/Story"
+import EventSection from "@/components/Events"
+import SponsorsComponent from "@/components/sponsor"
+import Footer from "@/components/Footer"
+import PresidentIntro from "@/components/President"
+import TeamComponent from "@/components/Team"
+import DomainsSection from "@/components/Domains"
 
 export default function Home() {
   return (
-    <main className="min-h-screen max-w-screen overflow-x-hidden">
-      {/* <HeroPage /> */}
-      {/* hero compoenent */}
-      <div className="h-[110vh] w-full">
-        <Image
-          src="/ck-core.jpg"
-          alt="CK Group"
-          className="object-cover w-full h-full sm:block hidden"
-          fill
-        />
-        <Image
-          src="/ck-mob.png"
-          alt="CK Group Mobile"
-          className="object-cover w-full h-full block sm:hidden"
-          fill
-        />
+    <main className="min-h-screen bg-background overflow-x-hidden" style={{ scrollSnapType: "y mandatory" }}>
+      <Navbar />
+
+      <Hero />
+
+      <div id="story" className="hidden md:block w-full">
+        <StoryComponent />
       </div>
-      <StoryComponent/>
-      <EventSection />
-      <TeamMemberComponent />
-      <SponsorsComponent />
+
+      <div id="domains" className="w-full">
+        <DomainsSection />
+      </div>
+
+      <div id="events" className="w-full">
+        <EventSection />
+      </div>
+
+      <div id="president" className="w-full">
+        <PresidentIntro />
+      </div>
+
+      <div id="team" className="w-full">
+        <TeamComponent />
+      </div>
+
+      <div id="sponsors" className="w-full">
+        <SponsorsComponent />
+      </div>
+
+      <div id="footer" className="w-full">
+        <Footer />
+      </div>
     </main>
-  );
+  )
 }

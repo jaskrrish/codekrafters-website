@@ -1,345 +1,169 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React from "react";
 import { Russo_One, Montserrat } from 'next/font/google';
 
-// Fonts must be initialized at module scope
-const russoOne = Russo_One({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-russo-one',
-  display: 'swap',
-});
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['800', '900'],
-  variable: '--font-montserrat',
-  display: 'swap',
-});
+const russoOne = Russo_One({ subsets: ["latin"], weight: "400" });
+const montserrat = Montserrat({ subsets: ["latin"], weight: ["800", "900"] });
 
+function Card({ src, label }: { src: string; label: string }) {
+  return (
+    <div className="relative group mx-2 sm:mx-3 md:mx-4 flex-shrink-0">
+      <img
+        src={src || "/placeholder.svg"}
+        alt={label}
+        loading="lazy"
+        className="h-24 sm:h-32 md:h-40 lg:h-48 xl:h-56 w-auto rounded-lg sm:rounded-xl transition-transform duration-300 group-hover:scale-95"
+      />
 
-// Minimal types for clarity
-type GSAPType = any;
-type ScrollTriggerType = any;
+      <div className="absolute inset-0 bg-black/60 rounded-lg sm:rounded-xl opacity-0 
+        group-hover:opacity-100 transition-opacity duration-300 
+        flex items-center justify-center pointer-events-none">
+        <span className="text-white text-xs sm:text-sm md:text-lg lg:text-xl font-semibold text-center px-2">
+          {label}
+        </span>
+      </div>
+    </div>
+  );
+}
 
-const EventSection: React.FC = () => {
-  const scrollerRef = useRef<HTMLDivElement>(null);
+function EventRow({
+  images,
+  folder,
+  label,
+  reverse = false,
+}: {
+  images: string[];
+  folder: string;
+  label: string;
+  reverse?: boolean;
+}) {
+  const doubled = [...images, ...images];
 
-  useEffect(() => {
-    let cleanup: (() => void) | null = null;
+  return (
+    <section className="w-full overflow-hidden py-4 sm:py-6 md:py-8">
+      <div className={`scroll-row ${reverse ? "reverse" : ""}`}>
+        {doubled.map((img, i) => (
+          <Card key={`${folder}-${i}`} src={`/${folder}/${img}`} label={label} />
+        ))}
+      </div>
 
-    // Dynamic import of GSAP to avoid SSR issues
-    const loadGSAP = async () => {
-      try {
-        const all = await import('gsap/all');
-        const { gsap, ScrollTrigger, ModifiersPlugin } = all as unknown as {
-          gsap: GSAPType;
-          ScrollTrigger: ScrollTriggerType;
-          ModifiersPlugin: object;
-        };
-
-        gsap.registerPlugin(ScrollTrigger, ModifiersPlugin);
-
-        ScrollTrigger.config({
-          autoRefreshEvents: "visibilitychange,DOMContentLoaded,load,resize",
-          ignoreMobileResize: true
-        });
-        
-        if (typeof window !== 'undefined') {
-          requestAnimationFrame(() => {
-            handleScroll(gsap, ScrollTrigger);
-            
-            cleanup = () => {
-              ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill());
-            };
-          });
+      <style jsx>{`
+        .scroll-row {
+          display: flex;
+          width: max-content;     
+          animation: scrollX 25s linear infinite;
         }
-      } catch (error) {
-        console.error('Failed to load GSAP:', error);
-      }
-    };
 
-    loadGSAP();
-    
-    // Cleanup on unmount
-    return () => {
-      if (cleanup) {
-        cleanup();
-      }
-    };
-  }, []);
-
-  const handleScroll = (gsap: GSAPType, ScrollTrigger: ScrollTriggerType): void => {
-    // Remove scroller default since we're now part of main page scroll
-    // ScrollTrigger.defaults({
-    //   scroller: '.scroller',
-    // });
-
-    const sections = gsap.utils.toArray('section');
-    
-    sections.forEach((section: Element, index: number) => {
-      const wrapper = section.querySelector('.wrapper');
-      if (!wrapper) return;
-      
-      const sectionElement = section as HTMLElement;
-      const wrapperElement = wrapper as HTMLElement;
-      
-      // Optimize performance with will-change
-      gsap.set(wrapper, { willChange: 'transform' });
-      
-      // Ensure seamless loop by duplicating original content to exceed container width
-      const originalHTMLKey = '__originalHTML__';
-      const anyWrapper = wrapperElement as unknown as { [key: string]: string };
-      if (!anyWrapper[originalHTMLKey]) {
-        anyWrapper[originalHTMLKey] = wrapperElement.innerHTML;
-      } else {
-        wrapperElement.innerHTML = anyWrapper[originalHTMLKey];
-      }
-
-      // Measure original segment width (one full, non-repeating set)
-      const measureOriginalWidth = (): number => {
-        return wrapperElement.scrollWidth;
-      };
-
-      let originalWidth = measureOriginalWidth();
-      const sectionWidth = sectionElement.offsetWidth;
-
-      // Duplicate content until we have at least ~2.5x the section width
-      // This guarantees no gaps during wrap even on large screens
-      while (wrapperElement.scrollWidth < sectionWidth * 2.5 && originalWidth > 0) {
-        wrapperElement.innerHTML += anyWrapper[originalHTMLKey];
-      }
-
-      // Recompute the original segment width in case images/layout adjusted
-      // If originalWidth is 0 (images not measured yet), fall back to dividing by 2
-      originalWidth = originalWidth || Math.max(1, Math.floor(wrapperElement.scrollWidth / 2));
-
-      // Determine direction per visual row index (considering the text row at index 2)
-      const rowIndex = index < 2 ? index : index + 1; // Account for text row in the middle
-      const isRightToLeft = rowIndex % 2 === 1; // odd rows move R→L
-
-      // Apply a phase offset for the 2nd image line (section index 1)
-      // to avoid seeing the same sequence too soon. This shifts the loop start.
-      const applyPhaseOffset = index === 1;
-      const phaseOffset = applyPhaseOffset ? originalWidth * 0.8 : 0; // 40% shift
-
-      const xStart = isRightToLeft ? -phaseOffset : -originalWidth + phaseOffset;
-      const xEnd = isRightToLeft ? -originalWidth - phaseOffset : 0 + phaseOffset;
-
-      const wrapX = gsap.utils.wrap(-originalWidth, 0);
-
-      gsap.fromTo(
-        wrapperElement,
-        { x: xStart },
-        {
-          x: xEnd,
-          ease: "none",
-          modifiers: {
-            x: (x: string) => `${wrapX(parseFloat(x))}px`,
-          },
-          scrollTrigger: {
-            trigger: sectionElement,
-            scrub: 5,
-            start: "top bottom",
-            end: "bottom top",
-            invalidateOnRefresh: true,
-            anticipatePin: 1,
-            scroller: "body", // Use main page scroll
-          },
+        .scroll-row.reverse {
+          animation-direction: reverse;
         }
-      );
-    });
 
-    // Add horizontal parallax effect to the Hackverse text (treat as row index 2)
-    const hackverseText = document.querySelector('.hackverse-text');
-    if (hackverseText && hackverseText.parentElement) {
-      gsap.set(hackverseText, { willChange: 'transform' });
-      
-      // Text moves from left to center and stays there
-      gsap.fromTo(
-        hackverseText,
-        { x: '-100%' }, // Start from left
-        {
-          x: '0%', // Move to center and stay
-          ease: "none",
-          scrollTrigger: {
-            trigger: hackverseText.parentElement as Element,
-            scrub: 4, // Increased from 1.5 to 4 for slower text movement
-            start: "top bottom",
-            end: "center center", // Stop at center of screen
-            invalidateOnRefresh: true,
-            anticipatePin: 1,
-            scroller: "body", // Use main page scroll
-          },
+        .scroll-row:hover {
+          animation-play-state: paused;
         }
-      );
-    }
+        @keyframes scrollX {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
+    </section>
+  );
+}
 
-    // Refresh ScrollTrigger after setup
-    ScrollTrigger.refresh();
-  };
-
-  // Image lists by folder
-  const qonneqtImages = [
-    'qonneqt-001.jpg',
-    'qonneqt-002.jpg',
-    'qonneqt-003.jpg',
-    'qonneqt-004.jpg',
-    'qonneqt-005.jpg',
-    'qonneqt-006.png',
-    'qonneqt-007.jpg',
-    'qonneqt-008.jpg',
-  ];
-  const hackverseImages = [
-    'hackverse-001.jpg',
-    'hackverse-002.jpg',
-    'hackverse-003.jpg',
-    'hackverse-004.jpg',
-    'hackverse-005.jpg',
-    'hackverse-006.jpg',
-    'hackverse-007.jpg',
-    'hackverse-008.jpg',
-    'hackverse-009.jpg',
-    'hackverse-010.jpg',
-  ];
+export default function EventSection() {
   const launchpadImages = [
-    'launchpad-001.jpg',
-    'launchpad-002.jpg',
-    'launchpad-003.png',
-    'launchpad-004.jpg',
-    'launchpad-005.jpg',
-    'launchpad-006.jpg',
-    'launchpad-007.jpg',
-    'launchpad-008.jpg',
-    'launchpad-009.jpg',
-    'launchpad-010.jpg',
+    "launchpad-001.jpg",
+    "launchpad-002.jpg",
+    "launchpad-003.png",
+    "launchpad-004.jpg",
+    "launchpad-005.jpg",
+    "launchpad-006.jpg",
+    "launchpad-007.jpg",
+    "launchpad-008.jpg",
+    "launchpad-009.jpg",
+    "launchpad-010.jpg",
   ];
+
+  const hackverseImages = [
+    "hackverse-001.jpg",
+    "hackverse-002.jpg",
+    "hackverse-003.jpg",
+    "hackverse-004.jpg",
+    "hackverse-005.jpg",
+    "hackverse-006.jpg",
+    "hackverse-007.jpg",
+    "hackverse-008.jpg",
+    "hackverse-009.jpg",
+    "hackverse-010.jpg",
+  ];
+
+  const qonneqtImages = [
+    "qonneqt-001.jpg",
+    "qonneqt-002.jpg",
+    "qonneqt-003.jpg",
+    "qonneqt-004.jpg",
+    "qonneqt-005.jpg",
+    "qonneqt-006.png",
+    "qonneqt-007.jpg",
+    "qonneqt-008.jpg",
+  ];
+
   const otherEventsImages = [
-    'otherevents-001.png',
-    'otherevents-002.png',
-    'otherevents-003.png',
-    'otherevents-004.png',
-    'otherevents-005.png',
-    'otherevents-006.png',
+    "otherevents-001.png",
+    "otherevents-002.png",
+    "otherevents-003.png",
+    "otherevents-004.png",
+    "otherevents-005.png",
+    "otherevents-006.png",
   ];
 
   return (
-    <div 
-        ref={scrollerRef}
-        className="events-section overflow-x-hidden"
-        style={{
-          backgroundColor: '#F2F0D8',
-        }}
-      >
+    <div className="w-full bg-[#FFEFB4] overflow-x-hidden">
+      {/* Row 1 - Left Scroll */}
+      <EventRow
+        images={launchpadImages}
+        folder="launchpad"
+        label="Launchpad 2.0"
+      />
 
-        
-        {/* First image line (swapped with previous third line) */}
-        <section>
-          <div className="wrapper flex text-[16vh] font-medium will-change-transform">
-            {launchpadImages.map((imageName: string, imageIndex: number) => (
-              <div
-                key={`img-1-${imageIndex}`}
-                className="relative group m-2 flex-shrink-0"
-              >
-                <img
-                  className="h-40 md:h-48 lg:h-56 rounded-xl transition-all duration-300 group-hover:scale-95 cursor-pointer will-change-transform"
-                  src={`/launchpad/${imageName}`}
-                  alt={`Other Event ${imageIndex + 1}`}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="pointer-events-none absolute inset-0 rounded-xl bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <span className="text-white text-base md:text-lg lg:text-xl font-semibold tracking-wide">Launchpad 2.0</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+      {/* Row 2 - Right Scroll */}
+      <EventRow
+        images={hackverseImages}
+        folder="hackverse"
+        label="Hackverse 2025"
+        reverse
+      />
 
-        {/* Second image line */}
-        <section>
-          <div className="wrapper flex text-[16vh] font-medium will-change-transform">
-            {hackverseImages.map((imageName: string, imageIndex: number) => (
-              <div
-                key={`img-2-${imageIndex}`}
-                className="relative group m-2 flex-shrink-0"
-              >
-                <img
-                  className="h-40 md:h-48 lg:h-56 rounded-xl transition-all duration-300 group-hover:scale-95 cursor-pointer will-change-transform"
-                  src={`/hackverse/${imageName}`}
-                  alt={`Other Event ${imageIndex + 1}`}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="pointer-events-none absolute inset-0 rounded-xl bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <span className="text-white text-base md:text-lg lg:text-xl font-semibold tracking-wide">Hackverse 2025</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Title with parallax effect */}
-        <div className="relative overflow-hidden py-5" style={{ backgroundColor: '#F2F0D8' }}>
-          <div className="hackverse-text will-change-transform">
-            <div className={`w-full text-center drop-shadow-[0_2px_0_rgba(0,0,0,0.15)] leading-[0.85] ${russoOne.className}`}>
-              <span className="text-4xl md:text-6xl text-[#0b1220] tracking-[0.02em]">CODE</span>
-              <span className="text-4xl md:text-6xl text-[#F2B200] tracking-[0.02em] ml-1">KRAFTERS</span>
-            </div>
-            <div className={`w-full text-center drop-shadow-[0_2px_0_rgba(0,0,0,0.15)] mt-0 ${montserrat.className}`}>
-              <span className="text-3xl md:text-5xl text-[#0b1220] tracking-[0.01em] font-black">EVENTS</span>
-            </div>
-          </div>
-        </div>
-        
-
-        {/* Third image line (swapped with previous first line) */}
-        <section>
-          <div className="wrapper flex text-[16vh] font-medium will-change-transform">
-            {qonneqtImages.map((imageName: string, imageIndex: number) => (
-              <div
-                key={`img-3-${imageIndex}`}
-                className="relative group m-2 flex-shrink-0"
-              >
-                <img
-                  className="h-40 md:h-48 lg:h-56 rounded-xl transition-all duration-300 group-hover:scale-95 cursor-pointer will-change-transform"
-                  src={`/Qonneqt/${imageName}`}
-                  alt={`Hackverse Event ${imageIndex + 1}`}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="pointer-events-none absolute inset-0 rounded-xl bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <span className="text-white text-base md:text-lg lg:text-xl font-semibold tracking-wide">Builder's Qonneqt</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Fourth image line */}
-        <section>
-          <div className="wrapper flex text-[16vh] font-medium will-change-transform">
-            {otherEventsImages.map((imageName: string, imageIndex: number) => (
-              <div
-                key={`img-4-${imageIndex}`}
-                className="relative group m-2 flex-shrink-0"
-              >
-                <img
-                  className="h-40 md:h-48 lg:h-56 rounded-xl transition-all duration-300 group-hover:scale-95 cursor-pointer will-change-transform"
-                  src={`/otherevents/${imageName}`}
-                  alt={`Hackverse Event ${imageIndex + 1}`}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="pointer-events-none absolute inset-0 rounded-xl bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <span className="text-white text-base md:text-lg lg:text-xl font-semibold tracking-wide">Other Events</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+      {/* Title */}
+      <div className="text-center py-8 sm:py-12 md:py-16 px-4">
+        <h2 className={`${russoOne.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight`}>
+          <span className="text-[#0b1220]">CODE</span>
+          <span className="text-[#F2B200]">KRAFTERS </span>
+        </h2>
+        <h2 className={`${russoOne.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight`}>
+          <span className="text-[#0b1220]">EVENTS</span>
+        </h2>
       </div>
-  );
-};
 
-export default EventSection;
+      {/* Row 3 - Left Scroll */}
+      <EventRow
+        images={qonneqtImages}
+        folder="Qonneqt"
+        label="Builder's Qonneqt"
+      />
+
+      {/* Row 4 - Right Scroll */}
+      <EventRow
+        images={otherEventsImages}
+        folder="otherevents"
+        label="Other Events"
+        reverse
+      />
+    </div>
+  );
+}

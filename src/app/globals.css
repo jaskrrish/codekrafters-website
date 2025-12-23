@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import url('https://fonts.googleapis.com/css2?family=Asimovian&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Asimovian&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -46,37 +46,31 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: #F2F2F2;
+  --foreground: #0D0D0D;
+  --primary: #F2A516;
+  --primary-foreground: #0D0D0D;
+  --secondary: #BF8211;
+  --secondary-foreground: #F2F2F2;
+  --accent: #734E0A;
+  --accent-foreground: #F2F2F2;
+  --card: #F2F2F2;
+  --card-foreground: #0D0D0D;
+  --popover: #F2F2F2;
+  --popover-foreground: #0D0D0D;
+  --muted: #BF8211;
+  --muted-foreground: #734E0A;
+  --border: #BF8211;
+  --input: #F2A516;
+  --ring: #734E0A;
+  --sidebar: #F2F2F2;
+  --sidebar-foreground: #0D0D0D;
+  --sidebar-primary: #F2A516;
+  --sidebar-primary-foreground: #0D0D0D;
+  --sidebar-accent: #BF8211;
+  --sidebar-accent-foreground: #F2F2F2;
+  --sidebar-border: #734E0A;
+  --sidebar-ring: #734E0A;
 }
 
 .dark {
@@ -117,8 +111,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-background text-foreground;
+    background-color: #000 !important;
+    color: #fff !important;
+    @apply bg-black text-white;
   }
 }
 
