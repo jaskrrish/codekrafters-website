@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Instagram, Github, Globe } from 'lucide-react';
 
 export default function PresidentIntroRetro() {
   return (
@@ -68,44 +67,9 @@ export default function PresidentIntroRetro() {
             style defines our club's culture.
           </p>
 
-          {/* <CHANGE> Updated social links with responsive sizing and spacing */}
-          <motion.div
-            className="flex items-center gap-3 sm:gap-4 md:gap-5 pt-2 justify-center md:justify-start"
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <a
-              href="https://instagram.com/jass"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-1.5 sm:p-2 md:p-2.5 bg-[#0D0D0D] text-[#FFEFB4] rounded-full shadow-[2px_2px_0_#F2A516] sm:shadow-[3px_3px_0_#F2A516] md:shadow-[4px_4px_0_#F2A516] hover:shadow-[3px_3px_0_#F2A516] sm:hover:shadow-[5px_5px_0_#F2A516] transition-all duration-300 hover:translate-y-[-2px]"
-            >
-              <Instagram className="w-4 h-4 sm:w-5 sm:h-5" />
-            </a>
-
-            <a
-              href="https://github.com/jass"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-1.5 sm:p-2 md:p-2.5 bg-[#0D0D0D] text-[#FFEFB4] rounded-full shadow-[2px_2px_0_#F2A516] sm:shadow-[3px_3px_0_#F2A516] md:shadow-[4px_4px_0_#F2A516] hover:shadow-[3px_3px_0_#F2A516] sm:hover:shadow-[5px_5px_0_#F2A516] transition-all duration-300 hover:translate-y-[-2px]"
-            >
-              <Github className="w-4 h-4 sm:w-5 sm:h-5" />
-            </a>
-
-            <a
-              href="https://jass-portfolio.com" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-1.5 sm:p-2 md:p-2.5 bg-[#0D0D0D] text-[#FFEFB4] rounded-full shadow-[2px_2px_0_#F2A516] sm:shadow-[3px_3px_0_#F2A516] md:shadow-[4px_4px_0_#F2A516] hover:shadow-[3px_3px_0_#F2A516] sm:hover:shadow-[5px_5px_0_#F2A516] transition-all duration-300 hover:translate-y-[-2px]"
-            >
-              <Globe className="w-4 h-4 sm:w-5 sm:h-5" />
-            </a>
-          </motion.div>
-
           {/* <CHANGE> Updated CTA button with responsive sizing and spacing */}
           <motion.a
-            href="https://linkedin.com/in/jass"
+            href=" https://www.linkedin.com/in/jaskrrish/"
             target="_blank"
             whileHover={{ scale: 1.05, rotate: -2 }}
             whileTap={{ scale: 0.95 }}
