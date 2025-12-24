@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Instagram, Github, Linkedin } from 'lucide-react';
+import { Linkedin } from 'lucide-react';
 import { useRef, useEffect, useState } from "react";
 import { TEAM_MEMBERS, DOMAINS } from "@/data/team-data";
 
@@ -226,26 +226,6 @@ export default function TeamComponent() {
 
                       {/* Social links with responsive icon sizing and spacing */}
                       <div className="flex items-center justify-center gap-2 sm:gap-3 mt-2 sm:mt-3">
-                        {member.social.instagram && (
-                          <a
-                            href={member.social.instagram}
-                            target="_blank"
-                            className="social-btn"
-                          >
-                            <Instagram className="w-3 h-3 sm:w-4 sm:h-4" />
-                          </a>
-                        )}
-
-                        {member.social.github && (
-                          <a
-                            href={member.social.github}
-                            target="_blank"
-                            className="social-btn"
-                          >
-                            <Github className="w-3 h-3 sm:w-4 sm:h-4" />
-                          </a>
-                        )}
-
                         {member.social.linkedin && (
                           <a
                             href={member.social.linkedin}
