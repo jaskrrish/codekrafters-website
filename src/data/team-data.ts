@@ -251,7 +251,7 @@ export const TEAM_MEMBERS = [
   {
     id: 19,
     name: "Banu Pragathi",
-    role: "PR & Management Head",
+    role: "Public Relations & Management Head",
     description: "Oversees PR strategy and management operations.",
     imagePath: "/images/pragathi.png",
     domain: "pr",
@@ -264,7 +264,7 @@ export const TEAM_MEMBERS = [
   {
     id: 20,
     name: "Kavya Reddy",
-    role: "PR & Management Head",
+    role: "Public Relations & Management Head",
     description: "Manages organizational relationships and growth.",
     imagePath: "/images/Kavya.png",
     domain: "pr",
@@ -277,7 +277,7 @@ export const TEAM_MEMBERS = [
   {
     id: 21,
     name: "Siddarth Kilari",
-    role: "PR & Management Lead",
+    role: "Public Relations & Management Lead",
     description: "Drives PR initiatives and communications.",
     imagePath: "/images/Siddharth.png",
     domain: "pr",
@@ -290,7 +290,7 @@ export const TEAM_MEMBERS = [
   {
     id: 22,
     name: "Satya Lohith",
-    role: "PR & Management Lead",
+    role: "Public Relations & Management Lead",
     description: "Leads management strategy and team development.",
     imagePath: "/images/Satya.png",
     domain: "pr",
@@ -337,6 +337,6 @@ export const DOMAINS = [
   { id: "cp", label: "Competitive Programming" },
   { id: "web3", label: "Web3" },
   { id: "creatives", label: "Creatives" },
-  { id: "pr", label: "PR & Management" },
+  { id: "pr", label: "Public Relations & Management" },
   { id: "operations", label: "Operations" },
 ]
