@@ -23,7 +23,7 @@ const DOMAINS = [
   { id: "cp", name: "Competitive Programming", icon: Laptop, desc: "Sharpening logic and algorithms for hackathons and coding contests." },
   { id: "web3", name: "Web3", icon: Globe, desc: "Exploring decentralized apps, blockchain tech, and on-chain innovation." },
   { id: "creatives", name: "Creatives", icon: Palette, desc: "Designing visuals, posters, and brand experiences that pop." },
-  { id: "pr", name: "Public Relations", icon: Users, desc: "Connecting CodeKrafters with communities and managing collaborations." },
+  { id: "pr", name: "Public Relations & Management", icon: Users, desc: "Connecting CodeKrafters with communities and managing collaborations." },
   { id: "operations", name: "Operations", icon: Wrench, desc: "Handling logistics, event flow, and everything behind the scenes." },
 ];
 
