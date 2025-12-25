@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Russo_One, Montserrat } from 'next/font/google';
+import Image from "next/image";
 
 const russoOne = Russo_One({ subsets: ["latin"], weight: "400" });
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["800", "900"] });
@@ -9,7 +10,7 @@ const montserrat = Montserrat({ subsets: ["latin"], weight: ["800", "900"] });
 function Card({ src, label }: { src: string; label: string }) {
   return (
     <div className="relative group mx-2 sm:mx-3 md:mx-4 flex-shrink-0">
-      <img
+      <Image
         src={src || "/placeholder.svg"}
         alt={label}
         loading="lazy"
