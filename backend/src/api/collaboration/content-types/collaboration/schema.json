@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "collaborations",
+  "info": {
+    "singularName": "collaboration",
+    "pluralName": "collaborations",
+    "displayName": "Collaboration"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "companyName": {
+      "type": "string",
+      "required": true
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images"]
+    },
+    "description": {
+      "type": "text"
+    },
+    "websiteLink": {
+      "type": "string"
+    },
+    "date": {
+      "type": "date"
+    }
+  }
+} 
